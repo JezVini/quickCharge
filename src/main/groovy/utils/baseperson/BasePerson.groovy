@@ -1,4 +1,6 @@
-package com.quickcharge.baseperson
+package utils.baseperson
+
+import utils.baseperson.Address
 
 class BasePerson {
 
@@ -7,5 +9,7 @@ class BasePerson {
     String cpfCnpj
     String phone
     Address address
+
+    static embedded = ['address']
 
 }

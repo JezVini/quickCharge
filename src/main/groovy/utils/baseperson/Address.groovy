@@ -1,4 +1,4 @@
-package com.quickcharge.baseperson
+package utils.baseperson
 
 class Address {
 
