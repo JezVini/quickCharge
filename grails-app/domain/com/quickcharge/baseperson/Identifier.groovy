@@ -1,4 +1,4 @@
-package com.quickcharge.personbasedata
+package com.quickcharge.baseperson
 
 abstract class Identifier {
 

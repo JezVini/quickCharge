@@ -1,4 +1,4 @@
-package com.quickcharge.personbasedata
+package com.quickcharge.baseperson
 
 class Address {
 
@@ -6,6 +6,6 @@ class Address {
     String city
     String district
     String number
-    CEP cep
+    String postalCode
 
 }
