@@ -22,12 +22,7 @@ class CustomerService {
         customer.number = params.number
         customer.postalCode = params.postalCode
 
-        customer.save(flush: true)
-        if (!customer.save()) {
-                customer.errors.allErrors.each {
-                println it
-            }
-        }
+        customer.save()
         return customer
     }
 
