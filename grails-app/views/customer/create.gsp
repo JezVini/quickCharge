@@ -3,7 +3,7 @@
 
 <head>
     <meta name="layout" content="main">
-    <title>Create</title>
+    <title>Registrar Cliente</title>
 </head>
 
 <body>
