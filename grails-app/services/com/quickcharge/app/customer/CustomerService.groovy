@@ -29,28 +29,28 @@ class CustomerService {
     private Customer validateCustomer(Map params) {
         Customer customer = new Customer()
 
-        if(!params.email) {
+        if (!params.email) {
             customer.errors.reject("", null, "E-mail não preenchido")
         }
-        if(!params.cpfCnpj) {
+        if (!params.cpfCnpj) {
             customer.errors.reject("", null, "CPF ou CNPJ não preenchido")
         }
-        if(!params.phone) {
+        if (!params.phone) {
             customer.errors.reject("", null, "Telefone não preenchido")
         }
-        if(!params.state) {
+        if (!params.state) {
             customer.errors.reject("", null, "Estado não preenchido")
         }
-        if(!params.city) {
+        if (!params.city) {
             customer.errors.reject("", null, "Cidade não preenchida")
         }
-        if(!params.district) {
+        if (!params.district) {
             customer.errors.reject("", null, "Bairro não preenchido")
         }
-        if(!params.number) {
+        if (!params.number) {
             customer.errors.reject("", null, "Número não preenchido")
         }
-        if(!params.postalCode) {
+        if (!params.postalCode) {
             customer.errors.reject("", null, "CEP não preenchido")
         }
 
