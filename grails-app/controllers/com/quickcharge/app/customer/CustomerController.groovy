@@ -18,6 +18,5 @@ class CustomerController {
         }
 
         redirect(action: "create")
-        return
     }
 }
