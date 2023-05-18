@@ -30,8 +30,6 @@ class PayerService {
     public Payer validate(Map params) {
         Payer payer = new Payer()
 
-        println(params)
-
         if (!params.name){
             payer.errors.reject("", null, "Campo nome é obrigatório")
         }
