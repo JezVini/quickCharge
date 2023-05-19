@@ -8,5 +8,13 @@ abstract class BaseEntity {
 
     static mapping = {
         tablePerHierarchy false
+        deleted defaultValue: false
     }
+
+    static constraints = {
+        dateCreated blank: false, nullable: false
+        lastUpdated blank: false, nullable: false
+        deleted blank: false, nullable: false
+    }
+
 }
