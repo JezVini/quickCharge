@@ -1,6 +1,7 @@
 package com.quickcharge.app.customer
 
 import grails.gorm.transactions.Transactional
+import grails.validation.ValidationException
 
 @Transactional
 class CustomerService {
@@ -9,26 +10,36 @@ class CustomerService {
         Customer customer = validateCustomer(params)
 
         if (customer.hasErrors()) {
-            return customer
+            throw new ValidationException(null, customer.errors)
         }
 
-        customer.name = params.name
-        customer.email = params.email
-        customer.cpfCnpj = params.cpfCnpj
-        customer.phone = params.phone
-        customer.state = params.state
-        customer.city = params.city
-        customer.district = params.district
-        customer.number = params.number
-        customer.postalCode = params.postalCode
+        customer.properties[
+            "name",
+            "email",
+            "cpfCnpj",
+            "phone",
+            "state",
+            "city",
+            "district",
+            "number",
+            "postalCode"
+        ] = params
 
-        customer.save()
+        customer.save(failOnError: true)
+
+        if (customer.hasErrors()) {
+            throw new ValidationException(null, customer.errors)
+        }
+
         return customer
     }
 
     private Customer validateCustomer(Map params) {
         Customer customer = new Customer()
 
+        if (!params.name) {
+            customer.errors.reject("", null, "Nome não preenchido")
+        }
         if (!params.email) {
             customer.errors.reject("", null, "E-mail não preenchido")
         }
