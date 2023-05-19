@@ -7,6 +7,13 @@
 </head>
 
 <body>
+    <g:message code="${flash.message}"/>
+    <g:if test="${errorsList}">
+        <g:each in="${errorsList}" var="error">
+            <p>${error}</p>
+        </g:each>
+    </g:if>
+
     <form action="${createLink(controller: "customer", action: "save" )}">
         <label for="name">Nome</label>
         <input type="text" name="name" value="${name}" id="name" placeholder="Digite seu nome">

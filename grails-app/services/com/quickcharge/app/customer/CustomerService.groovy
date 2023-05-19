@@ -1,4 +1,4 @@
-package com.quickcharge.app.customer
+
 
 import grails.gorm.transactions.Transactional
 
@@ -9,19 +9,23 @@ class CustomerService {
         Customer customer = validateCustomer(params)
 
         if (customer.hasErrors()) {
+            //throw ex
             return customer
         }
 
-        customer.name = params.name
-        customer.email = params.email
-        customer.cpfCnpj = params.cpfCnpj
-        customer.phone = params.phone
-        customer.state = params.state
-        customer.city = params.city
-        customer.district = params.district
-        customer.number = params.number
-        customer.postalCode = params.postalCode
+        customer.with {
+            name = params.name
+            email = params.email
+            cpfCnpj = params.cpfCnpj
+            phone = params.phone
+            state = params.state
+            city = params.city
+            district = params.district
+            number = params.number
+            postalCode = params.postalCode
+         }
 
+        //throw ex
         customer.save()
         return customer
     }
@@ -30,28 +34,28 @@ class CustomerService {
         Customer customer = new Customer()
 
         if (!params.email) {
-            customer.errors.reject("", null, "E-mail não preenchido")
+            customer.errors.reject("", null, "O campo e-mail é obrigatório")
         }
         if (!params.cpfCnpj) {
-            customer.errors.reject("", null, "CPF ou CNPJ não preenchido")
+            customer.errors.reject("", null, "O campo CPF ou CNPJ é obrigatório")
         }
         if (!params.phone) {
-            customer.errors.reject("", null, "Telefone não preenchido")
+            customer.errors.reject("", null, "O campo telefone é obrigatório")
         }
         if (!params.state) {
-            customer.errors.reject("", null, "Estado não preenchido")
+            customer.errors.reject("", null, "O campo estado é obrigatório")
         }
         if (!params.city) {
-            customer.errors.reject("", null, "Cidade não preenchida")
+            customer.errors.reject("", null, "O campo cidade é obrigatório")
         }
         if (!params.district) {
-            customer.errors.reject("", null, "Bairro não preenchido")
+            customer.errors.reject("", null, "O campo bairro é obrigatório")
         }
         if (!params.number) {
-            customer.errors.reject("", null, "Número não preenchido")
+            customer.errors.reject("", null, "O campo número é obrigatório")
         }
         if (!params.postalCode) {
-            customer.errors.reject("", null, "CEP não preenchido")
+            customer.errors.reject("", null, "O campo CEP é obrigatório")
         }
 
         return customer
