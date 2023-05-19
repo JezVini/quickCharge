@@ -9,20 +9,26 @@ class PayerService {
         Payer payer = validate(params)
 
         if (payer.hasErrors()) {
-            return payer
+            throw new ValidationException(null, payer.errors)
         }
 
-        payer.name = params.name
-        payer.email = params.email
-        payer.cpfCnpj = params.cpfCnpj
-        payer.phone = params.phone
-        payer.state = params.state
-        payer.city = params.city
-        payer.district = params.district
-        payer.number = params.number
-        payer.postalCode = params.postalCode
+        payer.with {
+            name = params.name
+            email = params.email
+            cpfCnpj = params.cpfCnpj
+            phone = params.phone
+            state = params.state
+            city = params.city
+            district = params.district
+            number = params.number
+            postalCode = params.postalCode
+        }
 
-        payer.save()
+        payer.save(failOnError: true)
+
+        if (payer.hasErrors()) {
+            throw new ValidationException(null, payer.errors)
+        }
 
         return payer
     }
@@ -30,20 +36,32 @@ class PayerService {
     public Payer validate(Map params) {
         Payer payer = new Payer()
 
-        if (!params.name){
-            payer.errors.reject("", null, "Campo nome é obrigatório")
-        }
-
         if (!params.email) {
-            payer.errors.reject("", null, "Campo e-mail é obrigatório")
+            customer.errors.reject('', null, 'O campo e-mail é obrigatório')
         }
-
-        if (!params.cpfCnpj){
-            payer.errors.reject("", null, "Campo CPF/CNPJ é obrigatório")
+        if (!params.cpfCnpj) {
+            customer.errors.reject('', null, 'O campo CPF ou CNPJ é obrigatório')
+        }
+        if (!params.phone) {
+            customer.errors.reject('', null, 'O campo telefone é obrigatório')
+        }
+        if (!params.state) {
+            customer.errors.reject('', null, 'O campo estado é obrigatório')
+        }
+        if (!params.city) {
+            customer.errors.reject('', null, 'O campo cidade é obrigatório')
+        }
+        if (!params.district) {
+            customer.errors.reject('', null, 'O campo bairro é obrigatório')
+        }
+        if (!params.number) {
+            customer.errors.reject('', null, 'O campo número é obrigatório')
+        }
+        if (!params.postalCode) {
+            customer.errors.reject('', null, 'O campo CEP é obrigatório')
         }
 
         return payer
     }
-
 
 }
