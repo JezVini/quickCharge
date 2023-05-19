@@ -34,6 +34,10 @@ class CustomerService {
         return customer
     }
 
+    public List<Customer> list() {
+        return Customer.list()
+    }
+
     private Customer validateCustomer(Map params) {
         Customer customer = new Customer()
 

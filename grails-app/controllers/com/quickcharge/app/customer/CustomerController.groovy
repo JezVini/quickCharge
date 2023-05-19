@@ -6,6 +6,10 @@ class CustomerController {
 
     def customerService
 
+    def index() {
+        return [customerList: customerService.list()]
+    }
+
     def create() {
         return params
     }
