@@ -1,5 +1,7 @@
 package com.quickcharge.app.payer
 
+import grails.validation.ValidationException
+
 class PayerController {
 
     PayerService payerService
@@ -12,10 +14,9 @@ class PayerController {
         try {
             payerService.save(params)
             flash.message = 'Registro criado com sucesso'
-            params = [:]
-        } catch (ValidationException error) {
-            flash.message = 'Falha no registro'
-        } catch (Exception error) {
+        } catch (ValidationException validationException) {
+            flash.message = validationException.errors.allErrors.first().defaultMessage
+        } catch (Exception exception) {
             flash.message = 'Ocorreu um erro, contate o desenvolvimento'
         } finally {
             redirect([
