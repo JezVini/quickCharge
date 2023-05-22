@@ -2,6 +2,7 @@ package com.quickcharge.app.payer
 
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
+import com.quickcharge.app.customer.Customer
 
 @Transactional
 class PayerService {
@@ -14,6 +15,7 @@ class PayerService {
         }
 
         payer.properties["name", "email", "cpfCnpj", "phone", "state", "city", "district", "number", "postalCode"] = params
+        payer.customer = Customer.get(params.customer ?: 1)
 
         payer.save(failOnError: true)
 
