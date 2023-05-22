@@ -15,7 +15,7 @@ class PayerService {
         }
 
         payer.properties["name", "email", "cpfCnpj", "phone", "state", "city", "district", "number", "postalCode"] = params
-        payer.customer = Customer.get(params.customer ?: 1)
+        payer.customer = Customer.get(params.customer)
 
         payer.save(failOnError: true)
 
