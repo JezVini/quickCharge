@@ -7,7 +7,10 @@ class CustomerController {
     def customerService
 
     def index() {
-        return [customerList: customerService.list()]
+        List<Customer> customerList = customerService.list()
+        return [
+            customerList: customerList,
+            customerCount: customerList.size()]
     }
 
     def create() {
