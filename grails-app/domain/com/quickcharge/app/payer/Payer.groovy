@@ -5,6 +5,6 @@ import utils.baseperson.BasePerson
 
 class Payer extends BasePerson {
     Customer customer
+
     static constraints = {}
 }
-
