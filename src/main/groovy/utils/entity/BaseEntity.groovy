@@ -1,12 +1,16 @@
 package utils.entity
 
-abstract class BaseEntity {
+abstract class BaseEntity implements Comparable {
 
     Date dateCreated
     Date lastUpdated
-    Boolean deleted
+    Boolean deleted = false
 
     static mapping = {
         tablePerHierarchy false
+    }
+
+    int compareTo(obj) {
+        obj.lastUpdated.compareTo(lastUpdated)
     }
 }

@@ -1,6 +1,8 @@
 package utils.baseperson
 
-abstract class BasePerson {
+import utils.entity.BaseEntity
+
+abstract class BasePerson extends BaseEntity {
 
     String name
     String email

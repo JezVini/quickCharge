@@ -34,8 +34,20 @@ class CustomerService {
         return customer
     }
 
-    private Customer validateCustomer(Map params) {
-        Customer customer = new Customer()
+    public Customer update(Map params) {
+        Customer customer = Customer.get(params.long("id"))
+
+        customer.properties[
+            "name",
+            "email",
+            "cpfCnpj",
+            "phone",
+            "state",
+            "city",
+            "district",
+            "number",
+            "postalCode"
+        ] = params
 
         if (!params.name) {
             customer.errors.reject("", null, "Nome não preenchido")
