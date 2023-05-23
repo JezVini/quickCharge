@@ -30,7 +30,7 @@ class CustomerService {
         return customer
     }
 
-    private Customer validateCustomer(Map params) {
+    private Customer validateSave(Map params) {
         Customer validatedCustomer = new Customer()
 
         if (!params.name) {
