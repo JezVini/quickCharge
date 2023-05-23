@@ -20,33 +20,15 @@ class CustomerController {
     def save() {
         try {
             customerService.save(params)
-            flash.message = "Registro criado com sucesso"
+            flash.message = (!params.id) ? "Registro criado com sucesso" : "Cadastro editado com sucesso"
         } catch (ValidationException validationException) {
             flash.message = validationException.errors.allErrors.first().defaultMessage
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro, contate o desenvolvimento"
         } finally {
             redirect([
-                action: "create",
-                params: params
-            ])
-        }
-    }
-
-    def update() {
-        try {
-            customerService.update(params)
-            flash.message = "Cadastro editado com sucesso"
-        } catch (ValidationException validationException) {
-            flash.message = validationException.errors.allErrors.first().defaultMessage
-        } catch (Exception exception) {
-            flash.message = "Ocorreu um erro, contate o desenvolvimento"
-        } finally {
-            redirect([
-                action: "edit",
-                params: [
-                    id: params.id
-                ]
+                action: (!params.id) ? "create" : "edit",
+                params: (!params.id) ? params : [id: params.id]
             ])
         }
     }
