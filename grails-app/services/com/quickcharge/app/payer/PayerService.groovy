@@ -22,7 +22,7 @@ class PayerService {
         return payer
     }
 
-    public Payer validatePayer(Map params) {
+    public Payer validateSave(Map params) {
         Payer validatedPayer = new Payer()
 
         if (!params.name) {
