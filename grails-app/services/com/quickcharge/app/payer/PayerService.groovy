@@ -7,23 +7,38 @@ import com.quickcharge.app.customer.Customer
 @Transactional
 class PayerService {
 
-    public Payer save(Map params) {
-        Payer payer = validatePayer(params)
-
-        payer.properties["name", "email", "cpfCnpj", "phone", "state", "city", "district", "number", "postalCode"] = params
-        payer.customer = Customer.get(params.customer)
+    public Boolean save(Map params) {
+        Payer payer = validateSave(params)
 
         if (payer.hasErrors()) {
             throw new ValidationException("Erro ao salvar pagador", payer.errors)
         }
 
-        payer.save(failOnError: true)
+        payer.customer = Customer.get(params.customerId)
+        payer.properties [
+            "name",
+            "email",
+            "cpfCnpj",
+            "phone",
+            "state",
+            "city",
+            "district",
+            "number",
+            "postalCode"
+        ] = params
 
-        return payer
+        println(payer.properties)
+
+        return payer.save(failOnError: true)
     }
 
-    public Payer validatePayer(Map params) {
-        Payer validatedPayer = new Payer()
+    public Payer get(Long id, Long customerId) {
+        Customer customer = Customer.get(customerId)
+        return Payer.findWhere(id: id, customer: customer, deleted: false)
+    }
+
+    public Payer validateSave(Map params) {
+        Payer validatedPayer = params.id ? Payer.get(params.long("id")) : new Payer()
 
         if (!params.name) {
             payer.errors.reject("", null, "O campo nome é obrigatório")
