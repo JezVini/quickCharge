@@ -17,21 +17,25 @@ class CustomerController {
         return params
     }
 
+    def edit() {
+        Customer customer = Customer.get(params.long("id"))
+        return [
+            customer: customer
+        ]
+    }
+
     def save() {
         try {
-            //flash.type = MessageType.SUCESS
             customerService.save(params)
-            flash.message = "Registro criado com sucesso"
+            flash.message = (!params.id) ? "Registro criado com sucesso" : "Cadastro editado com sucesso"
         } catch (ValidationException validationException) {
             flash.message = validationException.errors.allErrors.first().defaultMessage
-            //flash.type = MessageType.SUCESS
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro, contate o desenvolvimento"
-            //flash.type = MessageType.SUCESS
         } finally {
             redirect([
-                action: "create",
-                params: params
+                action: (!params.id) ? "create" : "edit",
+                params: (!params.id) ? params : [id: params.id]
             ])
         }
     }

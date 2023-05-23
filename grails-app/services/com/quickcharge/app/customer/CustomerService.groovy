@@ -7,10 +7,16 @@ import grails.validation.ValidationException
 class CustomerService {
 
     public Customer save(Map params) {
-        Customer customer = validateCustomer(params)
+        Customer customer;
+        if (params.id) {
+            customer = validateCustomer(params, Customer.get(params.long("id")))
+        } else {
+            customer = validateCustomer(params, new Customer())
+
+        }
 
         if (customer.hasErrors()) {
-            throw new ValidationException(null, customer.errors)
+            throw new ValidationException("Erro ao salvar cliente", customer.errors)
         }
 
         customer.properties[
@@ -27,48 +33,46 @@ class CustomerService {
 
         customer.save(failOnError: true)
 
-        if (customer.hasErrors()) {
-            throw new ValidationException(null, customer.errors)
-        }
-
         return customer
     }
 
-    public List<Customer> list() {
-        return Customer.list()
-    }
-
-    private Customer validateCustomer(Map params) {
-        Customer customer = new Customer()
-
+    private Customer validateCustomer(Map params, Customer validatedCustomer) {
         if (!params.name) {
-            customer.errors.reject("", null, "Nome não preenchido")
-        }
-        if (!params.email) {
-            customer.errors.reject("", null, "E-mail não preenchido")
-        }
-        if (!params.cpfCnpj) {
-            customer.errors.reject("", null, "CPF ou CNPJ não preenchido")
-        }
-        if (!params.phone) {
-            customer.errors.reject("", null, "Telefone não preenchido")
-        }
-        if (!params.state) {
-            customer.errors.reject("", null, "Estado não preenchido")
-        }
-        if (!params.city) {
-            customer.errors.reject("", null, "Cidade não preenchida")
-        }
-        if (!params.district) {
-            customer.errors.reject("", null, "Bairro não preenchido")
-        }
-        if (!params.number) {
-            customer.errors.reject("", null, "Número não preenchido")
-        }
-        if (!params.postalCode) {
-            customer.errors.reject("", null, "CEP não preenchido")
+            validatedCustomer.errors.reject("", null, "Nome não preenchido")
         }
 
-        return customer
+        if (!params.email) {
+            validatedCustomer.errors.reject("", null, "E-mail não preenchido")
+        }
+
+        if (!params.cpfCnpj) {
+            validatedCustomer.errors.reject("", null, "CPF ou CNPJ não preenchido")
+        }
+
+        if (!params.phone) {
+            validatedCustomer.errors.reject("", null, "Telefone não preenchido")
+        }
+
+        if (!params.state) {
+            validatedCustomer.errors.reject("", null, "Estado não preenchido")
+        }
+
+        if (!params.city) {
+            validatedCustomer.errors.reject("", null, "Cidade não preenchida")
+        }
+
+        if (!params.district) {
+            validatedCustomer.errors.reject("", null, "Bairro não preenchido")
+        }
+
+        if (!params.number) {
+            validatedCustomer.errors.reject("", null, "Número não preenchido")
+        }
+
+        if (!params.postalCode) {
+            validatedCustomer.errors.reject("", null, "CEP não preenchido")
+        }
+
+        return validatedCustomer
     }
 }
