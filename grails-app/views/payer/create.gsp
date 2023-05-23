@@ -1,7 +1,7 @@
 <html>
 <head>
     <meta name="layout" content="main" >
-    <title>Novo Pagador</title>
+    <title>Registrar Pagador</title>
 </head>
 <body>
 
