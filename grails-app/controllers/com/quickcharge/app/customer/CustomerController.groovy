@@ -12,15 +12,12 @@ class CustomerController {
 
     def save() {
         try {
-            //flash.type = MessageType.SUCESS
             customerService.save(params)
             flash.message = "Registro criado com sucesso"
         } catch (ValidationException validationException) {
             flash.message = validationException.errors.allErrors.first().defaultMessage
-            //flash.type = MessageType.SUCESS
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro, contate o desenvolvimento"
-            //flash.type = MessageType.SUCESS
         } finally {
             redirect([
                 action: "create",
