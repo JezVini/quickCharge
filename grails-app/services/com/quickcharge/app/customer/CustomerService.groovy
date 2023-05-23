@@ -49,6 +49,11 @@ class CustomerService {
             "postalCode"
         ] = params
 
+        customer.save(failOnError: true)
+        return customer
+    }
+
+    public Customer validateCustomer(Map params) {
         if (!params.name) {
             customer.errors.reject("", null, "Nome não preenchido")
         }
