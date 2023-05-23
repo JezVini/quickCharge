@@ -35,7 +35,7 @@
         <label for="number">Número</label>
         <input type="text" name="number" id="number" placeholder="Digite o número" value="${customer.number}">
         <br>
-        <button type="submit">Editar</button>
+        <button type="submit">Salvar</button>
     </form>
 </body>
 </html>
