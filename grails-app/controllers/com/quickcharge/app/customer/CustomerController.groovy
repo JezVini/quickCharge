@@ -8,9 +8,7 @@ class CustomerController {
 
     def index() {
         List<Customer> customerList = customerService.list()
-        return [
-            customerList: customerList,
-            customerCount: customerList.size()]
+        return [customerList: customerList]
     }
 
     def create() {

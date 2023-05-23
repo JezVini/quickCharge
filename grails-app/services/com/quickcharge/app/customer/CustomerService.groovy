@@ -36,6 +36,10 @@ class CustomerService {
         return customer
     }
 
+    public List<Customer> list() {
+        return Customer.list()
+    }
+
     private Customer validateCustomer(Map params, Customer validatedCustomer) {
         if (!params.name) {
             validatedCustomer.errors.reject("", null, "Nome não preenchido")
