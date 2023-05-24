@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta name="layout" content="main">
-    <title>Registrar Cliente</title>
-</head>
+<html lang="pt-br">
+    <head>
+        <meta name="layout" content="main">
+        <title>Registrar Cliente</title>
+    </head>
     <body>
     
         <g:message code="${flash.message}"/>
