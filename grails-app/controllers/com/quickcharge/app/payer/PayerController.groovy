@@ -9,7 +9,7 @@ class PayerController {
     def create() {
         return params
     }
-
+    
     def edit() {
         Payer payer = payerService.get(
             params.long("id"),
@@ -17,7 +17,12 @@ class PayerController {
         )
         return [payer: payer]
     }
-
+    
+    def index () {
+        List<Payer> payerList = payerService.getAllByCustomerId(params.long("customerId"))
+        return [payers: payerList]
+    }
+    
     def save() {
         try {
             payerService.saveOrUpdate(params)

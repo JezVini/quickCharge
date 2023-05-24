@@ -15,6 +15,13 @@ class PayerService {
         )
     }
 
+    public List<Payer> getAllByCustomerId(Long customerId) {
+        return Payer.findAllWhere(
+            customer: Customer.get(customerId),
+            deleted: false
+        )
+    }
+    
     public Payer saveOrUpdate(Map params) {
         Payer validatedPayer = validateSave(params)
 
