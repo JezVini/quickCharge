@@ -1,21 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta name="layout" content="main">
-    <title>Registrar Cliente</title>
+    <meta name="layout" content="main" >
+    <title>Registrar Pagador</title>
 </head>
     <body>
         <g:message code="${flash.message}"/>
-        <form action="${createLink(controller: "customer", action: "save" )}">
+        <form action="${createLink(controller: "payer", action: "save")}" method="post">
+            <label for="name">Customer Id</label>
+            <input type="number"  name="customerId" id="customerId" value="1">
+            <br>
             <label for="name">Nome</label>
-            <input type="text" name="name" id="name" placeholder="Digite seu nome" value="${name}">
+            <input type="text"  name="name" id="name" placeholder="Digite seu nome" value="${name}">
             <br>
             <label for="email">E-mail</label>
             <input type="email" name="email" id="email" placeholder="Digite seu e-mail" value="${email}">
             <br>
             <label for="cpfCnpj">CPF ou CNPJ</label>
-            <input type="text" name="cpfCnpj" id="cpfCnpj" placeholder="Digite o CPF ou CNPJ" value="${cpfCnpj}">
+            <input type="text"  name="cpfCnpj" id="cpfCnpj" placeholder="Digite o CPF ou CNPJ" value="${cpfCnpj}">
             <br>
             <label for="phone">Telefone</label>
             <input type="tel" name="phone" id="phone" placeholder="Digite o número de telefone/celular" value="${phone}">

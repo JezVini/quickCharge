@@ -1,10 +1,10 @@
-package com.quickcharge.app.customer
+package com.quickcharge.app.payer
 
 import grails.validation.ValidationException
 
-class CustomerController {
+class PayerController {
 
-    def customerService
+    PayerService payerService
 
     def create() {
         return params
@@ -12,13 +12,13 @@ class CustomerController {
 
     def save() {
         try {
-            customerService.save(params)
-            flash.message = "Conta criada com sucesso"
+            payerService.save(params)
+            flash.message = "Pagador criado com sucesso"
         } catch (ValidationException validationException) {
             flash.message = validationException.errors.allErrors.first().defaultMessage
         } catch (Exception exception) {
-            flash.message = "Ocorreu um erro ao criar conta, contate o desenvolvimento"
-            log.info("CustomerController.save >> Erro ao salvar conta com os parâmetros: [${params}]")
+            flash.message = "Ocorreu um erro ao criar pagador, contate o desenvolvimento"
+            log.info("PayerController.save >> Erro ao salvar pagador: ${params}")
         } finally {
             redirect([
                 action: "create",
