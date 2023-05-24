@@ -33,8 +33,7 @@ class PayerService {
             "postalCode"
         ] = params
 
-        payer.save(failOnError: true)
-        return payer
+        return payer.save(failOnError: true)
     }
 
     public Payer validateSave(Map params) {
