@@ -9,6 +9,7 @@
     <form action="${createLink(controller: "customer", action: "update" )}" method="post">
         <input type="hidden" name="id" value="${customer.id}">
         <label for="name">Nome</label>
+
         <input type="text" name="name" id="name" placeholder="Digite seu nome" value="${customer.name}">
         <br>
 
