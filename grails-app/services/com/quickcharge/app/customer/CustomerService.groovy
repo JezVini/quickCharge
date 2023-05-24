@@ -6,18 +6,14 @@ import grails.validation.ValidationException
 @Transactional
 class CustomerService {
 
-    public Customer save(Map params) {
-        Customer customer;
-        if (params.id) {
-            customer = validateSave(params, Customer.get(params.long("id")))
-        } else {
-            customer = validateSave(params, new Customer())
+    public Customer saveOrUpdate(Map params) {
+        Customer validatedCustomer = validateSave(params)
 
-        }
-        if (customer.hasErrors()) {
-            throw new ValidationException("Erro ao salvar cliente", customer.errors)
+        if (validatedCustomer.hasErrors()) {
+            throw new ValidationException("Erro ao salvar cliente", validatedCustomer.errors)
         }
 
+        Customer customer = (!params.id) ? new Customer() : Customer.get(params.long("id"))
         customer.properties[
             "name",
             "email",
