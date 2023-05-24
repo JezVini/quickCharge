@@ -16,8 +16,7 @@
                 <th>Bairro</th>
                 <th>Número</th>
             </tr>
-
-
+            
             <g:if test="${payers}">
                 <g:each in="${payers}" var="payer" >
                     <tr id="${payer.id}">
@@ -36,7 +35,10 @@
             <g:else>
                 <td>Nenhum pagador encontrado...</td>
             </g:else>
+            
         </table>
+    
         <button>Novo pagador</button>
+    
     </body>
 </html>
