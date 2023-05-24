@@ -16,11 +16,9 @@ class PayerController {
             flash.message = "Pagador criado com sucesso"
         } catch (ValidationException validationException) {
             flash.message = validationException.errors.allErrors.first().defaultMessage
-            return
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao criar pagador, contate o desenvolvimento"
             log.info("PayerController.save >> Erro ao salvar pagador: ${params}")
-            return
         } finally {
             redirect([
                 action: "create",
