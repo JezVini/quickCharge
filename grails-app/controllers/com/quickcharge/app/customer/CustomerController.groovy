@@ -20,12 +20,12 @@ class CustomerController {
     def save() {
         try {
             customerService.saveOrUpdate(params)
-            flash.message = "Registro criado com sucesso"
+            flash.message = "Conta criada com sucesso"
         } catch (ValidationException validationException) {
             flash.message = validationException.errors.allErrors.first().defaultMessage
         } catch (Exception exception) {
-            flash.message = "Ocorreu um erro, contate o desenvolvimento"
-            log.info("CustomerController.save >> Erro ao salvar id ${params}")
+            flash.message = "Ocorreu um erro ao criar conta, contate o desenvolvimento"
+            log.info("CustomerController.save >> Erro ao salvar conta com os parâmetros: [${params}]")
         } finally {
             redirect([
                 action: "create",

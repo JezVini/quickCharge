@@ -10,7 +10,7 @@ class CustomerService {
         Customer validatedCustomer = validateSave(params)
 
         if (validatedCustomer.hasErrors()) {
-            throw new ValidationException("Erro ao salvar cliente", validatedCustomer.errors)
+            throw new ValidationException("Erro ao salvar conta", validatedCustomer.errors)
         }
 
         Customer customer = (!params.id) ? new Customer() : Customer.get(params.long("id"))
