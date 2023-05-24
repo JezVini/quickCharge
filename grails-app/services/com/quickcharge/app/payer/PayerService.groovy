@@ -14,7 +14,13 @@ class PayerService {
             throw new ValidationException("Erro ao salvar pagador", payer.errors)
         }
 
-        payer.customer = Customer.get(params.customerId)
+        Customer customer = Customer.get(params.customerId)
+        if (!customer) {
+            payer.errors.reject("", null, "Cliente inexistente")
+            throw new ValidationException("Erro ao salvar pagador", payer.errors)
+        }
+
+        payer.customer = customer
         payer.properties[
             "name",
             "email",
