@@ -7,12 +7,13 @@ import grails.validation.ValidationException
 class CustomerService {
 
     public Customer save(Map params) {
-        Customer customer = validateSave(params)
+        Customer validatedCustomer = validateSave(params)
 
-        if (customer.hasErrors()) {
-            throw new ValidationException("Erro ao salvar cliente", customer.errors)
+        if (validatedCustomer.hasErrors()) {
+            throw new ValidationException("Erro ao salvar conta", validatedCustomer.errors)
         }
 
+        Customer customer = new Customer()
         customer.properties[
             "name",
             "email",
