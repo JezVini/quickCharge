@@ -11,15 +11,10 @@ class PayerService {
         Payer validatedPayer = validateSave(params)
 
         if (validatedPayer.hasErrors()) {
-            throw new ValidationException("Erro ao salvar pagador", payer.errors)
+            throw new ValidationException("Erro ao salvar pagador", validatedPayer.errors)
         }
 
         Customer customer = Customer.get(params.customerId)
-        if (!customer) {
-            payer.errors.reject("", null, "Cliente inexistente")
-            throw new ValidationException("Erro ao salvar pagador", payer.errors)
-        }
-        
         Payer payer = (!params.id) 
             ? new Payer() 
             : Payer.findWhere(id: params.id, deleted: false, customerId: params.customerId)
@@ -42,7 +37,11 @@ class PayerService {
 
     public Payer validateSave(Map params) {
         Payer validatedPayer = new Payer()
-
+        
+        if (!params.customerId || !(Customer.get(params.customerId))) {
+            validatedPayer.errors.reject("", null, "Cliente inexistente")
+        }
+        
         if (!params.name) {
             validatedPayer.errors.reject("", null, "O campo nome é obrigatório")
         }
