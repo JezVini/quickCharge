@@ -6,19 +6,14 @@ import grails.validation.ValidationException
 @Transactional
 class CustomerService {
 
-    public Customer save(Map params) {
-        Customer customer;
-        if (params.id) {
-            customer = validateCustomer(params, Customer.get(params.long("id")))
-        } else {
-            customer = validateCustomer(params, new Customer())
+    public Customer saveOrUpdate(Map params) {
+        Customer validatedCustomer = validateSave(params)
 
+        if (validatedCustomer.hasErrors()) {
+            throw new ValidationException("Erro ao salvar cliente", validatedCustomer.errors)
         }
 
-        if (customer.hasErrors()) {
-            throw new ValidationException("Erro ao salvar cliente", customer.errors)
-        }
-
+        Customer customer = (!params.id) ? new Customer() : Customer.get(params.long("id"))
         customer.properties[
             "name",
             "email",
@@ -31,12 +26,12 @@ class CustomerService {
             "postalCode"
         ] = params
 
-        customer.save(failOnError: true)
-
-        return customer
+        return customer.save(failOnError: true)
     }
 
-    private Customer validateCustomer(Map params, Customer validatedCustomer) {
+    private Customer validateSave(Map params) {
+        Customer validatedCustomer = new Customer()
+
         if (!params.name) {
             validatedCustomer.errors.reject("", null, "Nome não preenchido")
         }
