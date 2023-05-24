@@ -13,7 +13,9 @@ class CustomerService {
             throw new ValidationException("Erro ao salvar conta", validatedCustomer.errors)
         }
 
-        Customer customer = (!params.id) ? new Customer() : Customer.get(params.long("id"))
+        Long customerId = params.long("id")
+        Customer customer = customerId ? Customer.get(params.long("id")) : new Customer()
+
         customer.properties[
             "name",
             "email",

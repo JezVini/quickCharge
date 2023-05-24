@@ -12,9 +12,7 @@ class CustomerController {
 
     def edit() {
         Customer customer = Customer.get(params.long("id"))
-        return [
-            customer: customer
-        ]
+        return [customer: customer]
     }
 
     def save() {
@@ -37,12 +35,12 @@ class CustomerController {
     def update() {
         try {
             customerService.saveOrUpdate(params)
-            flash.message = "Cadastro editado com sucesso"
+            flash.message = "Conta alterada com sucesso"
         } catch (ValidationException validationException) {
             flash.message = validationException.errors.allErrors.first().defaultMessage
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro, contate o desenvolvimento"
-            log.info("CustomerController.save >> Erro ao editar id ${params.id}")
+            log.info("CustomerController.save >> Erro ao alterar conta com os parâmetros: [${params}]")
         } finally {
             redirect([
                 action: "edit",
