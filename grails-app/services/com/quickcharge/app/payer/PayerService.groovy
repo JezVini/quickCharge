@@ -7,10 +7,10 @@ import com.quickcharge.app.customer.Customer
 @Transactional
 class PayerService {
 
-    public Payer save(Map params) {
-        Payer payer = validateSave(params)
+    public Payer saveOrUpdate(Map params) {
+        Payer validatedPayer = validateSave(params)
 
-        if (payer.hasErrors()) {
+        if (validatedPayer.hasErrors()) {
             throw new ValidationException("Erro ao salvar pagador", payer.errors)
         }
 
@@ -19,6 +19,10 @@ class PayerService {
             payer.errors.reject("", null, "Cliente inexistente")
             throw new ValidationException("Erro ao salvar pagador", payer.errors)
         }
+        
+        Payer payer = (!params.id) 
+            ? new Payer() 
+            : Payer.findWhere(id: params.id, deleted: false, customerId: params.customerId)
 
         payer.customer = customer
         payer.properties[

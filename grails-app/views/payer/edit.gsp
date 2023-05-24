@@ -6,7 +6,7 @@
 
 <body>
     <g:message code="${flash.message}"/>
-    <form action="${createLink(controller: "payer", action: "save" )}" method="post">
+    <form action="${createLink(controller: "payer", action: "update" )}" method="post">
         <input type="hidden" name="id" value="${payer.id}">
         <input type="hidden" name="customerId" value="${payer.customerId}">
         <label for="name">Nome</label>
