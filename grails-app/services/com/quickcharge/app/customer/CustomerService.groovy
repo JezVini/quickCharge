@@ -9,12 +9,11 @@ class CustomerService {
     public Customer save(Map params) {
         Customer customer;
         if (params.id) {
-            customer = validateCustomer(params, Customer.get(params.long("id")))
+            customer = validateSave(params, Customer.get(params.long("id")))
         } else {
-            customer = validateCustomer(params, new Customer())
+            customer = validateSave(params, new Customer())
 
         }
-
         if (customer.hasErrors()) {
             throw new ValidationException("Erro ao salvar cliente", customer.errors)
         }
@@ -31,12 +30,12 @@ class CustomerService {
             "postalCode"
         ] = params
 
-        customer.save(failOnError: true)
-
-        return customer
+        return customer.save(failOnError: true)
     }
 
-    private Customer validateCustomer(Map params, Customer validatedCustomer) {
+    private Customer validateSave(Map params) {
+        Customer validatedCustomer = new Customer()
+
         if (!params.name) {
             validatedCustomer.errors.reject("", null, "Nome não preenchido")
         }

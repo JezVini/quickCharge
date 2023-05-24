@@ -25,6 +25,7 @@ class CustomerController {
             flash.message = validationException.errors.allErrors.first().defaultMessage
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro, contate o desenvolvimento"
+            log.info("CustomerController.save >> Erro ao salvar id ${params}")
         } finally {
             redirect([
                 action: (!params.id) ? "create" : "edit",
