@@ -7,6 +7,14 @@ import com.quickcharge.app.customer.Customer
 @Transactional
 class PayerService {
 
+    public Payer get(Long id, Long customerId) {
+        return Payer.findWhere(
+            id: id,
+            customer: Customer.get(customerId),
+            deleted: false
+        )
+    }
+    
     public Payer saveOrUpdate(Map params) {
         Payer validatedPayer = validateSave(params)
 
