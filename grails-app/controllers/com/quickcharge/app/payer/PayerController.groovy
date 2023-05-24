@@ -7,7 +7,7 @@ class PayerController {
     PayerService payerService
 
     def create() {
-        return [:]
+        return params
     }
 
     def save() {
@@ -22,7 +22,10 @@ class PayerController {
             log.info("PayerController.save >> Erro ao salvar pagador: ${params}")
             return
         } finally {
-            redirect([action: "create"])
+            redirect([
+                action: "create",
+                params: params
+            ])
         }
     }
 }
