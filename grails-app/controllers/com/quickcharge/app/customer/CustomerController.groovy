@@ -12,20 +12,18 @@ class CustomerController {
 
     def edit() {
         Customer customer = Customer.get(params.long("id"))
-        return [
-            customer: customer
-        ]
+        return [customer: customer]
     }
 
     def save() {
         try {
             customerService.saveOrUpdate(params)
-            flash.message = "Registro criado com sucesso"
+            flash.message = "Conta criada com sucesso"
         } catch (ValidationException validationException) {
             flash.message = validationException.errors.allErrors.first().defaultMessage
         } catch (Exception exception) {
-            flash.message = "Ocorreu um erro, contate o desenvolvimento"
-            log.info("CustomerController.save >> Erro ao salvar id ${params}")
+            flash.message = "Ocorreu um erro ao criar conta, contate o desenvolvimento"
+            log.info("CustomerController.save >> Erro ao salvar conta com os parâmetros: [${params}]")
         } finally {
             redirect([
                 action: "create",
@@ -37,12 +35,12 @@ class CustomerController {
     def update() {
         try {
             customerService.saveOrUpdate(params)
-            flash.message = "Cadastro editado com sucesso"
+            flash.message = "Conta alterada com sucesso"
         } catch (ValidationException validationException) {
             flash.message = validationException.errors.allErrors.first().defaultMessage
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro, contate o desenvolvimento"
-            log.info("CustomerController.save >> Erro ao editar id ${params.id}")
+            log.info("CustomerController.save >> Erro ao alterar conta com os parâmetros: [${params}]")
         } finally {
             redirect([
                 action: "edit",
