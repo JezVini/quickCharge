@@ -3,16 +3,26 @@ package com.quickcharge.app.payer
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import com.quickcharge.app.customer.Customer
+import com.quickcharge.app.customer.CustomerService
 
 @Transactional
 class PayerService {
 
-    public Payer get(Long id, Long customerId) {
-        return Payer.findWhere(
+    CustomerService customerService
+    
+    public Payer returnPayerIfExistsWithCustomerId(Long id, Long customerId) {
+        Customer customer = customerService.returnCustomerIfExists(customerId)
+        Payer payer = Payer.query(
             id: id,
-            customer: Customer.get(customerId),
-            deleted: false
-        )
+            customer: customer,
+            deletedOnly: false
+        ).get()
+        
+        if (payer) return payer
+
+        Payer payerError = new Payer()
+        payerError.errors.reject("", null, "Pagador inexistente")
+        throw new ValidationException("Erro ao buscar pagador", payerError.errors)
     }
 
     public Payer saveOrUpdate(Map params) {
