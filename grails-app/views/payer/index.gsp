@@ -1,9 +1,13 @@
 <html>
 <head>
     <meta name="layout" content="main" >
-    <title>Registrar Pagador</title>
+    <title>Todos Pagadores</title>
 </head>
     <body>
+    
+        <h1>Mostrando todos pagadores</h1>
+        <button> + Novo pagador</button>
+    
         <table>
             <tr>
                 <th>Nome</th>
@@ -15,6 +19,7 @@
                 <th>Cidade</th>
                 <th>Bairro</th>
                 <th>Número</th>
+                <th></th>
             </tr>
             
             <g:if test="${payers}">
@@ -29,16 +34,18 @@
                         <td>${payer.city}</td>
                         <td>${payer.district}</td>
                         <td>${payer.number}</td>
+                        <td>
+                            <button>Editar</button>
+                            <button>Desativar</button>
+                        </td>
                     </tr>
                 </g:each>
             </g:if>
             <g:else>
-                <td>Nenhum pagador encontrado...</td>
+                <td><g:message code="${flash.message}"/></td>
             </g:else>
             
         </table>
-    
-        <button>Novo pagador</button>
     
     </body>
 </html>

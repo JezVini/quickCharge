@@ -19,8 +19,17 @@ class PayerController {
     }
     
     def index () {
-        List<Payer> payerList = payerService.getAllByCustomerId(params.long("customerId"))
-        return [payers: payerList]
+        List<Payer> payerList
+        try {
+            payerList = payerService.getAllByCustomerId(params)
+        } catch (ValidationException validationException) {
+            flash.message = validationException.errors.allErrors.first().defaultMessage
+        } catch (Exception exception) {
+            flash.message = "Ocorreu um erro ao procurar pagadores, contate o desenvolvimento"
+            log.info("PayerController.index >> Erro ao procurar pagadores com parâmetros: [${params}]")
+        } finally {
+            return [payers: payerList]
+        }
     }
     
     def save() {
