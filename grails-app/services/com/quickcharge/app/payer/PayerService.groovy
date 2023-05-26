@@ -9,24 +9,6 @@ import com.quickcharge.app.customer.CustomerService
 class PayerService {
 
     CustomerService customerService
-
-    public List<Payer> getAllByCustomerId(Map params) {
-        Long customerId = params.long("customerId")
-        Customer customer = Customer.get(customerId)
-        Payer validatePayer = new Payer()
-    
-        if (!customer) {
-            validatePayer.errors.reject("", null, "Cliente inexistente")
-            throw new ValidationException("Cliente inexistente", validatePayer.errors)
-        }
-        
-        return Payer.findAllWhere(
-            customer: customer,
-            deleted: false
-        )
-    }
-    
-    
     
     public Payer saveOrUpdate(Map params) {
         Payer validatedPayer = validateSave(params)

@@ -37,16 +37,19 @@ class PayerController {
     }
     
     def index () {
-        List<Payer> payerList
         try {
-            payerList = payerService.getAllByCustomerId(params)
-        } catch (ValidationException validationException) {
-            flash.message = validationException.errors.allErrors.first().defaultMessage
+            Long customerId = params.long("customerId")
+            
+            if (!Customer.query([id: customerId]).get()) {
+                flash.message = "Cliente inexistente"
+                return [invalidCustomer: true]
+            }
+            
+            return [payers: Payer.query(customerId: customerId).list()]
         } catch (Exception exception) {
-            flash.message = "Ocorreu um erro ao procurar pagadores, contate o desenvolvimento"
-            log.info("PayerController.index >> Erro ao procurar pagadores com parâmetros: [${params}]")
-        } finally {
-            return [payers: payerList]
+            flash.message = "Ocorreu um erro ao buscar pagadores, contate o desenvolvimento"
+            log.info("PayerController.index >> Erro ao consultar pagadores com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            return [:]
         }
     }
     
