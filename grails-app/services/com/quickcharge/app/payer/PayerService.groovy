@@ -3,17 +3,12 @@ package com.quickcharge.app.payer
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import com.quickcharge.app.customer.Customer
+import com.quickcharge.app.customer.CustomerService
 
 @Transactional
 class PayerService {
 
-    public Payer get(Long id, Long customerId) {
-        return Payer.findWhere(
-            id: id,
-            customer: Customer.get(customerId),
-            deleted: false
-        )
-    }
+    CustomerService customerService
 
     public List<Payer> getAllByCustomerId(Map params) {
         Long customerId = params.long("customerId")
@@ -40,9 +35,9 @@ class PayerService {
             throw new ValidationException("Erro ao salvar pagador", validatedPayer.errors)
         }
 
-        Customer customer = Customer.get(params.customerId)
+        Customer customer = Customer.query([id: params.customerId]).get()
         Payer payer = params.id
-            ? get(params.long("id"), params.long("customerId"))
+            ? Payer.query([id: params.id, customerId: params.customerId]).get()
             : new Payer()
 
         payer.customer = customer
@@ -61,7 +56,7 @@ class PayerService {
         return payer.save(failOnError: true)
     }
 
-    public Payer validateSave(Map params) {
+    private Payer validateSave(Map params) {
         Payer validatedPayer = new Payer()
 
         if (!params.customerId || !(Customer.get(params.customerId))) {
