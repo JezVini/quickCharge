@@ -11,21 +11,18 @@ class Payer extends BasePerson {
             if (!search.containsKey("customerId")) {
                 throw new RuntimeException("Payer.query(): o atributo [customerId] é obrigatório para executar a consulta.")
             }
-
-            if (!search.containsKey("id")) {
-                throw new RuntimeException("Payer.query(): o atributo [id] é obrigatório para executar a consulta.")
-            }
-
+            
             if (Boolean.valueOf(search.deletedOnly)) {
                 eq("deleted", true)
             } else if (!Boolean.valueOf(search.includeDeleted)) {
                 eq("deleted", false)
             }
-
-            if (search.containsKey("customerId")) {
-                eq("customer.id", search.customerId)
+            
+            eq("customer.id", Long.valueOf(search.customerId))
+            
+            if (search.containsKey("id")) {
+                eq("id", search.id)
             }
-            eq("id", search.id)
         }
     }
 }
