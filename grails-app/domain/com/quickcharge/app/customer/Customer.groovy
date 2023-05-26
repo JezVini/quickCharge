@@ -10,10 +10,6 @@ class Customer extends BasePerson {
                 throw new RuntimeException("Customer.query(): o atributo [id] é obrigatório para executar a consulta.")
             }
 
-            if (!search.containsKey("deletedOnly") && !search.containsKey("includeDeleted")) {
-                throw new RuntimeException("Customer.query(): os atributos [deletedOnly] ou [includeDeleted] são obrigatórios para executar a consulta.")
-            }
-
             if (Boolean.valueOf(search.deletedOnly)) {
                 eq("deleted", true)
             } else if (!Boolean.valueOf(search.includeDeleted)) {

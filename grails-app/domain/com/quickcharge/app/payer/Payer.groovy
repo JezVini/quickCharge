@@ -8,16 +8,12 @@ class Payer extends BasePerson {
 
     static namedQueries = {
         query { Map search ->
-            if (!search.containsKey("customer")) {
-                throw new RuntimeException("Payer.query(): o atributo [customer] é obrigatório para executar a consulta.")
+            if (!search.containsKey("customerId")) {
+                throw new RuntimeException("Payer.query(): o atributo [customerId] é obrigatório para executar a consulta.")
             }
 
             if (!search.containsKey("id")) {
                 throw new RuntimeException("Payer.query(): o atributo [id] é obrigatório para executar a consulta.")
-            }
-
-            if (!search.containsKey("deletedOnly") && !search.containsKey("includeDeleted")) {
-                throw new RuntimeException("Payer.query(): os atributos [deletedOnly] ou [includeDeleted] são obrigatórios para executar a consulta.")
             }
 
             if (Boolean.valueOf(search.deletedOnly)) {
@@ -26,7 +22,9 @@ class Payer extends BasePerson {
                 eq("deleted", false)
             }
 
-            eq("customer", search.customer)
+            if (search.containsKey("customerId")) {
+                eq("customer.id", search.customerId)
+            }
             eq("id", search.id)
         }
     }
