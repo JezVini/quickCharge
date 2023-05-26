@@ -9,21 +9,6 @@ import com.quickcharge.app.customer.CustomerService
 class PayerService {
 
     CustomerService customerService
-    
-    public Payer returnPayerIfExistsWithCustomerId(Long id, Long customerId) {
-        Customer customer = customerService.returnCustomerIfExists(customerId)
-        Payer payer = Payer.query(
-            id: id,
-            customer: customer,
-            deletedOnly: false
-        ).get()
-        
-        if (payer) return payer
-
-        Payer payerError = new Payer()
-        payerError.errors.reject("", null, "Pagador inexistente")
-        throw new ValidationException("Erro ao buscar pagador", payerError.errors)
-    }
 
     public Payer saveOrUpdate(Map params) {
         Payer validatedPayer = validateSave(params)
@@ -32,9 +17,9 @@ class PayerService {
             throw new ValidationException("Erro ao salvar pagador", validatedPayer.errors)
         }
 
-        Customer customer = Customer.get(params.customerId)
+        Customer customer = Customer.query([id: params.customerId]).get()
         Payer payer = params.id
-            ? get(params.long("id"), params.long("customerId"))
+            ? Payer.query([id: params.id, customerId: params.customerId]).get()
             : new Payer()
 
         payer.customer = customer
@@ -53,7 +38,7 @@ class PayerService {
         return payer.save(failOnError: true)
     }
 
-    public Payer validateSave(Map params) {
+    private Payer validateSave(Map params) {
         Payer validatedPayer = new Payer()
 
         if (!params.customerId || !(Customer.get(params.customerId))) {

@@ -1,5 +1,6 @@
 package com.quickcharge.app.payer
 
+import com.quickcharge.app.customer.Customer
 import grails.validation.ValidationException
 
 class PayerController {
@@ -11,19 +12,28 @@ class PayerController {
     }
 
     def edit() {
+        Long id = params.long("id")
+        Long customerId = params.long("customerId")
+        
         try {
-            Long id = params.long("id")
-            Long customerId = params.long("customerId")
-            Payer payer = payerService.returnPayerIfExistsWithCustomerId(id, customerId)
-            
+            if (!Customer.query([id: customerId]).get()) {
+                flash.message = "Cliente inexistente"
+                return [id: id, customerId: customerId]
+            }
+
+            Payer payer = Payer.query([id: id, customerId: customerId]).get()
+            if (!payer) {
+                flash.message = "Não foi possível buscar os dados do pagador"
+                return [id: id, customerId: customerId]
+            }   
+
             return [id: id, customerId: customerId, payer: payer]
-        } catch (ValidationException validationException) {
-            flash.message = validationException.errors.allErrors.first().defaultMessage
         } catch (Exception exception) {
-            flash.message = "Ocorreu um erro ao consular pagador, contate o desenvolvimento"
-            log.info("PayerController.edit >> Erro ao consultar pagador com os parâmetros: [${params}]")
+            flash.message = "Ocorreu um erro ao buscar dados do pagador, contate o desenvolvimento"
+            log.info("PayerController.edit >> Erro ao consultar pagador com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         }
-        return [:]
+        
+        return [id: id, customerId: id]
     }
 
     def save() {
@@ -34,7 +44,7 @@ class PayerController {
             flash.message = validationException.errors.allErrors.first().defaultMessage
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao criar pagador, contate o desenvolvimento"
-            log.info("PayerController.save >> Erro ao salvar pagador com os parâmetros: [${params}]")
+            log.info("PayerController.save >> Erro ao salvar pagador com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
             redirect([action: "create", params: params])
         }
@@ -48,7 +58,7 @@ class PayerController {
             flash.message = validationException.errors.allErrors.first().defaultMessage
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao alterar pagador, contate o desenvolvimento"
-            log.info("PayerController.update >> Erro ao editar pagador com os parâmetros: [${params}]")
+            log.info("PayerController.update >> Erro ao consultar pagador com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
             redirect([
                 action: "edit",
