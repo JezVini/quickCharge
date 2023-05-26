@@ -1,6 +1,4 @@
-package utils.baseperson
-
-import utils.Utils
+package utils
 
 class CpfCnpjUtils {
 
