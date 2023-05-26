@@ -30,16 +30,6 @@ class CustomerService {
 
         return customer.save(failOnError: true)
     }
-
-    public Customer returnCustomerIfExists(Long customerId) {
-        Customer customer = Customer.query([id: customerId, deletedOnly: false]).get()
-
-        if (customer) return customer
-
-        Customer customerError = new Customer()
-        customerError.errors.reject("", null, "Cliente inexistente")
-        throw new ValidationException("Erro ao buscar cliente", customerError.errors)
-    }
     
     private Customer validateSave(Map params) {
         Customer validatedCustomer = new Customer()
