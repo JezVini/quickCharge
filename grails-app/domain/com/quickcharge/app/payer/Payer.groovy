@@ -21,7 +21,7 @@ class Payer extends BasePerson {
             eq("customer.id", Long.valueOf(search.customerId))
             
             if (search.containsKey("id")) {
-                eq("id", search.id)
+                eq("id", Long.valueOf(search.id))
             }
         }
     }
