@@ -33,9 +33,19 @@
             <label for="district">Bairro</label>
             <input type="text" name="district" id="district" placeholder="Digite o distrito" value="${district}">
             <br>
+        
+            <label for="street">Rua</label>
+            <input type="text" name="street" id="street" placeholder="Digite a rua" value="${street}">
+            <br>
+
             <label for="number">Número</label>
             <input type="text" name="number" id="number" placeholder="Digite o número" value="${number}">
             <br>
+        
+            <label for="addressComplement">Complemento</label>
+            <input type="text" name="addressComplement" id="addressComplement" placeholder="Digite o complemento" value="${addressComplement}">
+            <br>
+        
             <button type="submit">Criar</button>
         </form>
     </body>

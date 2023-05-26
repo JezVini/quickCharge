@@ -41,8 +41,16 @@
         <input type="text" name="district" id="district" placeholder="Digite o distrito" value="${customer.district}">
         <br>
 
+        <label for="street">Rua</label>
+        <input type="text" name="street" id="street" placeholder="Digite a rua" value="${customer.street}">
+        <br>
+    
         <label for="number">Número</label>
         <input type="text" name="number" id="number" placeholder="Digite o número" value="${customer.number}">
+        <br>
+
+        <label for="addressComplement">Complemento</label>
+        <input type="text" name="addressComplement" id="addressComplement" placeholder="Digite o complemento" value="${customer.addressComplement}">
         <br>
 
         <button type="submit">Salvar</button>

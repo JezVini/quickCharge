@@ -30,7 +30,9 @@ class PayerService {
             "city",
             "district",
             "number",
-            "postalCode"
+            "postalCode",
+            "street",
+            "addressComplement"
         ] = params
 
         return payer.save(failOnError: true)
@@ -77,6 +79,10 @@ class PayerService {
 
         if (!params.postalCode) {
             validatedPayer.errors.reject("", null, "O campo CEP é obrigatório")
+        }
+
+        if (!params.street) {
+            validatedPayer.errors.reject("", null, "Rua não preenchida")
         }
 
         return validatedPayer

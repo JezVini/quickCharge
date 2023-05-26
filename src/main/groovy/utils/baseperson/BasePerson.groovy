@@ -15,6 +15,8 @@ abstract class BasePerson extends BaseEntity {
     String district
     String number
     String postalCode
+    String street
+    String addressComplement
 
     static constraints = {
         name blank: false
@@ -26,5 +28,7 @@ abstract class BasePerson extends BaseEntity {
         district blank: false
         number blank: false
         postalCode blank: false, size: 8..8
+        street blank: false
+        addressComplement blank: false, nullable: true
     }
 }
