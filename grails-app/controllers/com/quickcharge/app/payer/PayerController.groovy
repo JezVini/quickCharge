@@ -2,6 +2,7 @@ package com.quickcharge.app.payer
 
 import com.quickcharge.app.customer.Customer
 import grails.validation.ValidationException
+import utils.message.MessageType
 
 class PayerController {
 
@@ -39,10 +40,13 @@ class PayerController {
         try {
             payerService.saveOrUpdate(params)
             flash.message = "Pagador criado com sucesso"
+            flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
             flash.message = validationException.errors.allErrors.first().defaultMessage
+            flash.type = MessageType.WARNING
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao criar pagador, contate o desenvolvimento"
+            flash.type = MessageType.ERROR
             log.info("PayerController.save >> Erro ao salvar pagador com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
             redirect([action: "create", params: params])
