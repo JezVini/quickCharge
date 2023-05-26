@@ -2,6 +2,7 @@ package com.quickcharge.app.customer
 
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
+import utils.baseperson.CpfCnpjUtils
 
 @Transactional
 class CustomerService {
@@ -68,6 +69,16 @@ class CustomerService {
 
         if (!params.postalCode) {
             validatedCustomer.errors.reject("", null, "CEP não preenchido")
+        }
+
+        if (!CpfCnpjUtils.validate(params.cpfCnpj)) {
+            if (CpfCnpjUtils.isCpf(params.cpfCnpj)) {
+                validatedCustomer.errors.reject("", null, "Número de CPF não é válido")
+            } else if (CpfCnpjUtils.isCnpj(params.cpfCnpj)) {
+                validatedCustomer.errors.reject("", null, "Número de CNPJ não é válido")
+            } else {
+                validatedCustomer.errors.reject("", null, "Documento preenchido incorretamente")
+            }
         }
 
         return validatedCustomer
