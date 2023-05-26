@@ -8,8 +8,6 @@ import com.quickcharge.app.customer.CustomerService
 @Transactional
 class PayerService {
 
-    CustomerService customerService
-
     public Payer saveOrUpdate(Map params) {
         Payer validatedPayer = validateSave(params)
 
