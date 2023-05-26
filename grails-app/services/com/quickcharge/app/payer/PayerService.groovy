@@ -4,22 +4,25 @@ import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import com.quickcharge.app.customer.Customer
 import utils.baseperson.CpfCnpjUtils
+import com.quickcharge.app.customer.CustomerService
 
 @Transactional
 class PayerService {
 
-    public Payer save(Map params) {
+    public Payer saveOrUpdate(Map params) {
         Payer validatedPayer = validateSave(params)
 
         if (validatedPayer.hasErrors()) {
             throw new ValidationException("Erro ao salvar pagador", validatedPayer.errors)
         }
-        
-        Customer customer = Customer.get(params.customerId)
-        Payer payer = new Payer()
-        
+
+        Customer customer = Customer.query([id: params.customerId]).get()
+        Payer payer = params.id
+            ? Payer.query([id: params.id, customerId: params.customerId]).get()
+            : new Payer()
+
         payer.customer = customer
-        payer.properties [
+        payer.properties[
             "name",
             "email",
             "cpfCnpj",
@@ -34,13 +37,13 @@ class PayerService {
         return payer.save(failOnError: true)
     }
 
-    public Payer validateSave(Map params) {
+    private Payer validateSave(Map params) {
         Payer validatedPayer = new Payer()
-        
+
         if (!params.customerId || !(Customer.get(params.customerId))) {
             validatedPayer.errors.reject("", null, "Cliente inexistente")
         }
-        
+
         if (!params.name) {
             validatedPayer.errors.reject("", null, "O campo nome é obrigatório")
         }
