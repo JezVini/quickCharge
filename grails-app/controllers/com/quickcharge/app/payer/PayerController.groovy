@@ -12,28 +12,27 @@ class PayerController {
     }
     
     def edit() {
-        Long id = params.long("id")
-        Long customerId = params.long("customerId")
-        
         try {
+            Long id = params.long("id")
+            Long customerId = params.long("customerId")
+            Map parsedParams = [id: id, customerId: customerId]
+            
             if (!Customer.query([id: customerId]).get()) {
                 flash.message = "Cliente inexistente"
-                return [id: id, customerId: customerId]
+                return parsedParams
             }
 
             Payer payer = Payer.query([id: id, customerId: customerId]).get()
             if (!payer) {
                 flash.message = "Não foi possível buscar os dados do pagador"
-                return [id: id, customerId: customerId]
+                return parsedParams
             }   
 
-            return [id: id, customerId: customerId, payer: payer]
+            return parsedParams + [payer: payer]
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao buscar dados do pagador, contate o desenvolvimento"
             log.info("PayerController.edit >> Erro ao consultar pagador com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         }
-        
-        return [id: id, customerId: id]
     }
     
     def index () {
