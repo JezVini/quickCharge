@@ -58,7 +58,7 @@ class PayerController {
             flash.message = validationException.errors.allErrors.first().defaultMessage
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao alterar pagador, contate o desenvolvimento"
-            log.info("PayerController.update >> Erro ao consultar pagador com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            log.info("PayerController.update >> Erro ao alterar pagador com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
             redirect([
                 action: "edit",
