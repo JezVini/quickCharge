@@ -30,7 +30,7 @@ class CustomerService {
 
         return customer.save(failOnError: true)
     }
-
+    
     private Customer validateSave(Map params) {
         Customer validatedCustomer = new Customer()
 
