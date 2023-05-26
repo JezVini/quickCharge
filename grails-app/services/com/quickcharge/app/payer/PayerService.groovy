@@ -1,7 +1,11 @@
 package com.quickcharge.app.payer
 
+import com.quickcharge.app.customer.Customer
+import com.quickcharge.app.customer.CustomerService
+
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
+
 import com.quickcharge.app.customer.Customer
 import utils.CpfCnpjUtils
 
