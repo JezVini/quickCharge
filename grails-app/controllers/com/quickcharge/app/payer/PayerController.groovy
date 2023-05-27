@@ -20,18 +20,21 @@ class PayerController {
             
             if (!Customer.query([id: customerId]).get()) {
                 flash.message = "Cliente inexistente"
+                flash.type = MessageType.WARNING
                 return parsedParams
             }
 
             Payer payer = Payer.query([id: id, customerId: customerId]).get()
             if (!payer) {
                 flash.message = "Não foi possível buscar os dados do pagador"
+                flash.type = MessageType.WARNING
                 return parsedParams
             }   
 
             return parsedParams + [payer: payer]
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao buscar dados do pagador, contate o desenvolvimento"
+            flash.type = MessageType.ERROR
             log.info("PayerController.edit >> Erro ao consultar pagador com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         }
     }
@@ -42,12 +45,14 @@ class PayerController {
             
             if (!Customer.query([id: customerId]).get()) {
                 flash.message = "Cliente inexistente"
+                flash.type = MessageType.WARNING
                 return [invalidCustomer: true]
             }
             
             return [customerId: customerId, payers: Payer.query(customerId: customerId, includeDeleted: false).list()]
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao buscar pagadores, contate o desenvolvimento"
+            flash.type = MessageType.ERROR
             log.info("PayerController.index >> Erro ao consultar pagadores com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         }
     }
@@ -56,13 +61,15 @@ class PayerController {
         try {
             payerService.delete(params)
             flash.message = "Pagador desativado com sucesso"
+            flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
             flash.message = validationException.errors.allErrors.first().defaultMessage
+            flash.type = MessageType.WARNING
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao desativar pagador, contate o desenvolvimento"
+            flash.type = MessageType.ERROR
             log.info("PayerController.delete >> Erro ao deletar pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
-            println("delete: [${params}]")
             redirect([action: "index", params: [customerId: params.customerId]])
         }
     }
@@ -77,6 +84,7 @@ class PayerController {
             flash.type = MessageType.WARNING
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao criar pagador, contate o desenvolvimento"
+            flash.type = MessageType.ERROR
             log.info("PayerController.save >> Erro ao salvar pagador com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
             redirect([action: "create", params: params])
@@ -87,10 +95,13 @@ class PayerController {
         try {
             payerService.saveOrUpdate(params)
             flash.message = "Pagador alterado com sucesso"
+            flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
             flash.message = validationException.errors.allErrors.first().defaultMessage
+            flash.type = MessageType.WARNING
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao alterar pagador, contate o desenvolvimento"
+            flash.type = MessageType.ERROR
             log.info("PayerController.update >> Erro ao alterar pagador com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
             redirect([
