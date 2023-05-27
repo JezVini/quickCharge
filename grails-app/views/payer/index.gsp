@@ -8,7 +8,7 @@
         <h1>Mostrando todos pagadores</h1>
         <p><g:message code="${flash.message}"/></p>
     
-        <g:if test="${!Boolean.valueOf(invalidCustomer)}">
+        <g:if test="${!invalidCustomer}">
             <g:link action="create">
                 <button>Novo pagador</button>
             </g:link>
@@ -17,14 +17,9 @@
                 <tr>
                     <th>Nome</th>
                     <th>E-mail</th>
-                    <th>CNPJ</th>
+                    <th>CPF/CNPJ</th>
                     <th>Telefone</th>
-                    <th>CEP</th>
-                    <th>Estado</th>
-                    <th>Cidade</th>
-                    <th>Bairro</th>
-                    <th>Número</th>
-                    <th></th>
+                    <th>Ações</th>
                 </tr>
                 <g:if test="${payers}">
                     <g:each in="${payers}" var="payer" >
@@ -33,11 +28,6 @@
                             <td>${payer.email}</td>
                             <td>${payer.cpfCnpj}</td>
                             <td>${payer.phone}</td>
-                            <td>${payer.postalCode}</td>
-                            <td>${payer.state}</td>
-                            <td>${payer.city}</td>
-                            <td>${payer.district}</td>
-                            <td>${payer.number}</td>
                             <td>
                                 <g:link action="edit" params="${[id: payer.id, customerId: customerId]}">
                                     <button>Editar</button>
