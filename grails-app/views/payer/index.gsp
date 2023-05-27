@@ -6,10 +6,13 @@
     <body>
     
         <h1>Mostrando todos pagadores</h1>
+        <p><g:message code="${flash.message}"/></p>
     
         <g:if test="${!Boolean.valueOf(invalidCustomer)}">
-            <button> + Novo pagador</button>
-
+            <g:link action="create">
+                <button>Novo pagador</button>
+            </g:link>
+                
             <table>
                 <tr>
                     <th>Nome</th>
@@ -25,7 +28,7 @@
                 </tr>
                 <g:if test="${payers}">
                     <g:each in="${payers}" var="payer" >
-                        <tr id="${payer.id}">
+                        <tr>
                             <td>${payer.name}</td>
                             <td>${payer.email}</td>
                             <td>${payer.cpfCnpj}</td>
@@ -36,10 +39,16 @@
                             <td>${payer.district}</td>
                             <td>${payer.number}</td>
                             <td>
-                                <button>Editar</button>
-                                <button>Desativar</button>
+                                <g:link action="edit" params="${[id: payer.id, customerId: customerId]}">
+                                    <button>Editar</button>
+                                </g:link>
+                                
+                                <g:link action="delete" params="${[id: payer.id, customerId: customerId]}">
+                                    <button>Desativar</button>
+                                </g:link>
                             </td>
                         </tr>
+
                     </g:each>
                 </g:if>
                 <g:else>
@@ -47,8 +56,5 @@
                 </g:else>
             </table>
         </g:if>
-        <g:else>
-            <g:message code="${flash.message}"/>
-        </g:else>
     </body>
 </html>

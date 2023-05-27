@@ -45,11 +45,25 @@ class PayerController {
                 return [invalidCustomer: true]
             }
             
-            return [payers: Payer.query(customerId: customerId).list()]
+            return [customerId: customerId, payers: Payer.query(customerId: customerId, includeDeleted: false).list()]
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao buscar pagadores, contate o desenvolvimento"
             log.info("PayerController.index >> Erro ao consultar pagadores com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
-            return [:]
+        }
+    }
+    
+    def delete() {
+        try {
+            payerService.delete(params)
+            flash.message = "Pagador desativado com sucesso"
+        } catch (ValidationException validationException) {
+            flash.message = validationException.errors.allErrors.first().defaultMessage
+        } catch (Exception exception) {
+            flash.message = "Ocorreu um erro ao desativar pagador, contate o desenvolvimento"
+            log.info("PayerController.delete >> Erro ao deletar pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+        } finally {
+            println("delete: [${params}]")
+            redirect([action: "index", params: [customerId: params.customerId]])
         }
     }
     

@@ -3,7 +3,6 @@ package com.quickcharge.app.payer
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import com.quickcharge.app.customer.Customer
-import com.quickcharge.app.customer.CustomerService
 
 @Transactional
 class PayerService {
@@ -32,10 +31,32 @@ class PayerService {
             "number",
             "postalCode"
         ] = params
-
+        
         return payer.save(failOnError: true)
     }
 
+    public Payer delete(Map params) {
+        Long id = params.long("id")
+        Long customerId = params.long("customerId")
+        Payer validation = new Payer()
+        
+        Customer customer = Customer.query([id: params.customerId]).get()
+        if (!customer) {
+            validation.errors.reject("", null, "Cliente inexistente")
+            throw new ValidationException("Erro ao desativar pagador", validation.errors)
+        }
+
+        Payer payer = Payer.query([id: params.id, customerId: params.customerId]).get()
+        if (!payer) {
+            validation.errors.reject("", null, "Não foi possível encontrar o pagador")
+            throw new ValidationException("Erro ao desativar pagador", validation.errors)
+        }
+        
+        payer.deleted = true
+        
+        return payer.save(failOnError: true, flush: true)
+    }
+    
     private Payer validateSave(Map params) {
         Payer validatedPayer = new Payer()
 
