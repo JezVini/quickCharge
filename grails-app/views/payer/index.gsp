@@ -8,7 +8,7 @@
         <h1>Mostrando todos pagadores</h1>
         <p><g:message code="${flash.message}"/></p>
     
-        <g:if test="${!invalidCustomer}">
+        <g:if test="${payerList != null}">
             <g:link action="create">
                 <button>Novo pagador</button>
             </g:link>
@@ -21,8 +21,8 @@
                     <th>Telefone</th>
                     <th>Ações</th>
                 </tr>
-                <g:if test="${payers}">
-                    <g:each in="${payers}" var="payer" >
+                <g:if test="${payerList}">
+                    <g:each in="${payerList}" var="payer" >
                         <tr>
                             <td>${payer.name}</td>
                             <td>${payer.email}</td>

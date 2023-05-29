@@ -46,10 +46,10 @@ class PayerController {
             if (!Customer.query([id: customerId]).get()) {
                 flash.message = "Cliente inexistente"
                 flash.type = MessageType.WARNING
-                return [invalidCustomer: true]
+                return
             }
             
-            return [customerId: customerId, payers: Payer.query(customerId: customerId, includeDeleted: false).list()]
+            return [payerList: Payer.query(customerId: customerId).list(), customerId: customerId]
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao buscar pagadores, contate o desenvolvimento"
             flash.type = MessageType.ERROR
