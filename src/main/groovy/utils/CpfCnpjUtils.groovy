@@ -14,9 +14,9 @@ class CpfCnpjUtils {
         if (cpfCnpj == null || (cpfCnpj.length() != CPF_LENGTH && cpfCnpj.length() != CNPJ_LENGTH)) return false
 
         if (isCpf(cpfCnpj))
-            return validaCPF(cpfCnpj)
+            return cpfValidate(cpfCnpj)
         else if (isCnpj(cpfCnpj)) {
-            return validaCNPJ(cpfCnpj)
+            return cnpjValidate(cpfCnpj)
         }
     }
 
@@ -36,46 +36,46 @@ class CpfCnpjUtils {
         return cpfCnpj.length() == CPF_LENGTH
     }
 
-    private static boolean validaCPF(String strCpf) {
-        int digito1Aux = 0, digito2Aux = 0, digitoCPF
-        int digito1 = 0, digito2 = 0, restoDivisao = 0
-        String strDigitoVerificador, strDigitoResultado
+    private static boolean cpfValidate(String cpf) {
+        int auxFirstDigit = 0, auxSecondDigit = 0, cpfDigit
+        int firstDigit = 0, secondDigit = 0, divisionRemainder = 0
+        String checkerDigit, resultDigit
 
-        if (!validateCPFSequence(strCpf)) {
+        if (!cpfSequenceValidate(cpf)) {
             return false
         }
 
-        if (strCpf.substring(0, 1) != "") {
+        if (cpf.substring(0, 1) != "") {
             try {
-                strCpf = strCpf.replace('.',' ')
-                strCpf = strCpf.replace('-',' ')
-                strCpf = strCpf.replaceAll(" ","")
+                cpf = cpf.replace('.',' ')
+                cpf = cpf.replace('-',' ')
+                cpf = cpf.replaceAll(" ","")
 
-                for (int contador = 1; contador < strCpf.length() - 1; contador++) {
-                    digitoCPF = Integer.valueOf(strCpf.substring(contador -1, contador)).intValue()
-                    digito1Aux = digito1Aux + (11 - contador) * digitoCPF
-                    digito2Aux = digito2Aux + (12 - contador) * digitoCPF
+                for (int i = 1; i < cpf.length() - 1; i++) {
+                    cpfDigit = Integer.valueOf(cpf.substring(i -1, i)).intValue()
+                    auxFirstDigit = auxFirstDigit + (11 - i) * cpfDigit
+                    auxSecondDigit = auxSecondDigit + (12 - i) * cpfDigit
                 }
 
-                restoDivisao = (digito1Aux % 11)
-                if (restoDivisao < 2) {
-                    digito1 = 0
+                divisionRemainder = (auxFirstDigit % 11)
+                if (divisionRemainder < 2) {
+                    firstDigit = 0
                 } else {
-                    digito1 = 11 - restoDivisao
+                    firstDigit = 11 - divisionRemainder
                 }
 
-                digito2Aux += 2 * digito1
-                restoDivisao = (digito2Aux % 11)
-                if (restoDivisao < 2) {
-                    digito2 = 0
+                auxSecondDigit += 2 * firstDigit
+                divisionRemainder = (auxSecondDigit % 11)
+                if (divisionRemainder < 2) {
+                    secondDigit = 0
                 } else {
-                    digito2 = 11 - restoDivisao
+                    secondDigit = 11 - divisionRemainder
                 }
 
-                strDigitoVerificador = strCpf.substring(strCpf.length()-2, strCpf.length())
-                strDigitoResultado = String.valueOf(digito1) + String.valueOf(digito2)
+                checkerDigit = cpf.substring(cpf.length()-2, cpf.length())
+                resultDigit = String.valueOf(firstDigit) + String.valueOf(secondDigit)
 
-                return strDigitoVerificador == strDigitoResultado
+                return checkerDigit == resultDigit
 
             } catch (Exception e) {
                 return false
@@ -85,69 +85,69 @@ class CpfCnpjUtils {
         }
     }
 
-    private static boolean validateCPFSequence(String strCpf) {
-        if (strCpf?.trim().isEmpty()) {
+    private static boolean cpfSequenceValidate(String cpf) {
+        if (cpf?.trim().isEmpty()) {
             return false
         }
 
-        if (INVALID_CPF_SEQUENCES.contains(strCpf) ) {
+        if (INVALID_CPF_SEQUENCES.contains(cpf) ) {
             return false
         }
 
         return true
     }
 
-    private static boolean validaCNPJ(String strCNPJ) {
-        int soma = 0, digito
-        char[] caracteresCNPJ
-        String strCNPJ_Calculado
+    private static boolean cnpjValidate(String cnpj) {
+        int total = 0, digit
+        char[] cnpjCharacters
+        String calculatedCNPJ
 
-        if (strCNPJ.startsWith("00000000000000")) return false
+        if (cnpj.startsWith("00000000000000")) return false
 
-        if (strCNPJ.substring(0, 1) != ""){
+        if (cnpj.substring(0, 1) != ""){
             try {
-                strCNPJ = strCNPJ.replace('.',' ')
-                strCNPJ = strCNPJ.replace('/',' ')
-                strCNPJ = strCNPJ.replace('-',' ')
-                strCNPJ = strCNPJ.replaceAll(" ","")
-                strCNPJ_Calculado = strCNPJ.substring(0,12)
+                cnpj = cnpj.replace('.',' ')
+                cnpj = cnpj.replace('/',' ')
+                cnpj = cnpj.replace('-',' ')
+                cnpj = cnpj.replaceAll(" ","")
+                calculatedCNPJ = cnpj.substring(0,12)
 
-                if (strCNPJ.length() != 14) return false
+                if (cnpj.length() != 14) return false
 
-                caracteresCNPJ = strCNPJ.toCharArray()
+                cnpjCharacters = cnpj.toCharArray()
 
                 for (int i = 0; i < 4; i++) {
-                    if ((caracteresCNPJ[i]-48 >= 0) && (caracteresCNPJ[i]-48 <= 9)) {
-                        soma += (caracteresCNPJ[i] - 48 ) * (6 - (i + 1))
+                    if ((cnpjCharacters[i]-48 >= 0) && (cnpjCharacters[i]-48 <= 9)) {
+                        total += (cnpjCharacters[i] - 48 ) * (6 - (i + 1))
                     }
                 }
 
                 for (int i = 0; i < 8; i++) {
-                    if ((caracteresCNPJ[i+4]-48 >= 0) && (caracteresCNPJ[i+4]-48 <= 9)) {
-                        soma += (caracteresCNPJ[i+4] - 48 ) * (10 - (i + 1))
+                    if ((cnpjCharacters[i+4]-48 >= 0) && (cnpjCharacters[i+4]-48 <= 9)) {
+                        total += (cnpjCharacters[i+4] - 48 ) * (10 - (i + 1))
                     }
                 }
 
-                digito = 11 - (soma % 11)
-                strCNPJ_Calculado += ((digito == 10) || (digito == 11)) ? "0" : Integer.toString(digito)
+                digit = 11 - (total % 11)
+                calculatedCNPJ += ((digit == 10) || (digit == 11)) ? "0" : Integer.toString(digit)
 
-                soma = 0
+                total = 0
                 for (int i = 0; i < 5; i++) {
-                    if ((caracteresCNPJ[i]-48 >= 0) && (caracteresCNPJ[i]-48 <= 9)) {
-                        soma += (caracteresCNPJ[i] - 48) * (7 - (i + 1))
+                    if ((cnpjCharacters[i]-48 >= 0) && (cnpjCharacters[i]-48 <= 9)) {
+                        total += (cnpjCharacters[i] - 48) * (7 - (i + 1))
                     }
                 }
 
                 for (int i = 0; i < 8; i++) {
-                    if ((caracteresCNPJ[i+5]-48 >= 0) && (caracteresCNPJ[i+5]-48 <= 9)) {
-                        soma += (caracteresCNPJ[i+5] - 48) * (10 - (i + 1))
+                    if ((cnpjCharacters[i+5]-48 >= 0) && (cnpjCharacters[i+5]-48 <= 9)) {
+                        total += (cnpjCharacters[i+5] - 48) * (10 - (i + 1))
                     }
                 }
 
-                digito = 11 - (soma % 11)
-                strCNPJ_Calculado += ((digito == 10) || (digito == 11)) ? "0" : Integer.toString(digito)
+                digit = 11 - (total % 11)
+                calculatedCNPJ += ((digit == 10) || (digit == 11)) ? "0" : Integer.toString(digit)
 
-                return strCNPJ == strCNPJ_Calculado
+                return cnpj == calculatedCNPJ
             } catch (Exception e) {
                 return false
             }
