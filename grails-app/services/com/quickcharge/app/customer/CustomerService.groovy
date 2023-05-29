@@ -24,9 +24,9 @@ class CustomerService {
             "state",
             "city",
             "district",
-            "number",
+            "addressNumber",
             "postalCode",
-            "street",
+            "address",
             "addressComplement"
         ] = params
         
@@ -52,6 +52,10 @@ class CustomerService {
             validatedCustomer.errors.reject("", null, "Telefone não preenchido")
         }
 
+        if (!params.postalCode) {
+            validatedCustomer.errors.reject("", null, "CEP não preenchido")
+        }
+
         if (!params.state) {
             validatedCustomer.errors.reject("", null, "Estado não preenchido")
         }
@@ -64,18 +68,14 @@ class CustomerService {
             validatedCustomer.errors.reject("", null, "Bairro não preenchido")
         }
 
-        if (!params.number) {
-            validatedCustomer.errors.reject("", null, "Número não preenchido")
-        }
-
-        if (!params.postalCode) {
-            validatedCustomer.errors.reject("", null, "CEP não preenchido")
-        }
-
-        if (!params.street) {
+        if (!params.address) {
             validatedCustomer.errors.reject("", null, "Rua não preenchida")
         }
 
+        if (!params.addressNumber) {
+            validatedCustomer.errors.reject("", null, "Número não preenchido")
+        }
+        
         return validatedCustomer
     }
 }

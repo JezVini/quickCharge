@@ -3,7 +3,6 @@ package com.quickcharge.app.payer
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import com.quickcharge.app.customer.Customer
-import com.quickcharge.app.customer.CustomerService
 
 @Transactional
 class PayerService {
@@ -29,9 +28,9 @@ class PayerService {
             "state",
             "city",
             "district",
-            "number",
+            "addressNumber",
             "postalCode",
-            "street",
+            "address",
             "addressComplement"
         ] = params
 
@@ -61,6 +60,10 @@ class PayerService {
             validatedPayer.errors.reject("", null, "O campo telefone é obrigatório")
         }
 
+        if (!params.postalCode) {
+            validatedPayer.errors.reject("", null, "O campo CEP é obrigatório")
+        }
+
         if (!params.state) {
             validatedPayer.errors.reject("", null, "O campo estado é obrigatório")
         }
@@ -73,18 +76,14 @@ class PayerService {
             validatedPayer.errors.reject("", null, "O campo bairro é obrigatório")
         }
 
-        if (!params.number) {
+        if (!params.address) {
+            validatedPayer.errors.reject("", null, "O campo rua rua é obrigatório")
+        }
+
+        if (!params.addressNumber) {
             validatedPayer.errors.reject("", null, "O campo número é obrigatório")
         }
-
-        if (!params.postalCode) {
-            validatedPayer.errors.reject("", null, "O campo CEP é obrigatório")
-        }
-
-        if (!params.street) {
-            validatedPayer.errors.reject("", null, "Rua não preenchida")
-        }
-
+        
         return validatedPayer
     }
 }

@@ -13,9 +13,9 @@ abstract class BasePerson extends BaseEntity {
     String state
     String city
     String district
-    String number
+    String addressNumber
     String postalCode
-    String street
+    String address
     String addressComplement
 
     static constraints = {
@@ -26,9 +26,9 @@ abstract class BasePerson extends BaseEntity {
         state blank: false, size: 2..2
         city blank: false
         district blank: false
-        number blank: false
+        addressNumber blank: false
         postalCode blank: false, size: 8..8
-        street blank: false
+        address blank: false
         addressComplement blank: false, nullable: true
     }
 }
