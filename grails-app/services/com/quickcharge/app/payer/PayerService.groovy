@@ -71,7 +71,24 @@ class PayerService {
         if (!CpfCnpjUtils.validate(params.cpfCnpj as String)) {
             validatedPayer.errors.reject("", null, "CPF ou CNPJ informado é inválido")
         }
-
+        
+        Integer MIN_PHONE_LENGTH = 10
+        Integer MAX_PHONE_LENGTH = 11
+        Integer phoneLength = params.phone.length()
+        if (phoneLength < MIN_PHONE_LENGTH || phoneLength > MAX_PHONE_LENGTH) {
+            validatedPayer.errors.reject("", null, "Telefone inválido")
+        }
+        
+        Integer POSTAL_CODE_LENGTH = 8
+        if (params.postalCode.length() != POSTAL_CODE_LENGTH) {
+            validatedPayer.errors.reject("", null, "CEP inválido")
+        }
+        
+        Integer STATE_LENGTH = 2
+        if (params.state.length() != STATE_LENGTH) {
+            validatedPayer.errors.reject("", null, "Estado deve ser uma sigla")
+        }
+        
         return validatedPayer
     }
 }
