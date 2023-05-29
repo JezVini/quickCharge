@@ -81,7 +81,7 @@ class PayerService {
         }
 
         if (!CpfCnpjUtils.validate(params.cpfCnpj)) {
-            validatedPayer.errors.reject("", null, "Documento não é válido")
+            validatedPayer.errors.reject("", null, "CPF ou CNPJ informado é inválido")
         }
 
         return validatedPayer
