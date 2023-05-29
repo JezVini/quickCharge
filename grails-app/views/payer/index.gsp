@@ -1,7 +1,7 @@
 <html>
 <head>
     <meta name="layout" content="main" >
-    <title>Todos Pagadores</title>
+    <title>Listagem de pagadores</title>
 </head>
     <body>
     
