@@ -37,44 +37,22 @@ class CustomerService {
     private Customer validateSave(Map params) {
         Customer validatedCustomer = new Customer()
 
-        if (!params.name) {
-            validatedCustomer.errors.reject("", null, "Nome não preenchido")
-        }
+        Map validationFields = [
+            name: "nome",
+            email: "e-mail",
+            cpfCnpj: "CPF ou CNPJ",
+            phone: "telefone",
+            postalCode: "CEP",
+            state: "estado",
+            city: "cidade",
+            district: "bairro",
+            street: "rua",
+            number: "número"
+        ]
 
-        if (!params.email) {
-            validatedCustomer.errors.reject("", null, "E-mail não preenchido")
-        }
-
-        if (!params.cpfCnpj) {
-            validatedCustomer.errors.reject("", null, "CPF ou CNPJ não preenchido")
-        }
-
-        if (!params.phone) {
-            validatedCustomer.errors.reject("", null, "Telefone não preenchido")
-        }
-
-        if (!params.state) {
-            validatedCustomer.errors.reject("", null, "Estado não preenchido")
-        }
-
-        if (!params.city) {
-            validatedCustomer.errors.reject("", null, "Cidade não preenchida")
-        }
-
-        if (!params.district) {
-            validatedCustomer.errors.reject("", null, "Bairro não preenchido")
-        }
-
-        if (!params.number) {
-            validatedCustomer.errors.reject("", null, "Número não preenchido")
-        }
-
-        if (!params.postalCode) {
-            validatedCustomer.errors.reject("", null, "CEP não preenchido")
-        }
-
-        if (!params.street) {
-            validatedCustomer.errors.reject("", null, "Rua não preenchida")
+        validationFields.forEach { fieldKey, fieldName ->
+            if (params[fieldKey]) return
+            validatedCustomer.errors.reject("", null, "O campo ${fieldName} é obrigatório")
         }
 
         if (!CpfCnpjUtils.validate(params.cpfCnpj)) {

@@ -40,51 +40,29 @@ class PayerService {
 
     private Payer validateSave(Map params) {
         Payer validatedPayer = new Payer()
-
+        
+        Map validationFields = [
+            name: "nome",
+            email: "e-mail",
+            cpfCnpj: "CPF ou CNPJ",
+            phone: "telefone",
+            postalCode: "CEP",
+            state: "estado",
+            city: "cidade", 
+            district: "bairro",
+            street: "rua",
+            number: "número"
+        ]
+        
+        validationFields.forEach { fieldKey, fieldName ->
+            if (params[fieldKey]) return 
+            validatedPayer.errors.reject("", null, "O campo ${fieldName} é obrigatório")
+        }
+        
         if (!params.customerId || !(Customer.get(params.customerId))) {
             validatedPayer.errors.reject("", null, "Cliente inexistente")
         }
-
-        if (!params.name) {
-            validatedPayer.errors.reject("", null, "O campo nome é obrigatório")
-        }
-
-        if (!params.email) {
-            validatedPayer.errors.reject("", null, "O campo e-mail é obrigatório")
-        }
-
-        if (!params.cpfCnpj) {
-            validatedPayer.errors.reject("", null, "O campo CPF ou CNPJ é obrigatório")
-        }
-
-        if (!params.phone) {
-            validatedPayer.errors.reject("", null, "O campo telefone é obrigatório")
-        }
-
-        if (!params.state) {
-            validatedPayer.errors.reject("", null, "O campo estado é obrigatório")
-        }
-
-        if (!params.city) {
-            validatedPayer.errors.reject("", null, "O campo cidade é obrigatório")
-        }
-
-        if (!params.district) {
-            validatedPayer.errors.reject("", null, "O campo bairro é obrigatório")
-        }
-
-        if (!params.number) {
-            validatedPayer.errors.reject("", null, "O campo número é obrigatório")
-        }
-
-        if (!params.postalCode) {
-            validatedPayer.errors.reject("", null, "O campo CEP é obrigatório")
-        }
-
-        if (!params.street) {
-            validatedPayer.errors.reject("", null, "Rua não preenchida")
-        }
-
+        
         if (!CpfCnpjUtils.validate(params.cpfCnpj)) {
             validatedPayer.errors.reject("", null, "Documento não é válido")
         }
