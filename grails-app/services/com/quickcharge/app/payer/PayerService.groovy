@@ -3,6 +3,7 @@ package com.quickcharge.app.payer
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import com.quickcharge.app.customer.Customer
+import utils.CpfCnpjUtils
 
 @Transactional
 class PayerService {
@@ -83,7 +84,11 @@ class PayerService {
         if (!params.addressNumber) {
             validatedPayer.errors.reject("", null, "O campo número é obrigatório")
         }
-        
+
+        if (!CpfCnpjUtils.validate(params.cpfCnpj)) {
+            validatedPayer.errors.reject("", null, "CPF ou CNPJ informado é inválido")
+        }
+
         return validatedPayer
     }
 }
