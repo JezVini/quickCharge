@@ -41,7 +41,7 @@ class PayerService {
         Payer validatedPayer = validateDelete(params)
 
         if (validatedPayer.hasErrors()) {
-            throw new ValidationException("Erro ao desativar pagador", validatedPayer.errors)
+            throw new ValidationException("Erro ao remover pagador", validatedPayer.errors)
         }
         
         Payer payer = Payer.query([id: params.id, customerId: params.customerId]).get()

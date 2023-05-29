@@ -34,7 +34,7 @@
                                 </g:link>
                                 
                                 <g:link action="delete" params="${[id: payer.id, customerId: customerId]}">
-                                    <button>Desativar</button>
+                                    <button>Remover</button>
                                 </g:link>
                             </td>
                         </tr>

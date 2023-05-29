@@ -60,15 +60,15 @@ class PayerController {
     def delete() {
         try {
             payerService.delete(params)
-            flash.message = "Pagador desativado com sucesso"
+            flash.message = "Pagador removido com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
             flash.message = validationException.errors.allErrors.first().defaultMessage
             flash.type = MessageType.WARNING
         } catch (Exception exception) {
-            flash.message = "Ocorreu um erro ao desativar pagador, contate o desenvolvimento"
+            flash.message = "Ocorreu um erro ao remover pagador, contate o desenvolvimento"
             flash.type = MessageType.ERROR
-            log.info("PayerController.delete >> Erro ao deletar pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            log.info("PayerController.delete >> Erro ao remover pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
             redirect([action: "index", params: [customerId: params.customerId]])
         }
