@@ -3,6 +3,7 @@ package com.quickcharge.app.payer
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import com.quickcharge.app.customer.Customer
+import org.apache.commons.validator.routines.EmailValidator
 import utils.CpfCnpjUtils
 
 @Transactional
@@ -62,9 +63,13 @@ class PayerService {
         if (!params.customerId || !(Customer.get(params.customerId))) {
             validatedPayer.errors.reject("", null, "Cliente inexistente")
         }
+
+        if (!(new EmailValidator(false).isValid(params.email as String))) {
+            validatedPayer.errors.reject("", null, "Email inválido")
+        }
         
-        if (!CpfCnpjUtils.validate(params.cpfCnpj)) {
-            validatedPayer.errors.reject("", null, "Documento não é válido")
+        if (!CpfCnpjUtils.validate(params.cpfCnpj as String)) {
+            validatedPayer.errors.reject("", null, "CPF ou CNPJ informado é inválido")
         }
 
         return validatedPayer

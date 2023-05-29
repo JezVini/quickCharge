@@ -2,6 +2,7 @@ package com.quickcharge.app.customer
 
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
+import org.apache.commons.validator.routines.EmailValidator
 import utils.CpfCnpjUtils
 
 @Transactional
@@ -55,8 +56,12 @@ class CustomerService {
             validatedCustomer.errors.reject("", null, "O campo ${fieldName} é obrigatório")
         }
 
-        if (!CpfCnpjUtils.validate(params.cpfCnpj)) {
-                validatedCustomer.errors.reject("", null, "CPF ou CNPJ informado é inválido")
+        if (!(new EmailValidator(false).isValid(params.email as String))) {
+            validatedCustomer.errors.reject("", null, "Email inválido")
+        }
+        
+        if (!CpfCnpjUtils.validate(params.cpfCnpj as String)) {
+            validatedCustomer.errors.reject("", null, "CPF ou CNPJ informado é inválido")
         }
 
         return validatedCustomer
