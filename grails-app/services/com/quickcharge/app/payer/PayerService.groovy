@@ -2,7 +2,6 @@ package com.quickcharge.app.payer
 
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
-
 import com.quickcharge.app.customer.Customer
 import utils.CpfCnpjUtils
 
@@ -31,7 +30,9 @@ class PayerService {
             "city",
             "district",
             "number",
-            "postalCode"
+            "postalCode",
+            "street",
+            "addressComplement"
         ] = params
 
         return payer.save(failOnError: true)
@@ -78,6 +79,10 @@ class PayerService {
 
         if (!params.postalCode) {
             validatedPayer.errors.reject("", null, "O campo CEP é obrigatório")
+        }
+
+        if (!params.street) {
+            validatedPayer.errors.reject("", null, "Rua não preenchida")
         }
 
         if (!CpfCnpjUtils.validate(params.cpfCnpj)) {

@@ -26,7 +26,9 @@ class CustomerService {
             "city",
             "district",
             "number",
-            "postalCode"
+            "postalCode",
+            "street",
+            "addressComplement"
         ] = params
 
         return customer.save(failOnError: true)
@@ -69,6 +71,10 @@ class CustomerService {
 
         if (!params.postalCode) {
             validatedCustomer.errors.reject("", null, "CEP não preenchido")
+        }
+
+        if (!params.street) {
+            validatedCustomer.errors.reject("", null, "Rua não preenchida")
         }
 
         if (!CpfCnpjUtils.validate(params.cpfCnpj)) {
