@@ -29,9 +29,9 @@ class PayerService {
             "state",
             "city",
             "district",
-            "number",
+            "addressNumber",
             "postalCode",
-            "street",
+            "address",
             "addressComplement"
         ] = params
 
@@ -50,8 +50,8 @@ class PayerService {
             state: "estado",
             city: "cidade", 
             district: "bairro",
-            street: "rua",
-            number: "número"
+            address: "rua",
+            addressNumber: "número"
         ]
         
         validationFields.forEach { fieldKey, fieldName ->
