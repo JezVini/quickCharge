@@ -72,7 +72,7 @@ class CustomerService {
         }
 
         if (!CpfCnpjUtils.validate(params.cpfCnpj)) {
-                validatedCustomer.errors.reject("", null, "Documento não é válido")
+                validatedCustomer.errors.reject("", null, "CPF ou CNPJ informado é inválido")
         }
 
         return validatedCustomer
