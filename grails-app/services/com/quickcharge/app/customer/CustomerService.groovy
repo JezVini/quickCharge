@@ -51,9 +51,9 @@ class CustomerService {
             addressNumber: "número"
         ]
 
-        validationFields.forEach { fieldKey, fieldName ->
-            if (params[fieldKey]) return
-            validatedCustomer.errors.reject("", null, "O campo ${fieldName} é obrigatório")
+        for (field in validationFields) {
+            if (params[field.key]) continue
+            validatedCustomer.errors.reject("", null, "O campo ${field.value} é obrigatório")
         }
 
         if (!(new EmailValidator(false).isValid(params.email as String))) {
