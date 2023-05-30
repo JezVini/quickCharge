@@ -51,7 +51,7 @@ class CustomerService {
             addressNumber: "número"
         ]
 
-        for (field in validationFields) {
+        for (field : validationFields) {
             if (params[field.key]) continue
             validatedCustomer.errors.reject("", null, "O campo ${field.value} é obrigatório")
         }
