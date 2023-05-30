@@ -57,7 +57,7 @@ class PayerService {
         ]
 
         for (def field : shouldNotBeEmptyFieldMap) {
-            if (params[field.key]) continue
+            if ((params[field.key] as String).trim()) continue
             validatedPayer.errors.reject("", null, "O campo ${field.value} é obrigatório")
         }
         
