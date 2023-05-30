@@ -43,7 +43,7 @@ class PayerService {
     private Payer validateEmptyField(Map params) {
         Payer validatedPayer = new Payer()
 
-        Map sholdNotBeEmptyFieldMap = [
+        Map shouldNotBeEmptyFieldMap = [
             name: "nome",
             email: "e-mail",
             cpfCnpj: "CPF ou CNPJ",
@@ -56,7 +56,7 @@ class PayerService {
             addressNumber: "número"
         ]
 
-        for (def field : sholdNotBeEmptyFieldMap) {
+        for (def field : shouldNotBeEmptyFieldMap) {
             if (params[field.key]) continue
             validatedPayer.errors.reject("", null, "O campo ${field.value} é obrigatório")
         }

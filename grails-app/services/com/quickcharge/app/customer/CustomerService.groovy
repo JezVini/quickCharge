@@ -39,7 +39,7 @@ class CustomerService {
     private Customer validateEmptyField(Map params) {
         Customer validatedCustomer = new Customer()
 
-        Map sholdNotBeEmptyFieldMap = [
+        Map shouldNotBeEmptyFieldMap = [
             name: "nome",
             email: "e-mail",
             cpfCnpj: "CPF ou CNPJ",
@@ -52,7 +52,7 @@ class CustomerService {
             addressNumber: "número"
         ]
 
-        for (def field : sholdNotBeEmptyFieldMap) {
+        for (def field : shouldNotBeEmptyFieldMap) {
             if (params[field.key]) continue
             validatedCustomer.errors.reject("", null, "O campo ${field.value} é obrigatório")
         }
