@@ -49,7 +49,7 @@ class PayerController {
                 return
             }
             
-            return [payerList: Payer.query(customerId: customerId).list(), customerId: customerId]
+            return [payerList: Payer.query([customerId: customerId]).list(), customerId: customerId]
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao buscar pagadores, contate o desenvolvimento"
             flash.type = MessageType.ERROR
