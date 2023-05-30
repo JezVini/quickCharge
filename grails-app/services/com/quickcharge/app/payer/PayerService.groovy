@@ -5,6 +5,7 @@ import grails.validation.ValidationException
 import com.quickcharge.app.customer.Customer
 import org.apache.commons.validator.routines.EmailValidator
 import utils.CpfCnpjUtils
+import utils.Utils
 import java.util.regex.Pattern
 
 @Transactional
@@ -12,14 +13,16 @@ class PayerService {
 
     public Payer saveOrUpdate(Map params) {
         Payer validatedPayer = validateSave(params)
-
+        
         if (validatedPayer.hasErrors()) {
             throw new ValidationException("Erro ao salvar pagador", validatedPayer.errors)
         }
 
-        Customer customer = Customer.query([id: params.customerId]).get()
-        Payer payer = params.id
-            ? Payer.query([id: params.id, customerId: params.customerId]).get()
+        Map sanitizedParams = sanitizeParams(params)
+        
+        Customer customer = Customer.query([id: sanitizedParams.customerId]).get()
+        Payer payer = sanitizedParams.id
+            ? Payer.query([id: sanitizedParams.id, customerId: sanitizedParams.customerId]).get()
             : new Payer()
 
         payer.customer = customer
@@ -35,7 +38,7 @@ class PayerService {
             "postalCode",
             "address",
             "addressComplement"
-        ] = params
+        ] = sanitizedParams
 
         return payer.save(failOnError: true)
     }
@@ -138,5 +141,38 @@ class PayerService {
         }
         
         return validatedPayer
+    }
+    
+    private Map sanitizeParams(Map params) {
+        Map sanitizedParams = [:]
+        List<String> mustRemoveNonNumericsFieldList = ["cpfCnpj", "phone", "postalCode"]
+        List<String> requiredFieldList = [
+            "name",
+            "email",
+            "cpfCnpj",
+            "phone",
+            "state",
+            "city",
+            "district",
+            "addressNumber",
+            "postalCode",
+            "address",
+            "addressComplement"
+        ]
+        
+        for (def param : params) {
+            if (!requiredFieldList.contains(param.key)) continue
+            
+            if (mustRemoveNonNumericsFieldList.contains(param.key)) {
+                sanitizedParams[param.key] = Utils.removeNonNumeric(param.value as String)
+            } else {
+                sanitizedParams[param.key] = (param.value as String).trim()
+            }
+        }
+        
+        sanitizedParams["customerId"] = params["customerId"]
+        sanitizedParams["id"] = params["id"]
+        
+        return sanitizedParams
     }
 }

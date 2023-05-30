@@ -4,6 +4,8 @@ import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import org.apache.commons.validator.routines.EmailValidator
 import utils.CpfCnpjUtils
+import utils.Utils
+
 import java.util.regex.Pattern
 
 @Transactional
@@ -16,8 +18,11 @@ class CustomerService {
             throw new ValidationException("Erro ao salvar conta", validatedCustomer.errors)
         }
 
-        Long customerId = params.long("id")
-        Customer customer = customerId ? Customer.get(params.long("id")) : new Customer()
+        Map sanitizedParams = sanitizeParams(params)
+
+        Customer customer = sanitizedParams.id 
+            ? Customer.query([id: sanitizedParams.id]).get()
+            : new Customer()
 
         customer.properties[
             "name",
@@ -31,7 +36,7 @@ class CustomerService {
             "postalCode",
             "address",
             "addressComplement"
-        ] = params
+        ] = sanitizedParams
         
         return customer.save(failOnError: true)
     }
@@ -130,5 +135,37 @@ class CustomerService {
         }
 
         return validatedCustomer
+    }
+
+    private Map sanitizeParams(Map params) {
+        Map sanitizedParams = [:]
+        List<String> mustRemoveNonNumericsFieldList = ["cpfCnpj", "phone", "postalCode"]
+        List<String> requiredFieldList = [
+            "name",
+            "email",
+            "cpfCnpj",
+            "phone",
+            "state",
+            "city",
+            "district",
+            "addressNumber",
+            "postalCode",
+            "address",
+            "addressComplement"
+        ]
+
+        for (def param : params) {
+            if (!requiredFieldList.contains(param.key)) continue
+
+            if (mustRemoveNonNumericsFieldList.contains(param.key)) {
+                sanitizedParams[param.key] = Utils.removeNonNumeric(param.value as String)
+            } else {
+                sanitizedParams[param.key] = (param.value as String).trim()
+            }
+        }
+
+        sanitizedParams["id"] = params["id"]
+
+        return sanitizedParams
     }
 }
