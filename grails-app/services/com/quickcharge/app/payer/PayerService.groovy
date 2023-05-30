@@ -11,18 +11,18 @@ import java.util.regex.Pattern
 @Transactional
 class PayerService {
 
-    public Payer saveOrUpdate(Map params) {
-        Payer validatedPayer = validateSave(params)
+    public Payer saveOrUpdate(Map parameterMap) {
+        Payer validatedPayer = validateSave(parameterMap)
         
         if (validatedPayer.hasErrors()) {
             throw new ValidationException("Erro ao salvar pagador", validatedPayer.errors)
         }
 
-        Map sanitizedParams = sanitizeParams(params)
+        Map sanitizedParameterMap = sanitizeParams(parameterMap)
         
-        Customer customer = Customer.query([id: sanitizedParams.customerId]).get()
-        Payer payer = sanitizedParams.id
-            ? Payer.query([id: sanitizedParams.id, customerId: sanitizedParams.customerId]).get()
+        Customer customer = Customer.query([id: sanitizedParameterMap.customerId]).get()
+        Payer payer = sanitizedParameterMap.id
+            ? Payer.query([id: sanitizedParameterMap.id, customerId: sanitizedParameterMap.customerId]).get()
             : new Payer()
 
         payer.customer = customer
@@ -38,12 +38,12 @@ class PayerService {
             "postalCode",
             "address",
             "addressComplement"
-        ] = sanitizedParams
+        ] = sanitizedParameterMap
 
         return payer.save(failOnError: true)
     }
 
-    private Payer validateEmptyField(Map params) {
+    private Payer validateEmptyField(Map parameterMap) {
         Payer validatedPayer = new Payer()
 
         Map shouldNotBeEmptyFieldMap = [
@@ -61,41 +61,41 @@ class PayerService {
         ]
 
         for (def field : shouldNotBeEmptyFieldMap) {
-            if ((params[field.key] as String).trim()) continue
+            if ((parameterMap[field.key] as String).trim()) continue
             validatedPayer.errors.reject("", null, "O campo ${field.value} é obrigatório")
         }
         
         return validatedPayer
     }
     
-    private Payer validatePatternMatching(Map params) {
+    private Payer validatePatternMatching(Map parameterMap) {
         Payer validatedPayer = new Payer()
         
         Pattern CPF_PATTERN = ~/\d{3}\.\d{3}\.\d{3}-\d{2}/
         Pattern CNPJ_PATTERN = ~/\d{2}\.\d{3}\.\d{3}\/\d{4}-{2}/
-        if (!(params.cpfCnpj as String).matches(CPF_PATTERN) && !(params.cpfCnpj as String).matches(CNPJ_PATTERN)) {
+        if (!(parameterMap.cpfCnpj as String).matches(CPF_PATTERN) && !(parameterMap.cpfCnpj as String).matches(CNPJ_PATTERN)) {
             validatedPayer.errors.reject("", null, "Padrão de CPF ou CNPJ inválido")
         }
 
         Pattern PHONE_PATTERN = ~/\(\d{2}\) 9?\d{4}-?\d{4}/
-        if (!(params.phone as String).matches(PHONE_PATTERN)) {
+        if (!(parameterMap.phone as String).matches(PHONE_PATTERN)) {
             validatedPayer.errors.reject("", null, "Padrão de telefone inválido!")
         }
 
         Pattern POSTAL_CODE_PATTERN = ~/\d{5}-\d{3}/
-        if (!(params.postalCode as String).matches(POSTAL_CODE_PATTERN)) {
+        if (!(parameterMap.postalCode as String).matches(POSTAL_CODE_PATTERN)) {
             validatedPayer.errors.reject("", null, "Padrão de CEP inválido")
         }
 
         Pattern STATE_PATTERN = ~/[A-Z]{2}/
-        if (!(params.state as String).matches(STATE_PATTERN)) {
+        if (!(parameterMap.state as String).matches(STATE_PATTERN)) {
             validatedPayer.errors.reject("", null, "Estado deve ser uma sigla")
         }
         
         return validatedPayer
     }
 
-    private Payer validateInvalidSpecials(Map params) {
+    private Payer validateInvalidSpecials(Map parameterMap) {
         Payer validatedPayer = new Payer()
 
         Pattern INVALID_CHARACTERS_PATTERN = ~/(.*)\p{Punct}+(.*)/
@@ -110,42 +110,42 @@ class PayerService {
         ]
 
         for (def field : shouldNotHaveSpecialsFieldMap) {
-            if (!(params[field.key] as String).matches(INVALID_CHARACTERS_PATTERN)) continue
+            if (!(parameterMap[field.key] as String).matches(INVALID_CHARACTERS_PATTERN)) continue
             validatedPayer.errors.reject("", null, "O campo ${field.value} não aceita carecteres especiais")
         }
 
         return validatedPayer
     }
 
-    private Payer validateSave(Map params) {
-        Payer emptyFieldPayer = validateEmptyField(params)
+    private Payer validateSave(Map parameterMap) {
+        Payer emptyFieldPayer = validateEmptyField(parameterMap)
         if (emptyFieldPayer.hasErrors()) return emptyFieldPayer
 
-        Payer patterMatchingPayer = validatePatternMatching(params)
+        Payer patterMatchingPayer = validatePatternMatching(parameterMap)
         if (patterMatchingPayer.hasErrors()) return patterMatchingPayer
 
-        Payer invalidSpecialsPayer = validateInvalidSpecials(params)
+        Payer invalidSpecialsPayer = validateInvalidSpecials(parameterMap)
         if (invalidSpecialsPayer.hasErrors()) return invalidSpecialsPayer
         
         Payer validatedPayer = new Payer()
         
-        if (!CpfCnpjUtils.validate(params.cpfCnpj as String)) {
+        if (!CpfCnpjUtils.validate(parameterMap.cpfCnpj as String)) {
             validatedPayer.errors.reject("", null, "CPF ou CNPJ inválido")
         }
         
-        if (!(new EmailValidator(false).isValid(params.email as String))) {
+        if (!(new EmailValidator(false).isValid(parameterMap.email as String))) {
             validatedPayer.errors.reject("", null, "Email inválido")
         }
 
-        if (!params.customerId || !(Customer.get(params.customerId))) {
+        if (!parameterMap.customerId || !(Customer.get(parameterMap.customerId))) {
             validatedPayer.errors.reject("", null, "Cliente inexistente")
         }
         
         return validatedPayer
     }
     
-    private Map sanitizeParams(Map params) {
-        Map sanitizedParams = [:]
+    private Map sanitizeParams(Map parameterMap) {
+        Map sanitizedParameterMap = [:]
         List<String> mustRemoveNonNumericsFieldList = ["cpfCnpj", "phone", "postalCode"]
         List<String> requiredFieldList = [
             "name",
@@ -161,19 +161,19 @@ class PayerService {
             "addressComplement"
         ]
         
-        for (def param : params) {
-            if (!requiredFieldList.contains(param.key)) continue
+        for (def parameter : parameterMap) {
+            if (!requiredFieldList.contains(parameter.key)) continue
             
-            if (mustRemoveNonNumericsFieldList.contains(param.key)) {
-                sanitizedParams[param.key] = Utils.removeNonNumeric(param.value as String)
+            if (mustRemoveNonNumericsFieldList.contains(parameter.key)) {
+                sanitizedParameterMap[parameter.key] = Utils.removeNonNumeric(parameter.value as String)
             } else {
-                sanitizedParams[param.key] = (param.value as String).trim()
+                sanitizedParameterMap[parameter.key] = (parameter.value as String).trim()
             }
         }
         
-        sanitizedParams["customerId"] = params["customerId"]
-        sanitizedParams["id"] = params["id"]
+        sanitizedParameterMap["customerId"] = parameterMap["customerId"]
+        sanitizedParameterMap["id"] = parameterMap["id"]
         
-        return sanitizedParams
+        return sanitizedParameterMap
     }
 }

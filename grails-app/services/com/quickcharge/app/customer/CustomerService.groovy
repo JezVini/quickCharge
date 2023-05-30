@@ -11,17 +11,17 @@ import java.util.regex.Pattern
 @Transactional
 class CustomerService {
 
-    public Customer saveOrUpdate(Map params) {
-        Customer validatedCustomer = validateSave(params)
+    public Customer saveOrUpdate(Map parameterMap) {
+        Customer validatedCustomer = validateSave(parameterMap)
 
         if (validatedCustomer.hasErrors()) {
             throw new ValidationException("Erro ao salvar conta", validatedCustomer.errors)
         }
 
-        Map sanitizedParams = sanitizeParams(params)
+        Map sanitizedParameterMap = sanitizeParameter(parameterMap)
 
-        Customer customer = sanitizedParams.id 
-            ? Customer.query([id: sanitizedParams.id]).get()
+        Customer customer = sanitizedParameterMap.id 
+            ? Customer.query([id: sanitizedParameterMap.id]).get()
             : new Customer()
 
         customer.properties[
@@ -36,12 +36,12 @@ class CustomerService {
             "postalCode",
             "address",
             "addressComplement"
-        ] = sanitizedParams
+        ] = sanitizedParameterMap
         
         return customer.save(failOnError: true)
     }
 
-    private Customer validateEmptyField(Map params) {
+    private Customer validateEmptyField(Map parameterMap) {
         Customer validatedCustomer = new Customer()
 
         Map shouldNotBeEmptyFieldMap = [
@@ -59,41 +59,41 @@ class CustomerService {
         ]
 
         for (def field : shouldNotBeEmptyFieldMap) {
-            if ((params[field.key] as String).trim()) continue
+            if ((parameterMap[field.key] as String).trim()) continue
             validatedCustomer.errors.reject("", null, "O campo ${field.value} é obrigatório")
         }
 
         return validatedCustomer
     }
 
-    private Customer validatePatternMatching(Map params) {
+    private Customer validatePatternMatching(Map parameterMap) {
         Customer validatedCustomer = new Customer()
 
         Pattern CPF_PATTERN = ~/\d{3}\.\d{3}\.\d{3}-\d{2}/
         Pattern CNPJ_PATTERN = ~/\d{2}\.\d{3}\.\d{3}\/\d{4}-{2}/
-        if (!(params.cpfCnpj as String).matches(CPF_PATTERN) && !(params.cpfCnpj as String).matches(CNPJ_PATTERN)) {
+        if (!(parameterMap.cpfCnpj as String).matches(CPF_PATTERN) && !(parameterMap.cpfCnpj as String).matches(CNPJ_PATTERN)) {
             validatedCustomer.errors.reject("", null, "Padrão de CPF ou CNPJ inválido")
         }
 
         Pattern PHONE_PATTERN = ~/\(\d{2}\) 9?\d{4}-?\d{4}/
-        if (!(params.phone as String).matches(PHONE_PATTERN)) {
+        if (!(parameterMap.phone as String).matches(PHONE_PATTERN)) {
             validatedCustomer.errors.reject("", null, "Padrão de telefone inválido!")
         }
 
         Pattern POSTAL_CODE_PATTERN = ~/\d{5}-\d{3}/
-        if (!(params.postalCode as String).matches(POSTAL_CODE_PATTERN)) {
+        if (!(parameterMap.postalCode as String).matches(POSTAL_CODE_PATTERN)) {
             validatedCustomer.errors.reject("", null, "Padrão de CEP inválido")
         }
 
         Pattern STATE_PATTERN = ~/[A-Z]{2}/
-        if (!(params.state as String).matches(STATE_PATTERN)) {
+        if (!(parameterMap.state as String).matches(STATE_PATTERN)) {
             validatedCustomer.errors.reject("", null, "Estado deve ser uma sigla")
         }
 
         return validatedCustomer
     }
 
-    private Customer validateInvalidSpecials(Map params) {
+    private Customer validateInvalidSpecials(Map parameterMap) {
         Customer validatedCustomer = new Customer()
 
         Pattern INVALID_CHARACTERS_PATTERN = ~/(.*)\p{Punct}+(.*)/
@@ -108,38 +108,38 @@ class CustomerService {
         ]
 
         for (def field : shouldNotHaveSpecialsFieldMap) {
-            if (!(params[field.key] as String).matches(INVALID_CHARACTERS_PATTERN)) continue
+            if (!(parameterMap[field.key] as String).matches(INVALID_CHARACTERS_PATTERN)) continue
             validatedCustomer.errors.reject("", null, "O campo ${field.value} não aceita carecteres especiais")
         }
 
         return validatedCustomer
     }
 
-    private Customer validateSave(Map params) {
-        Customer emptyFieldCustomer = validateEmptyField(params)
+    private Customer validateSave(Map parameterMap) {
+        Customer emptyFieldCustomer = validateEmptyField(parameterMap)
         if (emptyFieldCustomer.hasErrors()) return emptyFieldCustomer
 
-        Customer patterMatchingCustomer = validatePatternMatching(params)
+        Customer patterMatchingCustomer = validatePatternMatching(parameterMap)
         if (patterMatchingCustomer.hasErrors()) return patterMatchingCustomer
 
-        Customer invalidSpecialsCustomer = validateInvalidSpecials(params)
+        Customer invalidSpecialsCustomer = validateInvalidSpecials(parameterMap)
         if (invalidSpecialsCustomer.hasErrors()) return invalidSpecialsCustomer
 
         Customer validatedCustomer = new Customer()
 
-        if (!CpfCnpjUtils.validate(params.cpfCnpj as String)) {
+        if (!CpfCnpjUtils.validate(parameterMap.cpfCnpj as String)) {
             validatedCustomer.errors.reject("", null, "CPF ou CNPJ inválido")
         }
 
-        if (!(new EmailValidator(false).isValid(params.email as String))) {
+        if (!(new EmailValidator(false).isValid(parameterMap.email as String))) {
             validatedCustomer.errors.reject("", null, "Email inválido")
         }
 
         return validatedCustomer
     }
 
-    private Map sanitizeParams(Map params) {
-        Map sanitizedParams = [:]
+    private Map sanitizeParameter(Map parameterMap) {
+        Map sanitizedParameterMap = [:]
         List<String> mustRemoveNonNumericsFieldList = ["cpfCnpj", "phone", "postalCode"]
         List<String> requiredFieldList = [
             "name",
@@ -155,18 +155,18 @@ class CustomerService {
             "addressComplement"
         ]
 
-        for (def param : params) {
-            if (!requiredFieldList.contains(param.key)) continue
+        for (def parameter : parameterMap) {
+            if (!requiredFieldList.contains(parameter.key)) continue
 
-            if (mustRemoveNonNumericsFieldList.contains(param.key)) {
-                sanitizedParams[param.key] = Utils.removeNonNumeric(param.value as String)
+            if (mustRemoveNonNumericsFieldList.contains(parameter.key)) {
+                sanitizedParameterMap[parameter.key] = Utils.removeNonNumeric(parameter.value as String)
             } else {
-                sanitizedParams[param.key] = (param.value as String).trim()
+                sanitizedParameterMap[parameter.key] = (parameter.value as String).trim()
             }
         }
 
-        sanitizedParams["id"] = params["id"]
+        sanitizedParameterMap["id"] = parameterMap["id"]
 
-        return sanitizedParams
+        return sanitizedParameterMap
     }
 }
