@@ -57,7 +57,6 @@ class PayerService {
             district: "bairro",
             address: "rua",
             addressNumber: "número",
-            addressComplement: "complemento"
         ]
 
         for (def field : shouldNotBeEmptyFieldMap) {
@@ -106,7 +105,8 @@ class PayerService {
             city: "cidade",
             district: "bairro",
             address: "rua",
-            addressNumber: "número"
+            addressNumber: "número",
+            addressComplement: "complemento"
         ]
 
         for (def field : shouldNotHaveSpecialsFieldMap) {

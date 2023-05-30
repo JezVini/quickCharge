@@ -54,8 +54,7 @@ class CustomerService {
             city: "cidade",
             district: "bairro",
             address: "rua",
-            addressNumber: "número",
-            addressComplement: "complemento"
+            addressNumber: "número"
         ]
 
         for (def field : shouldNotBeEmptyFieldMap) {
@@ -104,7 +103,8 @@ class CustomerService {
             city: "cidade",
             district: "bairro",
             address: "rua",
-            addressNumber: "número"
+            addressNumber: "número",
+            addressComplement: "complemento"
         ]
 
         for (def field : shouldNotHaveSpecialsFieldMap) {
