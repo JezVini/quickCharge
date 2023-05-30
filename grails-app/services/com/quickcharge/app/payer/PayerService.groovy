@@ -55,7 +55,7 @@ class PayerService {
             addressNumber: "número"
         ]
         
-        for (field in validationFields) {
+        for (def field : validationFields) {
             if (params[field.key]) continue 
             validatedPayer.errors.reject("", null, "O campo ${field.value} é obrigatório")
         }
