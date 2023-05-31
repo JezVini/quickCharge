@@ -3,6 +3,7 @@ package quickcharge
 import com.quickcharge.app.authentication.Role
 import com.quickcharge.app.authentication.User
 import com.quickcharge.app.authentication.UserRole
+import com.quickcharge.app.customer.Customer
 
 class BootStrap {
     
@@ -14,15 +15,28 @@ class BootStrap {
 
         User user = User.findByUsername("user")
         if (user == null) {
-            user = new User(username: "user", password: "user", enabled: true).save()
+            Customer customer = new Customer(
+                name: "User",
+                email: "user@email.com",
+                cpfCnpj: "00000000000",
+                phone: "0000000000",
+                state: "00",
+                city: "city",
+                district: "district",
+                addressNumber: "addressNumber",
+                postalCode: "00000000",
+                address: "address",
+                addressComplement: "addressComplement").save()
+            
+            user = new User(username: customer.email, password: "user", customer: customer, enabled: true).save()
         }
         
         if (!UserRole.findByUserAndRole(user, roleUser)) {
             UserRole.withTransaction {
                     new UserRole(user: user, role: roleUser).save(flush:true)
-                }
             }
         }
+    }
         
     def destroy = {
     }

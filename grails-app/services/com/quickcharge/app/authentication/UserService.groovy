@@ -1,4 +1,4 @@
-package com.quickcharge.app.user
+package com.quickcharge.app.authentication
 
 import com.quickcharge.app.customer.Customer
 import grails.gorm.transactions.Transactional
