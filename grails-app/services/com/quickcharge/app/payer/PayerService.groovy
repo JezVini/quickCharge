@@ -18,7 +18,7 @@ class PayerService {
             throw new ValidationException("Erro ao salvar pagador", validatedPayer.errors)
         }
 
-        Map sanitizedParameterMap = sanitizeParams(parameterMap)
+        Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
         
         Customer customer = Customer.query([id: sanitizedParameterMap.customerId]).get()
         if (sanitizedParameterMap.id) {
@@ -146,10 +146,10 @@ class PayerService {
         return validatedPayer
     }
     
-    private Map sanitizeParams(Map parameterMap) {
+    private Map sanitizeParameterMap(Map parameterMap) {
         Map sanitizedParameterMap = [:]
-        List<String> mustRemoveNonNumericsFieldList = ["cpfCnpj", "phone", "postalCode"]
-        List<String> requiredFieldList = [
+        List<String> mustRemoveNonNumericsParameterList = ["cpfCnpj", "phone", "postalCode"]
+        List<String> toSanitizeParsedParameterList = [
             "name",
             "email",
             "cpfCnpj",
@@ -164,9 +164,9 @@ class PayerService {
         ]
         
         for (def parameter : parameterMap) {
-            if (!requiredFieldList.contains(parameter.key)) continue
+            if (!toSanitizeParsedParameterList.contains(parameter.key)) continue
             
-            if (mustRemoveNonNumericsFieldList.contains(parameter.key)) {
+            if (mustRemoveNonNumericsParameterList.contains(parameter.key)) {
                 sanitizedParameterMap[parameter.key] = Utils.removeNonNumeric(parameter.value as String)
             } else {
                 sanitizedParameterMap[parameter.key] = (parameter.value as String).trim()

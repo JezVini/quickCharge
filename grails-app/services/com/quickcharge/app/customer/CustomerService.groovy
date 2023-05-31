@@ -18,7 +18,7 @@ class CustomerService {
             throw new ValidationException("Erro ao salvar conta", validatedCustomer.errors)
         }
 
-        Map sanitizedParameterMap = sanitizeParameter(parameterMap)
+        Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
 
         if (sanitizedParameterMap.id) {
             Customer customer = Customer.query([id: sanitizedParameterMap.id]).get()
@@ -140,10 +140,10 @@ class CustomerService {
         return validatedCustomer
     }
 
-    private Map sanitizeParameter(Map parameterMap) {
+    private Map sanitizeParameterMap(Map parameterMap) {
         Map sanitizedParameterMap = [:]
-        List<String> mustRemoveNonNumericsFieldList = ["cpfCnpj", "phone", "postalCode"]
-        List<String> requiredFieldList = [
+        List<String> mustRemoveNonNumericsParameterList = ["cpfCnpj", "phone", "postalCode"]
+        List<String> toSanitizeParsedParameterList = [
             "name",
             "email",
             "cpfCnpj",
@@ -158,9 +158,9 @@ class CustomerService {
         ]
 
         for (def parameter : parameterMap) {
-            if (!requiredFieldList.contains(parameter.key)) continue
+            if (!toSanitizeParsedParameterList.contains(parameter.key)) continue
 
-            if (mustRemoveNonNumericsFieldList.contains(parameter.key)) {
+            if (mustRemoveNonNumericsParameterList.contains(parameter.key)) {
                 sanitizedParameterMap[parameter.key] = Utils.removeNonNumeric(parameter.value as String)
             } else {
                 sanitizedParameterMap[parameter.key] = (parameter.value as String).trim()
