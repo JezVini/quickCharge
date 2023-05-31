@@ -15,5 +15,9 @@ class Payment extends BaseEntity {
     Date paymentDate
     
     static constraints = {
+        billingType blank: false
+        value min: 0.01
+        status blank: false
+        paymentDate nullable: true
     }
 }
