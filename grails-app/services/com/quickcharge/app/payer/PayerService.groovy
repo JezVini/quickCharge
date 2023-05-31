@@ -72,24 +72,19 @@ class PayerService {
     private Payer validatePatternMatching(Map parameterMap) {
         Payer validatedPayer = new Payer()
         
-        Pattern CPF_PATTERN = ~/\d{3}\.\d{3}\.\d{3}-\d{2}/
-        Pattern CNPJ_PATTERN = ~/\d{2}\.\d{3}\.\d{3}\/\d{4}-{2}/
-        if (!(parameterMap.cpfCnpj as String).matches(CPF_PATTERN) && !(parameterMap.cpfCnpj as String).matches(CNPJ_PATTERN)) {
+        if (!CpfCnpjUtils.isCpfCnpjPatternMatch(parameterMap.cpfCnpj as String)) {
             validatedPayer.errors.reject("", null, "Padrão de CPF ou CNPJ inválido")
         }
 
-        Pattern PHONE_PATTERN = ~/\(\d{2}\) 9?\d{4}-?\d{4}/
-        if (!(parameterMap.phone as String).matches(PHONE_PATTERN)) {
+        if (!Utils.isPhonePatternMatch(parameterMap.phone as String)) {
             validatedPayer.errors.reject("", null, "Padrão de telefone inválido!")
         }
-
-        Pattern POSTAL_CODE_PATTERN = ~/\d{5}-\d{3}/
-        if (!(parameterMap.postalCode as String).matches(POSTAL_CODE_PATTERN)) {
+        
+        if (!Utils.isPostalCodePatternMatch(parameterMap.postalCode as String)) {
             validatedPayer.errors.reject("", null, "Padrão de CEP inválido")
         }
-
-        Pattern STATE_PATTERN = ~/[A-Z]{2}/
-        if (!(parameterMap.state as String).matches(STATE_PATTERN)) {
+        
+        if (!Utils.isStatePatternMatch(parameterMap.state as String)) {
             validatedPayer.errors.reject("", null, "Estado deve ser uma sigla")
         }
         
