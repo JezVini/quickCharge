@@ -20,9 +20,11 @@ class CustomerService {
 
         Map sanitizedParameterMap = sanitizeParameter(parameterMap)
 
-        Customer customer = sanitizedParameterMap.id 
-            ? Customer.query([id: sanitizedParameterMap.id]).get()
-            : new Customer()
+        if (sanitizedParameterMap.id) {
+            Customer customer = Customer.query([id: sanitizedParameterMap.id]).get()
+        } else {
+            Customer customer = new Customer()
+        }
 
         customer.properties[
             "name",

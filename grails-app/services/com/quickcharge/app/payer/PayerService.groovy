@@ -21,9 +21,11 @@ class PayerService {
         Map sanitizedParameterMap = sanitizeParams(parameterMap)
         
         Customer customer = Customer.query([id: sanitizedParameterMap.customerId]).get()
-        Payer payer = sanitizedParameterMap.id
-            ? Payer.query([id: sanitizedParameterMap.id, customerId: sanitizedParameterMap.customerId]).get()
-            : new Payer()
+        if (sanitizedParameterMap.id) {
+            Payer payer = Payer.query([id: sanitizedParameterMap.id, customerId: sanitizedParameterMap.customerId]).get()
+        } else {
+            Payer payer = new Payer()
+        }
 
         payer.customer = customer
         payer.properties[
