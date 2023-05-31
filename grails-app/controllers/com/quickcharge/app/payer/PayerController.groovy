@@ -1,6 +1,7 @@
 package com.quickcharge.app.payer
 
 import com.quickcharge.app.customer.Customer
+import grails.plugin.springsecurity.annotation.Secured
 import grails.validation.ValidationException
 import utils.message.MessageType
 
@@ -8,10 +9,12 @@ class PayerController {
 
     PayerService payerService
 
+    @Secured(['ROLE_USER'])
     def create() {
         return params
     }
 
+    @Secured(['ROLE_USER'])
     def edit() {
         try {
             Long id = params.long("id")
@@ -36,6 +39,7 @@ class PayerController {
         }
     }
 
+    @Secured(['ROLE_USER'])
     def save() {
         try {
             payerService.saveOrUpdate(params)
@@ -53,6 +57,7 @@ class PayerController {
         }
     }
 
+    @Secured(['ROLE_USER'])
     def update() {
         try {
             payerService.saveOrUpdate(params)

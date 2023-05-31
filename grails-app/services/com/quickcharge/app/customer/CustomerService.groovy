@@ -1,21 +1,23 @@
 package com.quickcharge.app.customer
 
+
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import utils.CpfCnpjUtils
 
 @Transactional
 class CustomerService {
+    
+    def userService
 
-    public Customer saveOrUpdate(Map params) {
-        Customer validatedCustomer = validateSave(params)
+    public Customer save(Map params) {
+        Customer validatedCustomer = validateSaveOrUpdate(params, true)
 
         if (validatedCustomer.hasErrors()) {
             throw new ValidationException("Erro ao salvar conta", validatedCustomer.errors)
         }
 
-        Long customerId = params.long("id")
-        Customer customer = customerId ? Customer.get(params.long("id")) : new Customer()
+        Customer customer = new Customer()
 
         customer.properties[
             "name",
@@ -31,17 +33,47 @@ class CustomerService {
             "addressComplement"
         ] = params
         
-        return customer.save(failOnError: true)
+        customer.save(failOnError: true)
+        userService.save(customer, params.email, params.password)
+        
+        return customer
     }
     
-    private Customer validateSave(Map params) {
+    public Customer update(Map params) {
+        Customer validatedCustomer = validateSaveOrUpdate(params)
+
+        if (validatedCustomer.hasErrors()) {
+            throw new ValidationException("Erro ao salvar conta", validatedCustomer.errors)
+        }
+
+        Customer customer = Customer.get(params.long("id"))
+
+        customer.properties[
+            "name",
+            "cpfCnpj",
+            "phone",
+            "state",
+            "city",
+            "district",
+            "addressNumber",
+            "postalCode",
+            "address",
+            "addressComplement"
+        ] = params
+
+        customer.save(failOnError: true)
+
+        return customer
+    }
+    
+    private Customer validateSaveOrUpdate(Map params, Boolean isSave = false) {
         Customer validatedCustomer = new Customer()
 
         if (!params.name) {
             validatedCustomer.errors.reject("", null, "Nome não preenchido")
         }
-
-        if (!params.email) {
+        
+        if (!params.email && isSave) {
             validatedCustomer.errors.reject("", null, "E-mail não preenchido")
         }
 

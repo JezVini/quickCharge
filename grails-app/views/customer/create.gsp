@@ -17,6 +17,10 @@
             <label for="email">E-mail</label>
             <input type="email" name="email" id="email" placeholder="Digite seu e-mail" value="${email}">
             <br>
+    
+            <label for="password">Senha</label>
+            <input type="password" name="password" id="password" placeholder="Digite sua senha">
+            <br>
         
             <label for="cpfCnpj">CPF ou CNPJ</label>
             <input type="text" name="cpfCnpj" id="cpfCnpj" placeholder="Digite o CPF ou CNPJ" value="${cpfCnpj}">
