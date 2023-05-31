@@ -1,13 +1,21 @@
 package utils
 
+import java.util.regex.Pattern
+
 class CpfCnpjUtils {
 
+    public static final Pattern CPF_PATTERN = ~/\d{3}\.\d{3}\.\d{3}-\d{2}/
+    public static final Pattern CNPJ_PATTERN = ~/\d{2}\.\d{3}\.\d{3}\/\d{4}-{2}/
     public static final CPF_LENGTH = 11
     public static final CNPJ_LENGTH = 14
     public static final INVALID_CPF_SEQUENCES = ["00000000000", "11111111111", "22222222222", "33333333333",
                                                  "44444444444", "55555555555", "66666666666", "77777777777",
                                                  "88888888888", "99999999999"]
 
+    public static Boolean isCpfCnpjPatternMatch(String cpfCnpj) {
+        return cpfCnpj.matches(CPF_PATTERN) || cpfCnpj.matches(CNPJ_PATTERN)
+    }
+    
     public static Boolean validate(String cpfCnpj) {
         cpfCnpj = Utils.removeNonNumeric(cpfCnpj)
 
