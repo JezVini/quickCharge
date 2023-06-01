@@ -2,6 +2,7 @@
 <head>
     <meta name="layout" content="main" >
     <title>Registrar Pagador</title>
+    <asset:javascript src="cep/cepAutomatically.js"/>
 </head>
     <body>
         <g:message code="${flash.message}"/>
@@ -22,7 +23,7 @@
             <input type="tel" name="phone" id="phone" placeholder="Digite o número de telefone/celular" value="${phone}">
             <br>
             <label for="postalCode">CEP</label>
-            <input type="text" name="postalCode" id="postalCode" placeholder="Digite o CEP" value="${postalCode}">
+            <input type="text" name="postalCode" id="postalCode" onblur="cepSearch(this.value)" placeholder="Digite o CEP" value="${postalCode}">
             <br>
             <label for="state">Estado</label>
             <input type="text" name="state" id="state" placeholder="Digite seu estado" value="${state}">
