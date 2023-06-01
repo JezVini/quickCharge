@@ -3,6 +3,7 @@
     <head>
         <meta name="layout" content="main">
         <title>Registrar Cliente</title>
+        <asset:javascript src="cep/cepAutomatically.js"/>
     </head>
     <body>
     
@@ -27,7 +28,7 @@
             <br>
         
             <label for="postalCode">CEP</label>
-            <input type="text" name="postalCode" id="postalCode" placeholder="Digite o CEP" value="${postalCode}">
+            <input type="text" name="postalCode" id="postalCode" onblur="cepSearch(this.value)" placeholder="Digite o CEP" value="${postalCode}">
             <br>
         
             <label for="state">Estado</label>
