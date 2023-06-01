@@ -38,6 +38,33 @@ class PayerService {
         return payer.save(failOnError: true)
     }
 
+    public Payer delete(Map params) {
+        Payer validatedPayer = validateDelete(params)
+
+        if (validatedPayer.hasErrors()) {
+            throw new ValidationException("Erro ao remover pagador", validatedPayer.errors)
+        }
+        
+        Payer payer = Payer.query([id: params.id, customerId: params.customerId]).get()
+        payer.deleted = true
+        
+        return payer.save(failOnError: true)
+    }
+    
+    private Payer validateDelete(Map params) {
+        Payer validatedPayer = new Payer()
+        
+        if (!Customer.query([id: params.customerId]).get()) {
+            validatedPayer.errors.reject("", null, "Cliente inexistente")
+        }
+
+        if (!Payer.query([id: params.id, customerId: params.customerId]).get()) {
+            validatedPayer.errors.reject("", null, "Não foi possível encontrar o pagador")
+        }
+        
+        return validatedPayer
+    }
+    
     private Payer validateSave(Map params) {
         Payer validatedPayer = new Payer()
 
