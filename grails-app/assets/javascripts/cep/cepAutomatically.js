@@ -19,8 +19,7 @@ function cepDataReceiver(json) {
         document.getElementById('district').value=(json.bairro);
         document.getElementById('city').value=(json.localidade);
         document.getElementById('state').value=(json.uf);
-    }
-    else {
+    } else {
         addressInputsEmpty();
         alert("CEP não encontrado.");
     }
