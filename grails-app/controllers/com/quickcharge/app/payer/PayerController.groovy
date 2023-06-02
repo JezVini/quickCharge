@@ -2,9 +2,10 @@ package com.quickcharge.app.payer
 
 import com.quickcharge.app.customer.Customer
 import grails.validation.ValidationException
+import utils.controller.BaseController
 import utils.message.MessageType
 
-class PayerController {
+class PayerController extends BaseController {
 
     PayerService payerService
 
@@ -63,8 +64,7 @@ class PayerController {
             flash.message = "Pagador removido com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
-            flash.message = validationException.errors.allErrors.first().defaultMessage
-            flash.type = MessageType.WARNING
+            this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao remover pagador, contate o desenvolvimento"
             flash.type = MessageType.ERROR
@@ -80,8 +80,7 @@ class PayerController {
             flash.message = "Pagador criado com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
-            flash.message = validationException.errors.allErrors.first().defaultMessage
-            flash.type = MessageType.WARNING
+            this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao criar pagador, contate o desenvolvimento"
             flash.type = MessageType.ERROR
@@ -97,8 +96,7 @@ class PayerController {
             flash.message = "Pagador alterado com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
-            flash.message = validationException.errors.allErrors.first().defaultMessage
-            flash.type = MessageType.WARNING
+            this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao alterar pagador, contate o desenvolvimento"
             flash.type = MessageType.ERROR
