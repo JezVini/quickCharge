@@ -7,15 +7,14 @@ import utils.CpfCnpjUtils
 @Transactional
 class CustomerService {
 
-    public Customer saveOrUpdate(Map params) {
+    public Customer save(Map params) {
         Customer validatedCustomer = validateSave(params)
 
         if (validatedCustomer.hasErrors()) {
             throw new ValidationException("Erro ao salvar conta", validatedCustomer.errors)
         }
-
-        Long customerId = params.long("id")
-        Customer customer = customerId ? Customer.get(params.long("id")) : new Customer()
+        
+        Customer customer = new Customer()
 
         customer.properties[
             "name",
@@ -33,6 +32,31 @@ class CustomerService {
         
         return customer.save(failOnError: true)
     }
+
+    public Customer update(Map params) {
+        Customer validatedCustomer = validateSave(params)
+
+        if (validatedCustomer.hasErrors()) {
+            throw new ValidationException("Erro ao salvar conta", validatedCustomer.errors)
+        }
+        
+        Customer customer = Customer.get(params.long("id"))
+
+        customer.properties[
+            "name",
+            "cpfCnpj",
+            "phone",
+            "state",
+            "city",
+            "district",
+            "addressNumber",
+            "postalCode",
+            "address",
+            "addressComplement"
+        ] = params
+
+        return customer.save(failOnError: true)
+    }
     
     private Customer validateSave(Map params) {
         Customer validatedCustomer = new Customer()
@@ -40,8 +64,8 @@ class CustomerService {
         if (!params.name) {
             validatedCustomer.errors.reject("", null, "Nome não preenchido")
         }
-
-        if (!params.email) {
+        
+        if (params.containsKey("email") && !params.email) {
             validatedCustomer.errors.reject("", null, "E-mail não preenchido")
         }
 

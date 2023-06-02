@@ -18,7 +18,7 @@ class CustomerController {
 
     def save() {
         try {
-            customerService.saveOrUpdate(params)
+            customerService.save(params)
             flash.message = "Conta criada com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
@@ -38,7 +38,7 @@ class CustomerController {
 
     def update() {
         try {
-            customerService.saveOrUpdate(params)
+            customerService.update(params)
             flash.message = "Conta alterada com sucesso"
         } catch (ValidationException validationException) {
             flash.message = validationException.errors.allErrors.first().defaultMessage
