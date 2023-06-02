@@ -18,7 +18,7 @@ class CustomerController {
 
     def save() {
         try {
-            customerService.saveOrUpdate(params)
+            customerService.save(params)
             flash.message = "Conta criada com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
@@ -26,6 +26,7 @@ class CustomerController {
             flash.type = MessageType.WARNING
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao criar conta, contate o desenvolvimento"
+            println(exception)
             flash.type = MessageType.ERROR
             log.info("CustomerController.save >> Erro ao salvar conta com os parâmetros: [${params}]")
         } finally {
@@ -38,7 +39,7 @@ class CustomerController {
 
     def update() {
         try {
-            customerService.saveOrUpdate(params)
+            customerService.update(params)
             flash.message = "Conta alterada com sucesso"
         } catch (ValidationException validationException) {
             flash.message = validationException.errors.allErrors.first().defaultMessage

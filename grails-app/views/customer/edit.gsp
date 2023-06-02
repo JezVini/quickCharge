@@ -14,10 +14,6 @@
         <input type="text" name="name" id="name" placeholder="Digite seu nome" value="${customer.name}">
         <br>
 
-        <label for="email">E-mail</label>
-        <input type="email" name="email" id="email" placeholder="Digite seu e-mail" value="${customer.email}">
-        <br>
-
         <label for="cpfCnpj">CPF ou CNPJ</label>
         <input type="text" name="cpfCnpj" id="cpfCnpj" placeholder="Digite o CPF ou CNPJ" value="${customer.cpfCnpj}">
         <br>
