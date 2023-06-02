@@ -44,29 +44,7 @@ class CustomerService {
         return customer.save(failOnError: true)
     }
 
-    private Customer validateEmptyField(Map parameterMap) {
-        Customer validatedCustomer = new Customer()
 
-        Map shouldNotBeEmptyFieldMap = [
-            name: "nome",
-            email: "e-mail",
-            cpfCnpj: "CPF ou CNPJ",
-            phone: "telefone",
-            postalCode: "CEP",
-            state: "estado",
-            city: "cidade",
-            district: "bairro",
-            address: "rua",
-            addressNumber: "número"
-        ]
-
-        for (def field : shouldNotBeEmptyFieldMap) {
-            if ((parameterMap[field.key] as String).trim()) continue
-            validatedCustomer.errors.reject("", null, "O campo ${field.value} é obrigatório")
-        }
-
-        return validatedCustomer
-    }
 
     private Customer validatePatternMatching(Map parameterMap) {
         Customer validatedCustomer = new Customer()
@@ -114,8 +92,6 @@ class CustomerService {
     }
 
     private Customer validateSave(Map parameterMap) {
-        Customer emptyFieldCustomer = validateEmptyField(parameterMap)
-        if (emptyFieldCustomer.hasErrors()) return emptyFieldCustomer
 
         Customer patterMatchingCustomer = validatePatternMatching(parameterMap)
         if (patterMatchingCustomer.hasErrors()) return patterMatchingCustomer
