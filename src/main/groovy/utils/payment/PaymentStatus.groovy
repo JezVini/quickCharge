@@ -1,6 +1,6 @@
 package utils.payment
 
-public enum StatusEnum {
+public enum PaymentStatus {
     PENDING,
     OVERDUE,
     RECEIVED,

@@ -1,6 +1,6 @@
 package utils.payment
 
-public enum BillingTypeEnum {
+public enum BillingType {
     PIX,
     BOLETO,
     DEPOSIT,
