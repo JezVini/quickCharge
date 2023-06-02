@@ -3,14 +3,16 @@ package com.quickcharge.app.payment
 import com.quickcharge.app.customer.Customer
 import com.quickcharge.app.payer.Payer
 import utils.entity.BaseEntity
+import utils.payment.BillingTypeEnum
+import utils.payment.StatusEnum 
 
 class Payment extends BaseEntity {
 
     Payer payer
     Customer customer
-    String billingType
+    BillingTypeEnum billingType
     Double value
-    String status
+    StatusEnum status
     Date dueDate
     Date paymentDate
     
