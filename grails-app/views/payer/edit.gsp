@@ -2,6 +2,7 @@
 <head>
     <meta name="layout" content="main">
     <title>Alterar dados de Pagador</title>
+    <asset:javascript src="cep/cepAutomatically.js"/>
 </head>
 <body>
     <g:message code="${flash.message}"/>
@@ -29,7 +30,7 @@
             <br>
 
             <label for="postalCode">CEP</label>
-            <input type="text" name="postalCode" id="postalCode" placeholder="Digite o CEP" value="${payer.postalCode}">
+            <input type="text" name="postalCode" id="postalCode" onblur="cepSearch(this.value)" placeholder="Digite o CEP" value="${payer.postalCode}">
             <br>
 
             <label for="state">Estado</label>
