@@ -1,9 +1,8 @@
 package com.quickcharge.app.payer
 
+import com.quickcharge.app.customer.Customer
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
-import com.quickcharge.app.customer.Customer
-import org.apache.commons.validator.routines.EmailValidator
 import utils.CpfCnpjUtils
 import utils.Utils
 import java.util.regex.Pattern
@@ -63,89 +62,65 @@ class PayerService {
         Payer validatedPayer = new Payer()
         
         if (!Customer.query([id: params.customerId]).get()) {
-            validatedPayer.errors.reject("", null, "Cliente inexistente")
+            validatedPayer.errors.rejectValue("customerId", "not.found")
         }
 
         if (!Payer.query([id: params.id, customerId: params.customerId]).get()) {
-            validatedPayer.errors.reject("", null, "Não foi possível encontrar o pagador")
-        }
-        
-        return validatedPayer
-    }
-    
-    private Payer validateEmptyField(Map parameterMap) {
-        Payer validatedPayer = new Payer()
-
-        Map shouldNotBeEmptyFieldMap = [
-            name: "nome",
-            email: "e-mail",
-            cpfCnpj: "CPF ou CNPJ",
-            phone: "telefone",
-            postalCode: "CEP",
-            state: "estado",
-            city: "cidade",
-            district: "bairro",
-            address: "rua",
-            addressNumber: "número",
-        ]
-
-        for (def field : shouldNotBeEmptyFieldMap) {
-            if ((parameterMap[field.key] as String).trim()) continue
-            validatedPayer.errors.reject("", null, "O campo ${field.value} é obrigatório")
+            validatedPayer.errors.rejectValue("id", "not.found")
         }
         
         return validatedPayer
     }
     
     private Payer validatePatternMatching(Map parameterMap) {
+        final String DEFAULT_FIELD_INVALID_PATTERN = "default.field.invalid.pattern"
+
         Payer validatedPayer = new Payer()
         
         if (!CpfCnpjUtils.isCpfCnpjPatternMatch(parameterMap.cpfCnpj as String)) {
-            validatedPayer.errors.reject("", null, "Padrão de CPF ou CNPJ inválido")
+            validatedPayer.errors.rejectValue("cpfCnpj", "", DEFAULT_FIELD_INVALID_PATTERN)
         }
 
         if (!Utils.isPhonePatternMatch(parameterMap.phone as String)) {
-            validatedPayer.errors.reject("", null, "Padrão de telefone inválido!")
+            validatedPayer.errors.rejectValue("phone", "", DEFAULT_FIELD_INVALID_PATTERN)
         }
-        
+
         if (!Utils.isPostalCodePatternMatch(parameterMap.postalCode as String)) {
-            validatedPayer.errors.reject("", null, "Padrão de CEP inválido")
+            validatedPayer.errors.rejectValue("postalCode", "", DEFAULT_FIELD_INVALID_PATTERN)
         }
-        
+
         if (!Utils.isStatePatternMatch(parameterMap.state as String)) {
-            validatedPayer.errors.reject("", null, "Estado deve ser uma sigla")
+            validatedPayer.errors.rejectValue("state", "invalid")
         }
         
         return validatedPayer
     }
 
     private Payer validateInvalidSpecials(Map parameterMap) {
-        Payer validatedPayer = new Payer()
-
-        Pattern INVALID_CHARACTERS_PATTERN = ~/(.*)\p{Punct}+(.*)/
+        final Pattern INVALID_CHARACTERS_PATTERN = ~/(.*)\p{Punct}+(.*)/
+        final String DEFAULT_FIELD_INVALID_SPECIAL_CHARACTERS = "default.field.invalid.special.characters"
         
-        Map shouldNotHaveSpecialsFieldMap = [
-            name: "nome",
-            state: "estado",
-            city: "cidade",
-            district: "bairro",
-            address: "rua",
-            addressNumber: "número",
-            addressComplement: "complemento"
+        Payer validatedPayer = new Payer()
+        
+        List<String> shouldNotHaveSpecialsFieldList = [
+            "name",
+            "state",
+            "city",
+            "district",
+            "address",
+            "addressNumber",
+            "addressComplement"
         ]
 
-        for (def field : shouldNotHaveSpecialsFieldMap) {
-            if (!(parameterMap[field.key] as String).matches(INVALID_CHARACTERS_PATTERN)) continue
-            validatedPayer.errors.reject("", null, "O campo ${field.value} não aceita carecteres especiais")
+        for (String field : shouldNotHaveSpecialsFieldList) {
+            if (!(parameterMap[field] as String).matches(INVALID_CHARACTERS_PATTERN)) continue
+            validatedPayer.errors.rejectValue(field, "", DEFAULT_FIELD_INVALID_SPECIAL_CHARACTERS)
         }
 
         return validatedPayer
     }
 
     private Payer validateSave(Map parameterMap) {
-        Payer emptyFieldPayer = validateEmptyField(parameterMap)
-        if (emptyFieldPayer.hasErrors()) return emptyFieldPayer
-
         Payer patterMatchingPayer = validatePatternMatching(parameterMap)
         if (patterMatchingPayer.hasErrors()) return patterMatchingPayer
 
@@ -155,15 +130,11 @@ class PayerService {
         Payer validatedPayer = new Payer()
         
         if (!CpfCnpjUtils.validate(parameterMap.cpfCnpj as String)) {
-            validatedPayer.errors.reject("", null, "CPF ou CNPJ inválido")
-        }
-        
-        if (!(new EmailValidator(false).isValid(parameterMap.email as String))) {
-            validatedPayer.errors.reject("", null, "Email inválido")
+            validatedPayer.errors.rejectValue("cpfCnpj", "invalid")
         }
 
-        if (!parameterMap.customerId || !(Customer.get(parameterMap.customerId))) {
-            validatedPayer.errors.reject("", null, "Cliente inexistente")
+        if (!parameterMap.customerId || !(Customer.query([id: parameterMap.customerId]))) {
+            validatedPayer.errors.rejectValue("customerId", "not.found")
         }
         
         return validatedPayer
