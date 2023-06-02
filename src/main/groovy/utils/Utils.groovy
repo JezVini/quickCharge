@@ -11,7 +11,7 @@ class Utils {
     }
 
     public static Boolean isPhonePatternMatch(String phone) {
-        final Pattern PHONE_PATTERN = ~/\(\d{2}\) 9?\d{4}-?\d{4}/
+        final Pattern PHONE_PATTERN = ~/\(\d{2}\) 9?\d{4}-\d{4}/
         return phone.matches(PHONE_PATTERN)
     }
     
