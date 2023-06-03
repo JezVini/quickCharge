@@ -121,6 +121,7 @@ class PayerService {
     }
 
     private Payer validateSave(Map parameterMap) {
+        
         Payer patterMatchingPayer = validatePatternMatching(parameterMap)
         if (patterMatchingPayer.hasErrors()) return patterMatchingPayer
 
@@ -131,10 +132,6 @@ class PayerService {
         
         if (!CpfCnpjUtils.validate(parameterMap.cpfCnpj as String)) {
             validatedPayer.errors.rejectValue("cpfCnpj", "invalid")
-        }
-
-        if (!parameterMap.customerId || !(Customer.query([id: parameterMap.customerId]))) {
-            validatedPayer.errors.rejectValue("customerId", "not.found")
         }
         
         return validatedPayer
