@@ -17,11 +17,12 @@ class CustomerService {
             throw new ValidationException("Erro ao salvar conta", validatedCustomer.errors)
         }
 
-        Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
+        Map parsedParameterMap = parseParameterMap(parameterMap)
+        Map sanitizedParsedParameterMap = sanitizeParameterMap(parsedParameterMap)
         
         Customer customer
-        if (sanitizedParameterMap.id) {
-            customer = Customer.query([id: sanitizedParameterMap.id]).get()
+        if (sanitizedParsedParameterMap.id) {
+            customer = Customer.query([id: sanitizedParsedParameterMap.id]).get()
         } else {
             customer = new Customer()
         }
@@ -38,7 +39,7 @@ class CustomerService {
             "postalCode",
             "address",
             "addressComplement"
-        ] = sanitizedParameterMap
+        ] = sanitizedParsedParameterMap
         
         return customer.save(failOnError: true)
     }
@@ -108,10 +109,8 @@ class CustomerService {
         return validatedCustomer
     }
 
-    private Map sanitizeParameterMap(Map parameterMap) {
-        Map sanitizedParameterMap = [:]
-        List<String> mustRemoveNonNumericsParameterList = ["cpfCnpj", "phone", "postalCode"]
-        List<String> toSanitizeParsedParameterList = [
+    private Map parseParameterMap(Map parameterMap) {
+        List<String> toParseParameterList = [
             "name",
             "email",
             "cpfCnpj",
@@ -122,20 +121,35 @@ class CustomerService {
             "addressNumber",
             "postalCode",
             "address",
-            "addressComplement"
+            "addressComplement",
+            "id",
         ]
 
+        Map parsedParameterMap = [:]
+        for (String parameter : toParseParameterList) {
+            parsedParameterMap[parameter] = parameterMap[parameter]
+        }
+
+        return parsedParameterMap
+    }
+
+    private Map sanitizeParameterMap(Map parameterMap) {
+        List<String> mustRemoveNonNumericsParameterList = ["cpfCnpj", "phone", "postalCode"]
+
+        Map sanitizedParameterMap = [:]
         for (def parameter : parameterMap) {
-            if (!toSanitizeParsedParameterList.contains(parameter.key)) continue
+            if (!(parameter.value instanceof String)) {
+                sanitizedParameterMap[parameter.key] = parameter.value
+                continue
+            }
 
             if (mustRemoveNonNumericsParameterList.contains(parameter.key)) {
                 sanitizedParameterMap[parameter.key] = Utils.removeNonNumeric(parameter.value as String)
-            } else {
-                sanitizedParameterMap[parameter.key] = (parameter.value as String).trim()
+                continue
             }
-        }
 
-        sanitizedParameterMap["id"] = parameterMap["id"]
+            sanitizedParameterMap[parameter.key] = (parameter.value as String).trim()
+        }
 
         return sanitizedParameterMap
     }
