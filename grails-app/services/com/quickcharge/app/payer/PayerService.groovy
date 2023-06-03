@@ -60,10 +60,6 @@ class PayerService {
     
     private Payer validateDelete(Map params) {
         Payer validatedPayer = new Payer()
-        
-        if (!Customer.query([id: params.customerId]).get()) {
-            validatedPayer.errors.rejectValue("customerId", "not.found")
-        }
 
         if (!Payer.query([id: params.id, customerId: params.customerId]).get()) {
             validatedPayer.errors.rejectValue("id", "not.found")
@@ -121,6 +117,7 @@ class PayerService {
     }
 
     private Payer validateSave(Map parameterMap) {
+        
         Payer patterMatchingPayer = validatePatternMatching(parameterMap)
         if (patterMatchingPayer.hasErrors()) return patterMatchingPayer
 
@@ -131,10 +128,6 @@ class PayerService {
         
         if (!CpfCnpjUtils.validate(parameterMap.cpfCnpj as String)) {
             validatedPayer.errors.rejectValue("cpfCnpj", "invalid")
-        }
-
-        if (!parameterMap.customerId || !(Customer.query([id: parameterMap.customerId]))) {
-            validatedPayer.errors.rejectValue("customerId", "not.found")
         }
         
         return validatedPayer
