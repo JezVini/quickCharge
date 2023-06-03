@@ -2,7 +2,6 @@ package com.quickcharge.app.customer
 
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
-import org.apache.commons.validator.routines.EmailValidator
 import utils.CpfCnpjUtils
 import utils.Utils
 
@@ -44,48 +43,49 @@ class CustomerService {
         return customer.save(failOnError: true)
     }
 
-
-
     private Customer validatePatternMatching(Map parameterMap) {
+        final String DEFAULT_FIELD_INVALID_PATTERN = "default.field.invalid.pattern"
+
         Customer validatedCustomer = new Customer()
 
         if (!CpfCnpjUtils.isCpfCnpjPatternMatch(parameterMap.cpfCnpj as String)) {
-            validatedCustomer.errors.reject("", null, "Padrão de CPF ou CNPJ inválido")
+            validatedCustomer.errors.rejectValue("cpfCnpj", "", DEFAULT_FIELD_INVALID_PATTERN)
         }
 
         if (!Utils.isPhonePatternMatch(parameterMap.phone as String)) {
-            validatedCustomer.errors.reject("", null, "Padrão de telefone inválido!")
+            validatedCustomer.errors.rejectValue("phone", "", DEFAULT_FIELD_INVALID_PATTERN)
         }
 
         if (!Utils.isPostalCodePatternMatch(parameterMap.postalCode as String)) {
-            validatedCustomer.errors.reject("", null, "Padrão de CEP inválido")
+            validatedCustomer.errors.rejectValue("postalCode", "", DEFAULT_FIELD_INVALID_PATTERN)
         }
 
         if (!Utils.isStatePatternMatch(parameterMap.state as String)) {
-            validatedCustomer.errors.reject("", null, "Estado deve ser uma sigla")
+            validatedCustomer.errors.rejectValue("state", "invalid")
         }
 
         return validatedCustomer
     }
-
+  
     private Customer validateInvalidSpecials(Map parameterMap) {
+        final Pattern INVALID_CHARACTERS_PATTERN = ~/(.*)\p{Punct}+(.*)/
+        final String DEFAULT_FIELD_INVALID_SPECIAL_CHARACTERS = "default.field.invalid.special.characters"
+
         Customer validatedCustomer = new Customer()
 
-        Pattern INVALID_CHARACTERS_PATTERN = ~/(.*)\p{Punct}+(.*)/
-
-        Map shouldNotHaveSpecialsFieldMap = [
-            name: "nome",
-            state: "estado",
-            city: "cidade",
-            district: "bairro",
-            address: "rua",
-            addressNumber: "número",
-            addressComplement: "complemento"
+        List<String> shouldNotHaveSpecialsFieldList = [
+            "name",
+            "state",
+            "city",
+            "district",
+            "address",
+            "addressNumber",
+            "addressComplement"
         ]
 
-        for (def field : shouldNotHaveSpecialsFieldMap) {
-            if (!(parameterMap[field.key] as String).matches(INVALID_CHARACTERS_PATTERN)) continue
-            validatedCustomer.errors.reject("", null, "O campo ${field.value} não aceita carecteres especiais")
+        for (String field : shouldNotHaveSpecialsFieldList) {
+            if (!(parameterMap[field] as String).matches(INVALID_CHARACTERS_PATTERN)) continue
+            validatedCustomer.errors.rejectValue(field, "", DEFAULT_FIELD_INVALID_SPECIAL_CHARACTERS)
         }
 
         return validatedCustomer
@@ -103,10 +103,6 @@ class CustomerService {
 
         if (!CpfCnpjUtils.validate(parameterMap.cpfCnpj as String)) {
             validatedCustomer.errors.reject("", null, "CPF ou CNPJ inválido")
-        }
-
-        if (!(new EmailValidator(false).isValid(parameterMap.email as String))) {
-            validatedCustomer.errors.reject("", null, "Email inválido")
         }
 
         return validatedCustomer
