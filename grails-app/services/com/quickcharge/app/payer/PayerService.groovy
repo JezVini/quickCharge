@@ -3,6 +3,7 @@ package com.quickcharge.app.payer
 import com.quickcharge.app.customer.Customer
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
+import com.quickcharge.app.customer.Customer
 import utils.CpfCnpjUtils
 import utils.Utils
 import java.util.regex.Pattern
@@ -10,23 +11,17 @@ import java.util.regex.Pattern
 @Transactional
 class PayerService {
 
-    public Payer saveOrUpdate(Map parameterMap) {
+    public Payer save(Map parameterMap) {
         Payer validatedPayer = validateSave(parameterMap)
-        
+
         if (validatedPayer.hasErrors()) {
             throw new ValidationException("Erro ao salvar pagador", validatedPayer.errors)
         }
 
         Map parsedParameterMap = parseParameterMap(parameterMap)
         Map sanitizedParsedParameterMap = sanitizeParameterMap(parsedParameterMap)
-        
         Customer customer = Customer.query([id: sanitizedParsedParameterMap.customerId]).get()
-        Payer payer
-        if (sanitizedParsedParameterMap.id) {
-            payer = Payer.query([id: sanitizedParsedParameterMap.id, customerId: sanitizedParsedParameterMap.customerId]).get()
-        } else {
-            payer = new Payer()
-        }
+        Payer payer = new Payer()
 
         payer.customer = customer
         payer.properties[
@@ -46,23 +41,53 @@ class PayerService {
         return payer.save(failOnError: true)
     }
 
-    public Payer delete(Map params) {
-        Payer validatedPayer = validateDelete(params)
+    public Payer update(Map parameterMap) {
+        Payer validatedPayer = validateSave(parameterMap)
+
+        if (validatedPayer.hasErrors()) {
+            throw new ValidationException("Erro ao salvar pagador", validatedPayer.errors)
+        }
+
+        Map parsedParameterMap = parseParameterMap(parameterMap)
+        Map sanitizedParsedParameterMap = sanitizeParameterMap(parsedParameterMap)
+        Customer customer = Customer.query([id: sanitizedParsedParameterMap.customerId]).get()
+        Payer payer = Payer.query([id: sanitizedParsedParameterMap.id, customerId: sanitizedParsedParameterMap.customerId]).get()
+
+        payer.customer = customer
+        payer.properties[
+            "name",
+            "email",
+            "cpfCnpj",
+            "phone",
+            "state",
+            "city",
+            "district",
+            "addressNumber",
+            "postalCode",
+            "address",
+            "addressComplement"
+        ] = sanitizedParsedParameterMap
+
+        return payer.save(failOnError: true)
+    }
+
+    public Payer delete(Map parameterMap) {
+        Payer validatedPayer = validateDelete(parameterMap)
 
         if (validatedPayer.hasErrors()) {
             throw new ValidationException("Erro ao remover pagador", validatedPayer.errors)
         }
         
-        Payer payer = Payer.query([id: params.id, customerId: params.customerId]).get()
+        Payer payer = Payer.query([id: parameterMap.id, customerId: parameterMap.customerId]).get()
         payer.deleted = true
         
         return payer.save(failOnError: true)
     }
     
-    private Payer validateDelete(Map params) {
+    private Payer validateDelete(Map parameterMap) {
         Payer validatedPayer = new Payer()
 
-        if (!Payer.query([id: params.id, customerId: params.customerId]).get()) {
+        if (!Payer.query([id: parameterMap.id, customerId: parameterMap.customerId]).get()) {
             validatedPayer.errors.rejectValue("id", "not.found")
         }
         

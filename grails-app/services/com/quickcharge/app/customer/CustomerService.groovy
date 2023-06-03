@@ -4,13 +4,12 @@ import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import utils.CpfCnpjUtils
 import utils.Utils
-
 import java.util.regex.Pattern
 
 @Transactional
 class CustomerService {
 
-    public Customer saveOrUpdate(Map parameterMap) {
+    public Customer save(Map parameterMap) {
         Customer validatedCustomer = validateSave(parameterMap)
 
         if (validatedCustomer.hasErrors()) {
@@ -19,14 +18,8 @@ class CustomerService {
 
         Map parsedParameterMap = parseParameterMap(parameterMap)
         Map sanitizedParsedParameterMap = sanitizeParameterMap(parsedParameterMap)
+        Customer customer = new Customer()
         
-        Customer customer
-        if (sanitizedParsedParameterMap.id) {
-            customer = Customer.query([id: sanitizedParsedParameterMap.id]).get()
-        } else {
-            customer = new Customer()
-        }
-
         customer.properties[
             "name",
             "email",
@@ -41,6 +34,33 @@ class CustomerService {
             "addressComplement"
         ] = sanitizedParsedParameterMap
         
+        return customer.save(failOnError: true)
+    }
+
+    public Customer update(Map params) {
+        Customer validatedCustomer = validateSave(params)
+
+        if (validatedCustomer.hasErrors()) {
+            throw new ValidationException("Erro ao salvar conta", validatedCustomer.errors)
+        }
+
+        Map parsedParameterMap = parseParameterMap(parameterMap)
+        Map sanitizedParsedParameterMap = sanitizeParameterMap(parsedParameterMap)
+        Customer customer = Customer.query([id: sanitizedParsedParameterMap.id])
+
+        customer.properties[
+            "name",
+            "cpfCnpj",
+            "phone",
+            "state",
+            "city",
+            "district",
+            "addressNumber",
+            "postalCode",
+            "address",
+            "addressComplement"
+        ] = sanitizedParsedParameterMap
+
         return customer.save(failOnError: true)
     }
 
