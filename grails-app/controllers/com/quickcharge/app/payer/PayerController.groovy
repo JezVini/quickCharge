@@ -49,7 +49,18 @@ class PayerController extends BaseController {
                 return
             }
             
-            return [payerList: Payer.query([customerId: customerId]).list(), customerId: customerId]
+            return [
+                payerList: Payer.query([
+                    customerId: customerId,
+                    deletedOnly: params.deletedOnly,
+                    includeDeleted: params.includeDeleted
+                ]).list(),
+                
+                customerId: customerId,
+                deletedOnly: params.deletedOnly,
+                includeDeleted: params.includeDeleted
+            ]
+            
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao buscar pagadores, contate o desenvolvimento"
             flash.type = MessageType.ERROR
@@ -69,7 +80,37 @@ class PayerController extends BaseController {
             flash.type = MessageType.ERROR
             log.info("PayerController.delete >> Erro ao remover pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
-            redirect([action: "index", params: [customerId: params.customerId]])
+            redirect([
+                action: "index",
+                params: [
+                    customerId: params.customerId,
+                    deletedOnly: params.deletedOnly,
+                    includeDeleted: params.includeDeleted
+                ]
+            ])
+        }
+    }
+    
+    def restore() {
+        try {
+            payerService.restore(params)
+            flash.message = "Pagador restaurado com sucesso"
+            flash.type = MessageType.SUCCESS
+        } catch (ValidationException validationException) {
+            this.validateExceptionHandler(validationException)
+        } catch (Exception exception) {
+            flash.message = "Ocorreu um erro ao restaurar pagador, contate o desenvolvimento"
+            flash.type = MessageType.ERROR
+            log.info("PayerController.restore >> Erro ao restaurar pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+        } finally {
+            redirect([
+                action: "index",
+                params: [
+                    customerId: params.customerId,
+                    deletedOnly: params.deletedOnly,
+                    includeDeleted: params.includeDeleted
+                ]
+            ])
         }
     }
     
