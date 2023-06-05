@@ -5,6 +5,7 @@ grails.plugin.springsecurity.userLookup.userDomainClassName = 'com.quickcharge.a
 grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'com.quickcharge.app.authentication.UserRole'
 grails.plugin.springsecurity.authority.className = 'com.quickcharge.app.authentication.Role'
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
+    [pattern: '/**',             access: ['IS_AUTHENTICATED_FULLY']],
 	[pattern: '/',               access: ['permitAll']],
 	[pattern: '/error',          access: ['permitAll']],
 	[pattern: '/index',          access: ['permitAll']],
