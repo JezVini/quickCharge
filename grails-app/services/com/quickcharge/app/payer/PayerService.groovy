@@ -83,6 +83,29 @@ class PayerService {
         return payer.save(failOnError: true)
     }
     
+    public Payer restore(Map parameterMap) {
+        Payer validatedPayer = validateRestore(parameterMap)
+
+        if (validatedPayer.hasErrors()) {
+            throw new ValidationException("Erro ao restaurar pagador", validatedPayer.errors)
+        }
+
+        Payer payer = Payer.query([id: parameterMap.id, customerId: parameterMap.customerId, deletedOnly: true]).get()
+        payer.deleted = false
+
+        return payer.save(failOnError: true)
+    }
+
+    private Payer validateRestore(Map parameterMap) {
+        Payer validatedPayer = new Payer()
+
+        if (!Payer.query([id: parameterMap.id, customerId: parameterMap.customerId, deletedOnly: true]).get()) {
+            validatedPayer.errors.rejectValue("id", "not.found")
+        }
+
+        return validatedPayer
+    }
+    
     private Payer validateDelete(Map parameterMap) {
         Payer validatedPayer = new Payer()
 
