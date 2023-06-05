@@ -42,8 +42,7 @@ class PayerController extends BaseController {
     
     def index () {
         try {
-            Long customerId = params.long("customerId")
-            
+            Long customerId = 1
             if (!Customer.query([id: customerId]).get()) {
                 flash.message = "Cliente inexistente"
                 flash.type = MessageType.WARNING
