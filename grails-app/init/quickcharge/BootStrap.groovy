@@ -13,14 +13,14 @@ class BootStrap {
             roleUser = new Role(authority: "ROLE_USER").save()
         }
 
-        User user = User.findByUsername("user")
+        User user = User.findByUsername("user@email.com")
         if (user == null) {
             Customer customer = new Customer(
                 name: "User",
                 email: "user@email.com",
-                cpfCnpj: "00000000000",
+                cpfCnpj: "54493586010",
                 phone: "0000000000",
-                state: "00",
+                state: "AA",
                 city: "city",
                 district: "district",
                 addressNumber: "addressNumber",

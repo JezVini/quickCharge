@@ -14,10 +14,10 @@ class CustomerController {
     def create() {
         return params
     }
-
-    @Secured(['ROLE_USER'])
+    
     def edit() {
-        Customer customer = Customer.get(Long.valueOf(springSecurityService.getCurrentUser().customer.id))
+        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+        Customer customer = Customer.query([id: customerId]).get()
         return [customer: customer]
     }
 
@@ -41,8 +41,7 @@ class CustomerController {
             ])
         }
     }
-
-    @Secured(['ROLE_USER'])
+    
     def update() {
         try {
             customerService.update(params)

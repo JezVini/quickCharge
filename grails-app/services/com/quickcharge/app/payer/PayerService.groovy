@@ -8,6 +8,8 @@ import utils.CpfCnpjUtils
 @Transactional
 class PayerService {
 
+    def springSecurityService
+    
     public Payer save(Map params) {
         Payer validatedPayer = validateSave(params)
 
@@ -15,7 +17,9 @@ class PayerService {
             throw new ValidationException("Erro ao salvar pagador", validatedPayer.errors)
         }
 
-        Customer customer = Customer.query([id: params.customerId]).get()
+        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+        Customer customer = Customer.query([id: customerId]).get()
+
         Payer payer = new Payer()
 
         payer.customer = customer
@@ -43,8 +47,10 @@ class PayerService {
             throw new ValidationException("Erro ao salvar pagador", validatedPayer.errors)
         }
 
-        Customer customer = Customer.query([id: params.customerId]).get()
-        Payer payer = Payer.query([id: params.id, customerId: params.customerId]).get()
+        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+        Customer customer = Customer.query([id: customerId]).get()
+        
+        Payer payer = Payer.query([id: params.id, customerId: customerId]).get()
 
         payer.customer = customer
         payer.properties[
@@ -70,8 +76,9 @@ class PayerService {
         if (validatedPayer.hasErrors()) {
             throw new ValidationException("Erro ao remover pagador", validatedPayer.errors)
         }
-        
-        Payer payer = Payer.query([id: params.id, customerId: params.customerId]).get()
+
+        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+        Payer payer = Payer.query([id: params.id, customerId: customerId]).get()
         payer.deleted = true
         
         return payer.save(failOnError: true)
@@ -79,12 +86,9 @@ class PayerService {
     
     private Payer validateDelete(Map params) {
         Payer validatedPayer = new Payer()
-        
-        if (!Customer.query([id: params.customerId]).get()) {
-            validatedPayer.errors.reject("", null, "Cliente inexistente")
-        }
 
-        if (!Payer.query([id: params.id, customerId: params.customerId]).get()) {
+        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+        if (!Payer.query([id: params.id, customerId: customerId]).get()) {
             validatedPayer.errors.reject("", null, "Não foi possível encontrar o pagador")
         }
         
@@ -93,10 +97,6 @@ class PayerService {
     
     private Payer validateSave(Map params) {
         Payer validatedPayer = new Payer()
-
-        if (!params.customerId || !(Customer.get(params.customerId))) {
-            validatedPayer.errors.reject("", null, "Cliente inexistente")
-        }
 
         if (!params.name) {
             validatedPayer.errors.reject("", null, "O campo nome é obrigatório")

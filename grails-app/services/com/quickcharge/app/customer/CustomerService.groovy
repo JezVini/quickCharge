@@ -8,6 +8,7 @@ import utils.CpfCnpjUtils
 class CustomerService {
     
     def userService
+    def springSecurityService
 
     public Customer save(Map params) {
         Customer validatedCustomer = validateSave(params)
@@ -45,7 +46,8 @@ class CustomerService {
             throw new ValidationException("Erro ao salvar conta", validatedCustomer.errors)
         }
 
-        Customer customer = Customer.get(params.long("id"))
+        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+        Customer customer = Customer.query([id: customerId]).get()
 
         customer.properties[
             "name",
