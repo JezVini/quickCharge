@@ -41,24 +41,6 @@ class PayerController {
         }
     }
 
-    def delete() {
-        try {
-            payerService.delete(params)
-            flash.message = "Pagador removido com sucesso"
-            flash.type = MessageType.SUCCESS
-        } catch (ValidationException validationException) {
-            flash.message = validationException.errors.allErrors.first().defaultMessage
-            flash.type = MessageType.WARNING
-        } catch (Exception exception) {
-            flash.message = "Ocorreu um erro ao remover pagador, contate o desenvolvimento"
-            flash.type = MessageType.ERROR
-            log.info("PayerController.delete >> Erro ao remover pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
-        } finally {
-            Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-            redirect([action: "index", params: [customerId: customerId]])
-        }
-    }
-    
     def index () {
         try {
             Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
@@ -74,6 +56,24 @@ class PayerController {
             flash.message = "Ocorreu um erro ao buscar pagadores, contate o desenvolvimento"
             flash.type = MessageType.ERROR
             log.info("PayerController.index >> Erro ao consultar pagadores com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+        }
+    }
+    
+    def delete() {
+        try {
+            payerService.delete(params)
+            flash.message = "Pagador removido com sucesso"
+            flash.type = MessageType.SUCCESS
+        } catch (ValidationException validationException) {
+            flash.message = validationException.errors.allErrors.first().defaultMessage
+            flash.type = MessageType.WARNING
+        } catch (Exception exception) {
+            flash.message = "Ocorreu um erro ao remover pagador, contate o desenvolvimento"
+            flash.type = MessageType.ERROR
+            log.info("PayerController.delete >> Erro ao remover pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+        } finally {
+            Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+            redirect([action: "index", params: [customerId: customerId]])
         }
     }
     

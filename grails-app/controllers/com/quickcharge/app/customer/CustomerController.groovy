@@ -1,6 +1,5 @@
 package com.quickcharge.app.customer
 
-
 import grails.plugin.springsecurity.annotation.Secured
 import grails.validation.ValidationException
 import utils.message.MessageType
