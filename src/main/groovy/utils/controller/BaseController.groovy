@@ -14,7 +14,7 @@ abstract class BaseController {
             String argument = error.field ? message(code: "field.${error.field}") : ""
             subMessage = message(code: error.defaultMessage ?: error.codes[0], args: [argument])
         } else {
-            subMessage = validationException.errors.allErrors.first().codes.first()
+            subMessage = error.codes.first()
         }
         
         flash.message = subMessage
