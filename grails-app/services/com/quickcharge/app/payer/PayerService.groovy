@@ -8,7 +8,7 @@ import utils.CpfCnpjUtils
 @Transactional
 class PayerService {
 
-    public Payer saveOrUpdate(Map params) {
+    public Payer save(Map params) {
         Payer validatedPayer = validateSave(params)
 
         if (validatedPayer.hasErrors()) {
@@ -16,9 +16,35 @@ class PayerService {
         }
 
         Customer customer = Customer.query([id: params.customerId]).get()
-        Payer payer = params.id
-            ? Payer.query([id: params.id, customerId: params.customerId]).get()
-            : new Payer()
+        Payer payer = new Payer()
+
+        payer.customer = customer
+        payer.properties[
+            "name",
+            "email",
+            "cpfCnpj",
+            "phone",
+            "state",
+            "city",
+            "district",
+            "addressNumber",
+            "postalCode",
+            "address",
+            "addressComplement"
+        ] = params
+
+        return payer.save(failOnError: true)
+    }
+
+    public Payer update(Map params) {
+        Payer validatedPayer = validateSave(params)
+
+        if (validatedPayer.hasErrors()) {
+            throw new ValidationException("Erro ao salvar pagador", validatedPayer.errors)
+        }
+
+        Customer customer = Customer.query([id: params.customerId]).get()
+        Payer payer = Payer.query([id: params.id, customerId: params.customerId]).get()
 
         payer.customer = customer
         payer.properties[

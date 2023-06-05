@@ -31,7 +31,6 @@ class CustomerController {
             flash.message = validationException.errors.allErrors.first().defaultMessage
             flash.type = MessageType.WARNING
         } catch (Exception exception) {
-            println(exception)
             flash.message = "Ocorreu um erro ao criar conta, contate o desenvolvimento"
             flash.type = MessageType.ERROR
             log.info("CustomerController.save >> Erro ao salvar conta com os parâmetros: [${params}]")

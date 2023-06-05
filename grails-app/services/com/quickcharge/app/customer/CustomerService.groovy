@@ -1,6 +1,5 @@
 package com.quickcharge.app.customer
 
-
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import utils.CpfCnpjUtils
@@ -11,12 +10,12 @@ class CustomerService {
     def userService
 
     public Customer save(Map params) {
-        Customer validatedCustomer = validateSaveOrUpdate(params, true)
+        Customer validatedCustomer = validateSave(params)
 
         if (validatedCustomer.hasErrors()) {
             throw new ValidationException("Erro ao salvar conta", validatedCustomer.errors)
         }
-
+        
         Customer customer = new Customer()
 
         customer.properties[
@@ -40,7 +39,7 @@ class CustomerService {
     }
     
     public Customer update(Map params) {
-        Customer validatedCustomer = validateSaveOrUpdate(params)
+        Customer validatedCustomer = validateSave(params)
 
         if (validatedCustomer.hasErrors()) {
             throw new ValidationException("Erro ao salvar conta", validatedCustomer.errors)
@@ -66,14 +65,14 @@ class CustomerService {
         return customer
     }
     
-    private Customer validateSaveOrUpdate(Map params, Boolean isSave = false) {
+    private Customer validateSave(Map params) {
         Customer validatedCustomer = new Customer()
 
         if (!params.name) {
             validatedCustomer.errors.reject("", null, "Nome não preenchido")
         }
         
-        if (!params.email && isSave) {
+        if (params.containsKey("email") && !params.email) {
             validatedCustomer.errors.reject("", null, "E-mail não preenchido")
         }
 

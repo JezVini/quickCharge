@@ -13,7 +13,7 @@
 
         <input type="text" name="name" id="name" placeholder="Digite seu nome" value="${customer.name}">
         <br>
-
+    
         <label for="cpfCnpj">CPF ou CNPJ</label>
         <input type="text" name="cpfCnpj" id="cpfCnpj" placeholder="Digite o CPF ou CNPJ" value="${customer.cpfCnpj}">
         <br>

@@ -79,7 +79,7 @@ class PayerController {
     
     def save() {
         try {
-            payerService.saveOrUpdate(params)
+            payerService.save(params)
             flash.message = "Pagador criado com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
@@ -97,7 +97,7 @@ class PayerController {
     @Secured(['ROLE_USER'])
     def update() {
         try {
-            payerService.saveOrUpdate(params)
+            payerService.update(params)
             flash.message = "Pagador alterado com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
