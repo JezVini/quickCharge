@@ -1,9 +1,9 @@
 
 
 // Added by the Spring Security Core plugin:
-grails.plugin.springsecurity.userLookup.userDomainClassName = 'com.quickcharge.app.user.User'
-grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'com.quickcharge.app.user.UserRole'
-grails.plugin.springsecurity.authority.className = 'com.quickcharge.app.user.Role'
+grails.plugin.springsecurity.userLookup.userDomainClassName = 'com.quickcharge.app.authentication.User'
+grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'com.quickcharge.app.authentication.UserRole'
+grails.plugin.springsecurity.authority.className = 'com.quickcharge.app.authentication.Role'
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	[pattern: '/**',             access: ['IS_AUTHENTICATED_FULLY']],
 	[pattern: '/error',          access: ['permitAll']],
