@@ -1,6 +1,5 @@
 package com.quickcharge.app.payer
 
-import com.quickcharge.app.customer.Customer
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import com.quickcharge.app.customer.Customer
