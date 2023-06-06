@@ -3,6 +3,7 @@ package com.quickcharge.app.customer
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import utils.CpfCnpjUtils
+import utils.baseperson.PersonType
 
 @Transactional
 class CustomerService {
@@ -30,7 +31,8 @@ class CustomerService {
             "address",
             "addressComplement"
         ] = params
-        
+
+        customer.personType = CpfCnpjUtils.isCpf(params.cpfCnpj) ? PersonType.NATURAL : PersonType.LEGAL 
         return customer.save(failOnError: true)
     }
     
