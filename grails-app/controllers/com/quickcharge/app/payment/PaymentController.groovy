@@ -1,16 +1,29 @@
 package com.quickcharge.app.payment
 
+
 import com.quickcharge.app.payer.Payer
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.validation.ValidationException
 import utils.message.MessageType
-import utils.payment.BillingType
+import utils.payment.BillingType 
 
 class PaymentController {
 
     PaymentService paymentService
     SpringSecurityService springSecurityService
 
+    def index() {
+        try {
+            Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+            List<Payment> paymentList = Payment.query([customerId: customerId]).list()
+            return [paymentList: paymentList]
+        } catch (Exception exception) {
+            flash.message = "Ocorreu um erro ao buscar cobranças, contate o desenvolvimento"
+            flash.type = MessageType.ERROR
+            log.info("PaymentController.index >> Erro ao consultar cobranças com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+        }
+    }
+    
     def create() {
         Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
         List<Payer> payerList = Payer.query([customerId: customerId]).list()
