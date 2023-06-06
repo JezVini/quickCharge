@@ -4,6 +4,7 @@ import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import com.quickcharge.app.customer.Customer
 import utils.CpfCnpjUtils
+import utils.address.State
 
 @Transactional
 class PayerService {
@@ -114,6 +115,10 @@ class PayerService {
 
         if (!CpfCnpjUtils.validate(params.cpfCnpj)) {
             validatedPayer.errors.reject("", null, "CPF ou CNPJ informado é inválido")
+        }
+
+        if (!State.validate(params.state)) {
+            validatedPayer.errors.reject("", null, "O campo estado não é válido")
         }
 
         return validatedPayer

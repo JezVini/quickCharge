@@ -3,6 +3,7 @@ package com.quickcharge.app.customer
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import utils.CpfCnpjUtils
+import utils.address.State
 
 @Transactional
 class CustomerService {
@@ -80,6 +81,11 @@ class CustomerService {
         if (!CpfCnpjUtils.validate(params.cpfCnpj)) {
             validatedCustomer.errors.reject("", null, "CPF ou CNPJ informado é inválido")
         }
+        
+        if (!State.validate(params.state)) {
+            validatedCustomer.errors.reject("", null, "O campo estado não é válido")
+        }
+        
         return validatedCustomer
     }
 }
