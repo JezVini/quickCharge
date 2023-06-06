@@ -3,11 +3,12 @@ package com.quickcharge.app.authentication
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import grails.compiler.GrailsCompileStatic
+import utils.entity.BaseEntity
 
 @GrailsCompileStatic
 @EqualsAndHashCode(includes='username')
 @ToString(includes='username', includeNames=true, includePackage=false)
-class User implements Serializable {
+class User extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1
 
