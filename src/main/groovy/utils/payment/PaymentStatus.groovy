@@ -5,4 +5,6 @@ public enum PaymentStatus {
     OVERDUE,
     RECEIVED,
     RECEIVED_IN_CASH,
+    FINISHED,
+    CANCELED
 }
