@@ -12,7 +12,7 @@ class Payment extends BaseEntity {
     Customer customer
     BillingType billingType
     Double value
-    PaymentStatus status
+    PaymentStatus status = PaymentStatus.PENDING
     Date dueDate
     Date paymentDate
     
