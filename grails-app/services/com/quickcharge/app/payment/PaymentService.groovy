@@ -89,7 +89,36 @@ class PaymentService {
         }
         
         return validatedPayment
-    }    
+    }
+
+    public Payment restore(Map parameterMap) {
+        Payment validatedPayment = validateRestore(parameterMap)
+
+        if (validatedPayment.hasErrors()) {
+            throw new ValidationException("Erro ao restaurar cobrança", validatedPayment.errors)
+        }
+
+        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+        Payment payment = Payment.query([id: parameterMap.id, customerId: customerId, deletedOnly: true]).get()
+        payment.deleted = false
+
+        return payment.save(failOnError: true)
+    }
+
+    private Payment validateRestore(Map parameterMap) {
+        Payment validatedPayment = new Payment()
+
+        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+        Payment payment = Payment.query([id: parameterMap.id, customerId: customerId, deletedOnly: true]).get()
+        if (!payment) {
+            validatedPayment.errors.rejectValue("id", "not.found", "Cobrança não encontrada")
+        } else {
+//          TODO: REMOVER AO IMPLEMENTAR JOB
+            changePaymentStatusIfOverDue(payment)
+        }
+
+        return validatedPayment
+    }
     
 //  TODO: REMOVER AO IMPLEMENTAR JOB 
     private void changePaymentStatusIfOverDue(Payment payment) {
