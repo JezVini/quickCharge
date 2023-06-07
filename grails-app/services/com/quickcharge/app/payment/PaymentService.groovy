@@ -8,6 +8,7 @@ import grails.validation.ValidationException
 import org.apache.commons.lang3.EnumUtils
 import org.apache.commons.lang3.time.DateUtils
 import utils.payment.BillingType
+import utils.payment.PaymentStatus
 
 import java.text.SimpleDateFormat
 
@@ -68,7 +69,8 @@ class PaymentService {
             throw new ValidationException("Erro ao remover cobrança", validatedPayment.errors)
         }
 
-        Payment payment = Payment.query([id: parameterMap.id, customerId: parameterMap.customerId]).get()
+        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+        Payment payment = Payment.query([id: parameterMap.id, customerId: customerId]).get()
         payment.deleted = true
 
         return payment.save(failOnError: true)
@@ -77,11 +79,21 @@ class PaymentService {
     private Payment validateDelete(Map parameterMap) {
         Payment validatedPayment = new Payment()
 
-        if (!Payment.query([id: parameterMap.id, customerId: parameterMap.customerId]).get()) {
+        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+        Payment payment = Payment.query([id: parameterMap.id, customerId: customerId]).get()
+        if (!payment) {
             validatedPayment.errors.rejectValue("id", "not.found", "Cobrança não encontrada")
+        } else {
+//          TODO: REMOVER AO IMPLEMENTAR JOB
+            changePaymentStatusIfOverDue(payment)
         }
-
+        
         return validatedPayment
-    }
+    }    
     
+//  TODO: REMOVER AO IMPLEMENTAR JOB 
+    private void changePaymentStatusIfOverDue(Payment payment) {
+        if(!payment.dueDate.before(new Date())) return
+        payment.status = PaymentStatus.OVERDUE
+    }
 }
