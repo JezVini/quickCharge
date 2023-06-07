@@ -61,4 +61,27 @@ class PaymentService {
         return validatedPayment
     }
     
+    public Payment delete(Map parameterMap) {
+        Payment validatedPayment = validateDelete(parameterMap)
+
+        if (validatedPayment.hasErrors()) {
+            throw new ValidationException("Erro ao remover cobrança", validatedPayment.errors)
+        }
+
+        Payment payment = Payment.query([id: parameterMap.id, customerId: parameterMap.customerId]).get()
+        payment.deleted = true
+
+        return payment.save(failOnError: true)
+    }
+ 
+    private Payment validateDelete(Map parameterMap) {
+        Payment validatedPayment = new Payment()
+
+        if (!Payment.query([id: parameterMap.id, customerId: parameterMap.customerId]).get()) {
+            validatedPayment.errors.rejectValue("id", "not.found", "Cobrança não encontrada")
+        }
+
+        return validatedPayment
+    }
+    
 }
