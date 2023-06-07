@@ -36,7 +36,7 @@ class SideBarTagLib {
 
         menuItemsList.add([
             icon: "user",
-            text: "Meus Perfil",
+            text: "Meu Perfil",
             href: createLink(controller: "customer", action: "edit"),
             value: "customer",
             active: (controllerName == "customer") && (actionName == "edit")
