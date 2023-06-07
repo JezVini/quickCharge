@@ -22,9 +22,15 @@ class Payment extends BaseEntity {
         status blank: false
         paymentDate nullable: true
         dueDate validator: {val, obj, errors ->
-            if(val.before(new Date()) && !obj.deleted) {
-                errors.rejectValue("dueDate", "past.date", "past.date.com.quickcharge.app.payment.Payment.dueDate")
+            if (!val.before(new Date())) return
+
+            if (obj.deleted && obj.paymentDate != null) {
+                errors.rejectValue("dueDate", "delete.payed", "delete.payed.com.quickcharge.app.payment.Payment.dueDate")
+                return
             }
+
+            if (obj.status != PaymentStatus.PENDING) return
+            errors.rejectValue("dueDate", "past.date", "past.date.com.quickcharge.app.payment.Payment.dueDate")
         }
     }
 
