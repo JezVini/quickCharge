@@ -77,7 +77,7 @@
 
                         <td>${payment.value}</td>
                         <td><g:message code="ENUM.BillingType.${payment.billingType}"/></td>
-                        <td>${payment.dueDate}</td>
+                        <td><g:formatDate format="dd/MM/yyyy" date="${payment.dueDate}"/></td>
                         <td><g:message code="ENUM.PaymentStatus.${payment.status}"/></td>
 
                         <td>
