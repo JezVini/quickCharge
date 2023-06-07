@@ -15,8 +15,17 @@ class PaymentController {
     def index() {
         try {
             Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-            List<Payment> paymentList = Payment.query([customerId: customerId]).list()
-            return [paymentList: paymentList]
+            
+            return [
+                paymentList: Payment.query([
+                    customerId: customerId,
+                    deletedOnly: params.deletedOnly,
+                    includeDeleted: params.includeDeleted
+                ]).list(),
+
+                deletedOnly: params.deletedOnly,
+                includeDeleted: params.includeDeleted
+            ]
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao buscar cobranças, contate o desenvolvimento"
             flash.type = MessageType.ERROR
@@ -59,6 +68,29 @@ class PaymentController {
             flash.message = "Ocorreu um erro ao remover cobrança, contate o desenvolvimento"
             flash.type = MessageType.ERROR
             log.info("PaymentController.delete >> Erro ao remover cobrança com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+        } finally {
+            redirect([
+                action: "index",
+                params: [
+                    deletedOnly: params.deletedOnly,
+                    includeDeleted: params.includeDeleted
+                ]
+            ])
+        }
+    }    
+    
+    def restore() {
+        try {
+            paymentService.restore(params)
+            flash.message = "Cobrança restaurada com sucesso"
+            flash.type = MessageType.SUCCESS
+        } catch (ValidationException validationException) {
+            flash.message = validationException.errors.allErrors.first().defaultMessage
+            flash.type = MessageType.WARNING
+        } catch (Exception exception) {
+            flash.message = "Ocorreu um erro ao restaurar cobrança, contate o desenvolvimento"
+            flash.type = MessageType.ERROR
+            log.info("PaymentController.restore >> Erro ao restaurar cobrança com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
             redirect([
                 action: "index",
