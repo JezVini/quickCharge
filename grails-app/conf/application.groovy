@@ -27,3 +27,4 @@ grails.plugin.springsecurity.filterChain.chainMap = [
 	[pattern: '/**',             filters: 'JOINED_FILTERS']
 ]
 
+grails.assets.excludes = ["mixins/*.scss"]
