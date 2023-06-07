@@ -1,10 +1,12 @@
 package com.quickcharge.app.payer
 
+import com.quickcharge.app.customer.Customer
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
-import com.quickcharge.app.customer.Customer
 import utils.CpfCnpjUtils
 import utils.Utils
+import utils.baseperson.PersonType
+
 import java.util.regex.Pattern
 
 @Transactional
@@ -17,29 +19,16 @@ class PayerService {
             throw new ValidationException("Erro ao salvar pagador", validatedPayer.errors)
         }
 
-        Map parsedParameterMap = parseParameterMap(parameterMap)
-        Map sanitizedParsedParameterMap = sanitizeParameterMap(parsedParameterMap)
-        Customer customer = Customer.query([id: sanitizedParsedParameterMap.customerId]).get()
+        Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
+        Customer customer = Customer.query([id: sanitizedParameterMap.customerId]).get()
         Payer payer = new Payer()
 
         payer.customer = customer
-        payer.properties[
-            "name",
-            "email",
-            "cpfCnpj",
-            "phone",
-            "state",
-            "city",
-            "district",
-            "addressNumber",
-            "postalCode",
-            "address",
-            "addressComplement"
-        ] = sanitizedParsedParameterMap
-
+        setPayerProperties(payer, sanitizedParameterMap)
+        
         return payer.save(failOnError: true)
     }
-
+    
     public Payer update(Map parameterMap) {
         Payer validatedPayer = validateSave(parameterMap)
 
@@ -47,29 +36,29 @@ class PayerService {
             throw new ValidationException("Erro ao salvar pagador", validatedPayer.errors)
         }
 
-        Map parsedParameterMap = parseParameterMap(parameterMap)
-        Map sanitizedParsedParameterMap = sanitizeParameterMap(parsedParameterMap)
-        Customer customer = Customer.query([id: sanitizedParsedParameterMap.customerId]).get()
-        Payer payer = Payer.query([id: sanitizedParsedParameterMap.id, customerId: sanitizedParsedParameterMap.customerId]).get()
+        Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
+        Payer payer = Payer.query([id: sanitizedParameterMap.id, customerId: sanitizedParameterMap.customerId]).get()
 
-        payer.customer = customer
-        payer.properties[
-            "name",
-            "email",
-            "cpfCnpj",
-            "phone",
-            "state",
-            "city",
-            "district",
-            "addressNumber",
-            "postalCode",
-            "address",
-            "addressComplement"
-        ] = sanitizedParsedParameterMap
+        setPayerProperties(payer, sanitizedParameterMap)
 
         return payer.save(failOnError: true)
     }
 
+    private void setPayerProperties(Payer payer, Map parameterMap) {
+        payer.name = parameterMap.name
+        payer.email = parameterMap.email
+        payer.cpfCnpj = parameterMap.cpfCnpj
+        payer.phone = parameterMap.phone
+        payer.state = parameterMap.state
+        payer.city = parameterMap.city
+        payer.district = parameterMap.district
+        payer.addressNumber = parameterMap.addressNumber
+        payer.postalCode = parameterMap.postalCode
+        payer.address = parameterMap.address
+        payer.addressComplement = parameterMap.addressComplement
+        payer.personType = CpfCnpjUtils.isCpf(parameterMap.cpfCnpj) ? PersonType.NATURAL : PersonType.LEGAL
+    }
+    
     public Payer delete(Map parameterMap) {
         Payer validatedPayer = validateDelete(parameterMap)
 
@@ -156,31 +145,6 @@ class PayerService {
         }
         
         return validatedPayer
-    }
-    
-     private Map parseParameterMap(Map parameterMap) {
-        List<String> toParseParameterList = [
-            "name",
-            "email",
-            "cpfCnpj",
-            "phone",
-            "state",
-            "city",
-            "district",
-            "addressNumber",
-            "postalCode",
-            "address",
-            "addressComplement",
-            "id",
-            "customerId"
-        ]
-        
-        Map parsedParameterMap = [:]
-        for (String parameter : toParseParameterList) {
-            parsedParameterMap[parameter] = parameterMap[parameter]
-        }
-        
-        return parsedParameterMap
     }
     
      private Map sanitizeParameterMap(Map parameterMap) {
