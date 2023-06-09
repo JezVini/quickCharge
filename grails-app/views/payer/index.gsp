@@ -73,7 +73,7 @@
                                 </g:link>
                             </g:if>
                             <g:else>
-                                <g:link action="edit" params="${parameterMap}">
+                                <g:link action="edit" params="${[id: payer.id]}">
                                     <button style="background-color: yellow ">Editar</button>
                                 </g:link>
 
