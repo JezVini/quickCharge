@@ -6,6 +6,5 @@ public enum BillingType {
     DEPOSIT,
     TRANSFER,
     DEBIT_CARD,
-    CREDIT_CARD,
-    UNDEFINED
+    CREDIT_CARD
 }
