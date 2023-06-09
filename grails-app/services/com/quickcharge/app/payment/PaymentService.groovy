@@ -109,7 +109,7 @@ class PaymentService {
         Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
         Payment payment = Payment.query([id: parameterMap.id, customerId: customerId, deletedOnly: true]).get()
         if (!payment) {
-            validatedPayment.errors.rejectValue("id", "not.found", "Cobrança não encontrada")
+            validatedPayment.errors.rejectValue("id", "not.found")
         } else {
 //          TODO: REMOVER AO IMPLEMENTAR JOB
             changePaymentStatusIfOverDue(payment)

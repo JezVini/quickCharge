@@ -84,8 +84,7 @@ class PaymentController extends BaseController{
             flash.message = "Cobrança restaurada com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
-            flash.message = validationException.errors.allErrors.first().defaultMessage
-            flash.type = MessageType.WARNING
+            this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao restaurar cobrança, contate o desenvolvimento"
             flash.type = MessageType.ERROR
