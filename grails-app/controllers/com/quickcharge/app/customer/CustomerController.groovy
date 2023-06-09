@@ -14,7 +14,7 @@ class CustomerController extends BaseController{
     def create() {
         return params
     }
-    
+
     def edit() {
         Customer customer = springSecurityService.getCurrentUser().customer
         return [customer: customer]
@@ -39,7 +39,7 @@ class CustomerController extends BaseController{
             ])
         }
     }
-    
+
     def update() {
         try {
             customerService.update(params)

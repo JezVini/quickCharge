@@ -38,7 +38,7 @@ class CustomerService {
         if (validatedCustomer.hasErrors()) {
             throw new ValidationException("Erro ao salvar conta", validatedCustomer.errors)
         }
-        
+
         Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
         Customer customer = springSecurityService.getCurrentUser().customer
 
