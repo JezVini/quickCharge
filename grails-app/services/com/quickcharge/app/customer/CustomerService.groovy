@@ -120,7 +120,7 @@ class CustomerService {
         Customer validatedCustomer = new Customer()
 
         if (!CpfCnpjUtils.validate(parameterMap.cpfCnpj as String)) {
-            validatedCustomer.errors.reject("", null, "CPF ou CNPJ inválido")
+            validatedCustomer.errors.rejectValue("cpfCnpj", "invalid")
         }
 
         return validatedCustomer
