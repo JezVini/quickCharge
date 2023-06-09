@@ -44,11 +44,13 @@ class CustomerController extends BaseController{
         try {
             customerService.update(params)
             flash.message = "Cadastro alterado com sucesso"
+            flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro, contate o desenvolvimento"
             log.info("CustomerController.save >> Erro ao alterar cadastro com os parâmetros: [${params}]")
+            flash.type = MessageType.ERROR
         } finally {
             redirect([
                 action: "edit",
