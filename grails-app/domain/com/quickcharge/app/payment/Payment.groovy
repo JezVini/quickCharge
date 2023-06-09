@@ -25,12 +25,12 @@ class Payment extends BaseEntity {
             if (!val.before(new Date())) return
 
             if (obj.deleted && obj.paymentDate != null) {
-                errors.rejectValue("dueDate", "delete.payed", "delete.payed.com.quickcharge.app.payment.Payment.dueDate")
+                errors.rejectValue("dueDate", "delete.payed")
                 return
             }
 
             if (obj.status != PaymentStatus.PENDING) return
-            errors.rejectValue("dueDate", "past.date", "past.date.com.quickcharge.app.payment.Payment.dueDate")
+            errors.rejectValue("dueDate", "past.date")
         }
     }
 
