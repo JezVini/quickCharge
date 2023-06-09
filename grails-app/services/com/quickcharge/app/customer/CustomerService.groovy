@@ -27,7 +27,7 @@ class CustomerService {
         setCustomerProperties(customer, sanitizedParameterMap)
         
         customer.save(failOnError: true)
-        userService.save(customer, sanitizedParameterMap.email, sanitizedParameterMap.password)
+        userService.save(customer, params.email, params.password)
         
         return customer
     }

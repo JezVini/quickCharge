@@ -1,8 +1,8 @@
 package com.quickcharge.app.payer
 
+import com.quickcharge.app.customer.Customer
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
-import com.quickcharge.app.customer.Customer
 import utils.CpfCnpjUtils
 import utils.Utils
 import utils.baseperson.PersonType
@@ -21,7 +21,8 @@ class PayerService {
         }
 
         Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
-        Customer customer = springSecurityService.getCurrentUser().customer
+        Customer customer = (springSecurityService.getCurrentUser().customer)
+        
         Payer payer = new Payer()
 
         payer.customer = customer
@@ -37,8 +38,9 @@ class PayerService {
             throw new ValidationException("Erro ao salvar pagador", validatedPayer.errors)
         }
 
+        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
         Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
-        Payer payer = Payer.query([id: sanitizedParameterMap.id, customerId: sanitizedParameterMap.customerId]).get()
+        Payer payer = Payer.query([id: sanitizedParameterMap.id, customerId: customerId]).get()
 
         setPayerProperties(payer, sanitizedParameterMap)
 
@@ -153,7 +155,7 @@ class PayerService {
             if (!(parameterMap[field] as String).matches(INVALID_CHARACTERS_PATTERN)) continue
             validatedPayer.errors.rejectValue(field, "", DEFAULT_FIELD_INVALID_SPECIAL_CHARACTERS)
         }
-        
+
         return validatedPayer
     }
 
@@ -170,7 +172,7 @@ class PayerService {
         if (!CpfCnpjUtils.validate(parameterMap.cpfCnpj as String)) {
             validatedPayer.errors.rejectValue("cpfCnpj", "invalid")
         }
-
+        
         return validatedPayer
     }
     

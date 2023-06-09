@@ -9,10 +9,11 @@ import utils.entity.BaseEntity
 @GrailsCompileStatic
 @EqualsAndHashCode(includes='username')
 @ToString(includes='username', includeNames=true, includePackage=false)
+
 class User extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1
-
+    
     String username
     String password
     Customer customer
@@ -26,9 +27,9 @@ class User extends BaseEntity implements Serializable {
     }
 
     static constraints = {
-        password nullable: false, blank: false, password: true
-        username nullable: false, blank: false, unique: true, email: true
-        customer nullable: false, blank: false
+        password blank: false, password: true
+        username blank: false, unique: true, email: true
+        customer blank: false
     }
 
     static mapping = {
