@@ -1,8 +1,11 @@
 package com.quickcharge.app.customer
 
 import utils.baseperson.BasePerson
+import utils.baseperson.PersonType
 
 class Customer extends BasePerson {
+    
+    PersonType personType
     
     static namedQueries = {
         query { Map search ->

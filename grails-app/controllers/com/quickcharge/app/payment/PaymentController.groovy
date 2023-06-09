@@ -4,10 +4,11 @@ package com.quickcharge.app.payment
 import com.quickcharge.app.payer.Payer
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.validation.ValidationException
+import utils.controller.BaseController
 import utils.message.MessageType
 import utils.payment.BillingType 
 
-class PaymentController {
+class PaymentController extends BaseController{
 
     PaymentService paymentService
     SpringSecurityService springSecurityService
@@ -45,8 +46,7 @@ class PaymentController {
             flash.message = "Cobrança criada com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
-            flash.message = validationException.errors.allErrors.first().defaultMessage
-            flash.type = MessageType.WARNING
+            this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao criar cobrança, contate o desenvolvimento"
             flash.type = MessageType.ERROR
@@ -62,8 +62,7 @@ class PaymentController {
             flash.message = "Cobrança removida com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
-            flash.message = validationException.errors.allErrors.first().defaultMessage
-            flash.type = MessageType.WARNING
+            this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao remover cobrança, contate o desenvolvimento"
             flash.type = MessageType.ERROR
