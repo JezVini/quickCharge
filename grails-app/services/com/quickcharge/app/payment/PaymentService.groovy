@@ -25,11 +25,9 @@ class PaymentService {
         }
         
         Payment payment = new Payment()
-        
-        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-        Payer payer = Payer.query([id: parameterMap.payerId, customerId: customerId]).get()
-        Customer customer = Customer.query([id: customerId]).get()
-        BillingType billingType = BillingType[parameterMap.billingType as String]
+        Customer customer = (springSecurityService.getCurrentUser().customer)
+        Payer payer = Payer.query([id: parameterMap.payerId, customerId: customer.id]).get()
+        BillingType billingType = BillingType[parameterMap.billingType as String] as BillingType
         Double value = parameterMap.double("value")
         
         Date selectedDay = new SimpleDateFormat("yyyy-MM-dd").parse(parameterMap.dueDate as String) 
@@ -48,15 +46,15 @@ class PaymentService {
         Payment validatedPayment = new Payment()
 
         if(!parameterMap.payerId) {
-            validatedPayment.errors.rejectValue("", "", "Selecione um pagador")
+            validatedPayment.errors.rejectValue("payer", "not.selected")
         }
         
-        if(!EnumUtils.isValidEnum(BillingType.class, parameterMap.billingType)) {
-            validatedPayment.errors.rejectValue("", "", "Selecione uma forma de pagamento")
+        if(!EnumUtils.isValidEnum(BillingType.class, parameterMap.billingType as String)) {
+            validatedPayment.errors.rejectValue("billingType", "not.selected")
         }
         
         if(!parameterMap.dueDate) {
-            validatedPayment.errors.rejectValue("", "", "Selecione uma data de vencimento")
+            validatedPayment.errors.rejectValue("dueDate", "not.selected",)
         }
         
         return validatedPayment
