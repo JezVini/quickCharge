@@ -57,7 +57,10 @@
 
             <button type="submit">Salvar</button>
 
-        </form>
-    </g:if>
-</body>
+            </form>
+        </g:if>
+        <g:else>
+            Pagador não encontrado
+        </g:else>
+    </body>
 </html>
