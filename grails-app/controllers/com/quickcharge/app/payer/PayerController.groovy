@@ -19,22 +19,8 @@ class PayerController extends BaseController {
         try {
             Long id = params.long("id")
             Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-            Map parsedParams = [id: id, customerId: customerId]
-            
-            if (!springSecurityService.getCurrentUser().customer) {
-                flash.message = "Cliente inexistente"
-                flash.type = MessageType.WARNING
-                return parsedParams
-            }
 
-            Payer payer = Payer.query([id: id, customerId: customerId]).get()
-            if (!payer) {
-                flash.message = "Não foi possível buscar os dados do pagador"
-                flash.type = MessageType.WARNING
-                return parsedParams
-            }   
-
-            return parsedParams + [payer: payer]
+            return [payer: Payer.query([id: id, customerId: customerId]).get()]
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao buscar dados do pagador, contate o desenvolvimento"
             flash.type = MessageType.ERROR
@@ -45,12 +31,6 @@ class PayerController extends BaseController {
     def index () {
         try {
             Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-
-            if (!springSecurityService.getCurrentUser().customer) {
-                flash.message = "Cliente inexistente"
-                flash.type = MessageType.WARNING
-                return
-            }
             
             return [
                 payerList: Payer.query([
@@ -59,7 +39,6 @@ class PayerController extends BaseController {
                     includeDeleted: params.includeDeleted
                 ]).list(),
                 
-                customerId: customerId,
                 deletedOnly: params.deletedOnly,
                 includeDeleted: params.includeDeleted
             ]
@@ -83,11 +62,9 @@ class PayerController extends BaseController {
             flash.type = MessageType.ERROR
             log.info("PayerController.delete >> Erro ao remover pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
-            Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
             redirect([
                 action: "index",
                 params: [
-                    customerId: customerId,
                     deletedOnly: params.deletedOnly,
                     includeDeleted: params.includeDeleted
                 ]
@@ -107,11 +84,9 @@ class PayerController extends BaseController {
             flash.type = MessageType.ERROR
             log.info("PayerController.restore >> Erro ao restaurar pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
-            Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
             redirect([
                 action: "index",
                 params: [
-                    customerId: customerId,
                     deletedOnly: params.deletedOnly,
                     includeDeleted: params.includeDeleted
                 ]
@@ -121,16 +96,17 @@ class PayerController extends BaseController {
     
     def save() {
         try {
-            payerService.save(params)
+            Payer payer = payerService.save(params)
             flash.message = "Pagador criado com sucesso"
             flash.type = MessageType.SUCCESS
+            redirect([action: "edit", params: [id: payer.id]])
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
+            redirect([action: "create", params: params])
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao criar pagador, contate o desenvolvimento"
             flash.type = MessageType.ERROR
             log.info("PayerController.save >> Erro ao salvar pagador com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
-        } finally {
             redirect([action: "create", params: params])
         }
     }
@@ -147,13 +123,9 @@ class PayerController extends BaseController {
             flash.type = MessageType.ERROR
             log.info("PayerController.update >> Erro ao alterar pagador com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
-            Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
             redirect([
                 action: "edit",
-                params: [
-                    id: params.id,
-                    customerId: customerId
-                ]
+                params: [id: params.id]
             ])
         }
     }

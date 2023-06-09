@@ -22,7 +22,6 @@ class PayerService {
 
         Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
         Customer customer = (springSecurityService.getCurrentUser().customer)
-        
         Payer payer = new Payer()
 
         payer.customer = customer
@@ -38,8 +37,8 @@ class PayerService {
             throw new ValidationException("Erro ao salvar pagador", validatedPayer.errors)
         }
 
-        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
         Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
+        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
         Payer payer = Payer.query([id: sanitizedParameterMap.id, customerId: customerId]).get()
 
         setPayerProperties(payer, sanitizedParameterMap)
@@ -83,7 +82,8 @@ class PayerService {
             throw new ValidationException("Erro ao restaurar pagador", validatedPayer.errors)
         }
 
-        Payer payer = Payer.query([id: parameterMap.id, customerId: parameterMap.customerId, deletedOnly: true]).get()
+        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+        Payer payer = Payer.query([id: parameterMap.id, customerId: customerId, deletedOnly: true]).get()
         payer.deleted = false
 
         return payer.save(failOnError: true)
@@ -176,7 +176,7 @@ class PayerService {
         return validatedPayer
     }
     
-     private Map sanitizeParameterMap(Map parameterMap) {
+    private Map sanitizeParameterMap(Map parameterMap) {
         List<String> mustRemoveNonNumericsParameterList = ["cpfCnpj", "phone", "postalCode"]
 
         Map sanitizedParameterMap = [:]
