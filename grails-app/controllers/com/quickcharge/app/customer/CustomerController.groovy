@@ -26,17 +26,15 @@ class CustomerController extends BaseController{
             customerService.save(params)
             flash.message = "Conta criada com sucesso"
             flash.type = MessageType.SUCCESS
+            redirect([action: "edit"])
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
+            redirect([action: "create", params: params])
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao criar conta, contate o desenvolvimento"
             flash.type = MessageType.ERROR
             log.info("CustomerController.save >> Erro ao salvar conta com os parâmetros: [${params}]")
-        } finally {
-            redirect([
-                action: "create",
-                params: params
-            ])
+            redirect([action: "create", params: params])
         }
     }
 
@@ -52,10 +50,7 @@ class CustomerController extends BaseController{
             log.info("CustomerController.save >> Erro ao alterar cadastro com os parâmetros: [${params}]")
             flash.type = MessageType.ERROR
         } finally {
-            redirect([
-                action: "edit",
-                params: [id: params.id]
-            ])
+            redirect([action: "edit"])
         }
     }
 }
