@@ -27,6 +27,6 @@ abstract class BasePerson extends BaseEntity {
         addressNumber blank: false
         postalCode blank: false, size: 8..8
         address blank: false
-        addressComplement blank: false, nullable: true
+        addressComplement blank: true, nullable: true
     }
 }

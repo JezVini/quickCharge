@@ -4,6 +4,8 @@ import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import utils.CpfCnpjUtils
 import utils.Utils
+import utils.baseperson.PersonType
+
 import java.util.regex.Pattern
 
 @Transactional
@@ -16,54 +18,44 @@ class CustomerService {
             throw new ValidationException("Erro ao salvar conta", validatedCustomer.errors)
         }
 
-        Map parsedParameterMap = parseParameterMap(parameterMap)
-        Map sanitizedParsedParameterMap = sanitizeParameterMap(parsedParameterMap)
+        Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
         Customer customer = new Customer()
         
-        customer.properties[
-            "name",
-            "email",
-            "cpfCnpj",
-            "phone",
-            "state",
-            "city",
-            "district",
-            "addressNumber",
-            "postalCode",
-            "address",
-            "addressComplement"
-        ] = sanitizedParsedParameterMap
+        customer.email = sanitizedParameterMap.email
+        setCustomerProperties(customer, sanitizedParameterMap)
         
         return customer.save(failOnError: true)
     }
 
-    public Customer update(Map params) {
-        Customer validatedCustomer = validateSave(params)
+    public Customer update(Map parameterMap) {
+        Customer validatedCustomer = validateSave(parameterMap)
 
         if (validatedCustomer.hasErrors()) {
             throw new ValidationException("Erro ao salvar conta", validatedCustomer.errors)
         }
 
-        Map parsedParameterMap = parseParameterMap(parameterMap)
-        Map sanitizedParsedParameterMap = sanitizeParameterMap(parsedParameterMap)
-        Customer customer = Customer.query([id: sanitizedParsedParameterMap.id])
+        Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
+        Customer customer = Customer.query([id: sanitizedParameterMap.id])
 
-        customer.properties[
-            "name",
-            "cpfCnpj",
-            "phone",
-            "state",
-            "city",
-            "district",
-            "addressNumber",
-            "postalCode",
-            "address",
-            "addressComplement"
-        ] = sanitizedParsedParameterMap
+        setCustomerProperties(customer, sanitizedParameterMap)
 
         return customer.save(failOnError: true)
     }
 
+    private void setCustomerProperties(Customer customer, Map parameterMap) {
+        customer.name = parameterMap.name
+        customer.cpfCnpj = parameterMap.cpfCnpj
+        customer.phone = parameterMap.phone
+        customer.state = parameterMap.state
+        customer.city = parameterMap.city
+        customer.district = parameterMap.district
+        customer.addressNumber = parameterMap.addressNumber
+        customer.postalCode = parameterMap.postalCode
+        customer.address = parameterMap.address
+        customer.addressComplement = parameterMap.addressComplement
+        customer.personType = CpfCnpjUtils.isCpf(parameterMap.cpfCnpj) ? PersonType.NATURAL : PersonType.LEGAL
+    }
+    
     private Customer validatePatternMatching(Map parameterMap) {
         final String DEFAULT_FIELD_INVALID_PATTERN = "default.field.invalid.pattern"
 
@@ -127,30 +119,6 @@ class CustomerService {
         }
 
         return validatedCustomer
-    }
-
-    private Map parseParameterMap(Map parameterMap) {
-        List<String> toParseParameterList = [
-            "name",
-            "email",
-            "cpfCnpj",
-            "phone",
-            "state",
-            "city",
-            "district",
-            "addressNumber",
-            "postalCode",
-            "address",
-            "addressComplement",
-            "id",
-        ]
-
-        Map parsedParameterMap = [:]
-        for (String parameter : toParseParameterList) {
-            parsedParameterMap[parameter] = parameterMap[parameter]
-        }
-
-        return parsedParameterMap
     }
 
     private Map sanitizeParameterMap(Map parameterMap) {
