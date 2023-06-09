@@ -1,9 +1,10 @@
 package com.quickcharge.app.customer
 
 import grails.validation.ValidationException
+import utils.controller.BaseController
 import utils.message.MessageType
 
-class CustomerController {
+class CustomerController extends BaseController{
 
     def customerService
 
@@ -18,12 +19,11 @@ class CustomerController {
 
     def save() {
         try {
-            customerService.saveOrUpdate(params)
+            customerService.save(params)
             flash.message = "Conta criada com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
-            flash.message = validationException.errors.allErrors.first().defaultMessage
-            flash.type = MessageType.WARNING
+            this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao criar conta, contate o desenvolvimento"
             flash.type = MessageType.ERROR
@@ -38,10 +38,10 @@ class CustomerController {
 
     def update() {
         try {
-            customerService.saveOrUpdate(params)
+            customerService.update(params)
             flash.message = "Conta alterada com sucesso"
         } catch (ValidationException validationException) {
-            flash.message = validationException.errors.allErrors.first().defaultMessage
+            this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro, contate o desenvolvimento"
             log.info("CustomerController.save >> Erro ao alterar conta com os parâmetros: [${params}]")

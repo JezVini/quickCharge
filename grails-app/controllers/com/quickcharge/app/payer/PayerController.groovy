@@ -2,9 +2,10 @@ package com.quickcharge.app.payer
 
 import com.quickcharge.app.customer.Customer
 import grails.validation.ValidationException
+import utils.controller.BaseController
 import utils.message.MessageType
 
-class PayerController {
+class PayerController extends BaseController {
 
     PayerService payerService
 
@@ -41,15 +42,25 @@ class PayerController {
     
     def index () {
         try {
-            Long customerId = params.long("customerId")
-            
+            Long customerId = 1
             if (!Customer.query([id: customerId]).get()) {
                 flash.message = "Cliente inexistente"
                 flash.type = MessageType.WARNING
                 return
             }
             
-            return [payerList: Payer.query([customerId: customerId]).list(), customerId: customerId]
+            return [
+                payerList: Payer.query([
+                    customerId: customerId,
+                    deletedOnly: params.deletedOnly,
+                    includeDeleted: params.includeDeleted
+                ]).list(),
+                
+                customerId: customerId,
+                deletedOnly: params.deletedOnly,
+                includeDeleted: params.includeDeleted
+            ]
+            
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao buscar pagadores, contate o desenvolvimento"
             flash.type = MessageType.ERROR
@@ -63,25 +74,53 @@ class PayerController {
             flash.message = "Pagador removido com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
-            flash.message = validationException.errors.allErrors.first().defaultMessage
-            flash.type = MessageType.WARNING
+            this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao remover pagador, contate o desenvolvimento"
             flash.type = MessageType.ERROR
             log.info("PayerController.delete >> Erro ao remover pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
-            redirect([action: "index", params: [customerId: params.customerId]])
+            redirect([
+                action: "index",
+                params: [
+                    customerId: params.customerId,
+                    deletedOnly: params.deletedOnly,
+                    includeDeleted: params.includeDeleted
+                ]
+            ])
+        }
+    }
+    
+    def restore() {
+        try {
+            payerService.restore(params)
+            flash.message = "Pagador restaurado com sucesso"
+            flash.type = MessageType.SUCCESS
+        } catch (ValidationException validationException) {
+            this.validateExceptionHandler(validationException)
+        } catch (Exception exception) {
+            flash.message = "Ocorreu um erro ao restaurar pagador, contate o desenvolvimento"
+            flash.type = MessageType.ERROR
+            log.info("PayerController.restore >> Erro ao restaurar pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+        } finally {
+            redirect([
+                action: "index",
+                params: [
+                    customerId: params.customerId,
+                    deletedOnly: params.deletedOnly,
+                    includeDeleted: params.includeDeleted
+                ]
+            ])
         }
     }
     
     def save() {
         try {
-            payerService.saveOrUpdate(params)
+            payerService.save(params)
             flash.message = "Pagador criado com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
-            flash.message = validationException.errors.allErrors.first().defaultMessage
-            flash.type = MessageType.WARNING
+            this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao criar pagador, contate o desenvolvimento"
             flash.type = MessageType.ERROR
@@ -93,12 +132,11 @@ class PayerController {
 
     def update() {
         try {
-            payerService.saveOrUpdate(params)
+            payerService.update(params)
             flash.message = "Pagador alterado com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
-            flash.message = validationException.errors.allErrors.first().defaultMessage
-            flash.type = MessageType.WARNING
+            this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao alterar pagador, contate o desenvolvimento"
             flash.type = MessageType.ERROR
