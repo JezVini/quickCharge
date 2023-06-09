@@ -12,7 +12,7 @@ class Payment extends BaseEntity {
     Customer customer
     BillingType billingType
     Double value
-    PaymentStatus status
+    PaymentStatus status = PaymentStatus.PENDING
     Date dueDate
     Date paymentDate
     
@@ -21,5 +21,10 @@ class Payment extends BaseEntity {
         value min: 0.01D
         status blank: false
         paymentDate nullable: true
+        dueDate validator: {val, obj, errors ->
+            if(val.before(new Date())) {
+                errors.rejectValue("dueDate", "past.date",)
+            }
+        }
     }
 }

@@ -6,12 +6,13 @@ import grails.validation.ValidationException
 import utils.CpfCnpjUtils
 import utils.Utils
 import utils.baseperson.PersonType
-
 import java.util.regex.Pattern
 
 @Transactional
 class PayerService {
 
+    def springSecurityService
+    
     public Payer save(Map parameterMap) {
         Payer validatedPayer = validateSave(parameterMap)
 
@@ -20,7 +21,8 @@ class PayerService {
         }
 
         Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
-        Customer customer = Customer.query([id: sanitizedParameterMap.customerId]).get()
+        Customer customer = (springSecurityService.getCurrentUser().customer)
+        
         Payer payer = new Payer()
 
         payer.customer = customer
@@ -36,8 +38,9 @@ class PayerService {
             throw new ValidationException("Erro ao salvar pagador", validatedPayer.errors)
         }
 
+        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
         Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
-        Payer payer = Payer.query([id: sanitizedParameterMap.id, customerId: sanitizedParameterMap.customerId]).get()
+        Payer payer = Payer.query([id: sanitizedParameterMap.id, customerId: customerId]).get()
 
         setPayerProperties(payer, sanitizedParameterMap)
 
@@ -65,8 +68,9 @@ class PayerService {
         if (validatedPayer.hasErrors()) {
             throw new ValidationException("Erro ao remover pagador", validatedPayer.errors)
         }
-        
-        Payer payer = Payer.query([id: parameterMap.id, customerId: parameterMap.customerId]).get()
+
+        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+        Payer payer = Payer.query([id: parameterMap.id, customerId: customerId]).get()
         payer.deleted = true
         
         return payer.save(failOnError: true)
@@ -88,7 +92,8 @@ class PayerService {
     private Payer validateRestore(Map parameterMap) {
         Payer validatedPayer = new Payer()
 
-        if (!Payer.query([id: parameterMap.id, customerId: parameterMap.customerId, deletedOnly: true]).get()) {
+        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+        if (!Payer.query([id: parameterMap.id, customerId: customerId, deletedOnly: true]).get()) {
             validatedPayer.errors.rejectValue("id", "not.found")
         }
 
@@ -98,7 +103,8 @@ class PayerService {
     private Payer validateDelete(Map parameterMap) {
         Payer validatedPayer = new Payer()
 
-        if (!Payer.query([id: parameterMap.id, customerId: parameterMap.customerId]).get()) {
+        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+        if (!Payer.query([id: parameterMap.id, customerId: customerId]).get()) {
             validatedPayer.errors.rejectValue("id", "not.found")
         }
         

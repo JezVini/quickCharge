@@ -5,11 +5,13 @@ import grails.validation.ValidationException
 import utils.CpfCnpjUtils
 import utils.Utils
 import utils.baseperson.PersonType
-
 import java.util.regex.Pattern
 
 @Transactional
 class CustomerService {
+    
+    def userService
+    def springSecurityService
 
     public Customer save(Map parameterMap) {
         Customer validatedCustomer = validateSave(parameterMap)
@@ -24,7 +26,10 @@ class CustomerService {
         customer.email = sanitizedParameterMap.email
         setCustomerProperties(customer, sanitizedParameterMap)
         
-        return customer.save(failOnError: true)
+        customer.save(failOnError: true)
+        userService.save(customer, parameterMap.email, parameterMap.password)
+        
+        return customer
     }
 
     public Customer update(Map parameterMap) {
@@ -33,9 +38,9 @@ class CustomerService {
         if (validatedCustomer.hasErrors()) {
             throw new ValidationException("Erro ao salvar conta", validatedCustomer.errors)
         }
-
+        
         Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
-        Customer customer = Customer.query([id: sanitizedParameterMap.id])
+        Customer customer = springSecurityService.getCurrentUser().customer
 
         setCustomerProperties(customer, sanitizedParameterMap)
 
