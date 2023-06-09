@@ -13,7 +13,7 @@ class CustomerController extends BaseController{
     }
 
     def edit() {
-        Customer customer = Customer.get(params.long("id"))
+        Customer customer = Customer.query([id: params.id]).get()
         return [customer: customer]
     }
 
