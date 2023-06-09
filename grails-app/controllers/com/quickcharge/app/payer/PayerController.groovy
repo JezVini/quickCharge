@@ -21,7 +21,7 @@ class PayerController extends BaseController {
             Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
             Map parsedParams = [id: id, customerId: customerId]
             
-            if (!Customer.query([id: customerId]).get()) {
+            if (!springSecurityService.getCurrentUser().customer) {
                 flash.message = "Cliente inexistente"
                 flash.type = MessageType.WARNING
                 return parsedParams
@@ -46,7 +46,7 @@ class PayerController extends BaseController {
         try {
             Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
 
-            if (!Customer.query([id: customerId]).get()) {
+            if (!springSecurityService.getCurrentUser().customer) {
                 flash.message = "Cliente inexistente"
                 flash.type = MessageType.WARNING
                 return

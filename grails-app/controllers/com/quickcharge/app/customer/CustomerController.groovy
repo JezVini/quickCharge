@@ -16,8 +16,7 @@ class CustomerController extends BaseController{
     }
     
     def edit() {
-        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-        Customer customer = Customer.query([id: customerId]).get()
+        Customer customer = springSecurityService.getCurrentUser().customer
         return [customer: customer]
     }
 

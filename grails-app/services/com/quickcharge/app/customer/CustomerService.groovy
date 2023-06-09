@@ -11,6 +11,9 @@ import java.util.regex.Pattern
 @Transactional
 class CustomerService {
 
+    def userService
+    def springSecurityService
+    
     public Customer save(Map parameterMap) {
         Customer validatedCustomer = validateSave(parameterMap)
 
@@ -25,7 +28,7 @@ class CustomerService {
         setCustomerProperties(customer, sanitizedParameterMap)
         
         customer.save(failOnError: true)
-        userService.save(customer, params.email, params.password)
+        userService.save(customer, parameterMap.email, parameterMap.password)
         
         return customer
     }
@@ -38,8 +41,7 @@ class CustomerService {
         }
 
         Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
-        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-        Customer customer = Customer.query([id: customerId]).get()
+        Customer customer = springSecurityService.getCurrentUser().customer
 
         setCustomerProperties(customer, sanitizedParameterMap)
 

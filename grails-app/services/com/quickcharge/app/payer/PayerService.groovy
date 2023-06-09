@@ -22,8 +22,7 @@ class PayerService {
         }
 
         Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
-        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-        Customer customer = Customer.query([id: customerId]).get()
+        Customer customer = (springSecurityService.getCurrentUser().customer)
         
         Payer payer = new Payer()
 
@@ -41,7 +40,7 @@ class PayerService {
         }
         
         Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
-        Payer payer = Payer.query([id: params.id, customerId: params.customerId]).get()
+        Payer payer = Payer.query([id: parameterMap.id, customerId: parameterMap.customerId]).get()
 
         setPayerProperties(payer, sanitizedParameterMap)
 
