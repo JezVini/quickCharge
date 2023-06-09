@@ -4,18 +4,22 @@ import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import com.quickcharge.app.customer.Customer
 import utils.CpfCnpjUtils
+import utils.Utils
+import java.util.regex.Pattern
 
 @Transactional
 class PayerService {
 
-    public Payer save(Map params) {
-        Payer validatedPayer = validateSave(params)
+    public Payer save(Map parameterMap) {
+        Payer validatedPayer = validateSave(parameterMap)
 
         if (validatedPayer.hasErrors()) {
             throw new ValidationException("Erro ao salvar pagador", validatedPayer.errors)
         }
 
-        Customer customer = Customer.query([id: params.customerId]).get()
+        Map parsedParameterMap = parseParameterMap(parameterMap)
+        Map sanitizedParsedParameterMap = sanitizeParameterMap(parsedParameterMap)
+        Customer customer = Customer.query([id: sanitizedParsedParameterMap.customerId]).get()
         Payer payer = new Payer()
 
         payer.customer = customer
@@ -31,20 +35,22 @@ class PayerService {
             "postalCode",
             "address",
             "addressComplement"
-        ] = params
+        ] = sanitizedParsedParameterMap
 
         return payer.save(failOnError: true)
     }
 
-    public Payer update(Map params) {
-        Payer validatedPayer = validateSave(params)
+    public Payer update(Map parameterMap) {
+        Payer validatedPayer = validateSave(parameterMap)
 
         if (validatedPayer.hasErrors()) {
             throw new ValidationException("Erro ao salvar pagador", validatedPayer.errors)
         }
 
-        Customer customer = Customer.query([id: params.customerId]).get()
-        Payer payer = Payer.query([id: params.id, customerId: params.customerId]).get()
+        Map parsedParameterMap = parseParameterMap(parameterMap)
+        Map sanitizedParsedParameterMap = sanitizeParameterMap(parsedParameterMap)
+        Customer customer = Customer.query([id: sanitizedParsedParameterMap.customerId]).get()
+        Payer payer = Payer.query([id: sanitizedParsedParameterMap.id, customerId: sanitizedParsedParameterMap.customerId]).get()
 
         payer.customer = customer
         payer.properties[
@@ -59,89 +65,142 @@ class PayerService {
             "postalCode",
             "address",
             "addressComplement"
-        ] = params
+        ] = sanitizedParsedParameterMap
 
         return payer.save(failOnError: true)
     }
 
-    public Payer delete(Map params) {
-        Payer validatedPayer = validateDelete(params)
+    public Payer delete(Map parameterMap) {
+        Payer validatedPayer = validateDelete(parameterMap)
 
         if (validatedPayer.hasErrors()) {
             throw new ValidationException("Erro ao remover pagador", validatedPayer.errors)
         }
         
-        Payer payer = Payer.query([id: params.id, customerId: params.customerId]).get()
+        Payer payer = Payer.query([id: parameterMap.id, customerId: parameterMap.customerId]).get()
         payer.deleted = true
         
         return payer.save(failOnError: true)
     }
     
-    private Payer validateDelete(Map params) {
+    private Payer validateDelete(Map parameterMap) {
         Payer validatedPayer = new Payer()
-        
-        if (!Customer.query([id: params.customerId]).get()) {
-            validatedPayer.errors.reject("", null, "Cliente inexistente")
-        }
 
-        if (!Payer.query([id: params.id, customerId: params.customerId]).get()) {
-            validatedPayer.errors.reject("", null, "Não foi possível encontrar o pagador")
+        if (!Payer.query([id: parameterMap.id, customerId: parameterMap.customerId]).get()) {
+            validatedPayer.errors.rejectValue("id", "not.found")
         }
         
         return validatedPayer
     }
     
-    private Payer validateSave(Map params) {
+    private Payer validatePatternMatching(Map parameterMap) {
+        final String DEFAULT_FIELD_INVALID_PATTERN = "default.field.invalid.pattern"
+
         Payer validatedPayer = new Payer()
-
-        if (!params.customerId || !(Customer.get(params.customerId))) {
-            validatedPayer.errors.reject("", null, "Cliente inexistente")
+        
+        if (!CpfCnpjUtils.isCpfCnpjPatternMatch(parameterMap.cpfCnpj as String)) {
+            validatedPayer.errors.rejectValue("cpfCnpj", "", DEFAULT_FIELD_INVALID_PATTERN)
         }
 
-        if (!params.name) {
-            validatedPayer.errors.reject("", null, "O campo nome é obrigatório")
+        if (!Utils.isPhonePatternMatch(parameterMap.phone as String)) {
+            validatedPayer.errors.rejectValue("phone", "", DEFAULT_FIELD_INVALID_PATTERN)
         }
 
-        if (!params.email) {
-            validatedPayer.errors.reject("", null, "O campo e-mail é obrigatório")
+        if (!Utils.isPostalCodePatternMatch(parameterMap.postalCode as String)) {
+            validatedPayer.errors.rejectValue("postalCode", "", DEFAULT_FIELD_INVALID_PATTERN)
         }
 
-        if (!params.cpfCnpj) {
-            validatedPayer.errors.reject("", null, "O campo CPF ou CNPJ é obrigatório")
+        if (!Utils.isStatePatternMatch(parameterMap.state as String)) {
+            validatedPayer.errors.rejectValue("state", "invalid")
         }
+        
+        return validatedPayer
+    }
 
-        if (!params.phone) {
-            validatedPayer.errors.reject("", null, "O campo telefone é obrigatório")
-        }
+    private Payer validateInvalidSpecials(Map parameterMap) {
+        final Pattern INVALID_CHARACTERS_PATTERN = ~/(.*)\p{Punct}+(.*)/
+        final String DEFAULT_FIELD_INVALID_SPECIAL_CHARACTERS = "default.field.invalid.special.characters"
+        
+        Payer validatedPayer = new Payer()
+        
+        List<String> shouldNotHaveSpecialsFieldList = [
+            "name",
+            "state",
+            "city",
+            "district",
+            "address",
+            "addressNumber",
+            "addressComplement"
+        ]
 
-        if (!params.postalCode) {
-            validatedPayer.errors.reject("", null, "O campo CEP é obrigatório")
-        }
-
-        if (!params.state) {
-            validatedPayer.errors.reject("", null, "O campo estado é obrigatório")
-        }
-
-        if (!params.city) {
-            validatedPayer.errors.reject("", null, "O campo cidade é obrigatório")
-        }
-
-        if (!params.district) {
-            validatedPayer.errors.reject("", null, "O campo bairro é obrigatório")
-        }
-
-        if (!params.address) {
-            validatedPayer.errors.reject("", null, "O campo rua rua é obrigatório")
-        }
-
-        if (!params.addressNumber) {
-            validatedPayer.errors.reject("", null, "O campo número é obrigatório")
-        }
-
-        if (!CpfCnpjUtils.validate(params.cpfCnpj)) {
-            validatedPayer.errors.reject("", null, "CPF ou CNPJ informado é inválido")
+        for (String field : shouldNotHaveSpecialsFieldList) {
+            if (!(parameterMap[field] as String).matches(INVALID_CHARACTERS_PATTERN)) continue
+            validatedPayer.errors.rejectValue(field, "", DEFAULT_FIELD_INVALID_SPECIAL_CHARACTERS)
         }
 
         return validatedPayer
+    }
+
+    private Payer validateSave(Map parameterMap) {
+        
+        Payer patterMatchingPayer = validatePatternMatching(parameterMap)
+        if (patterMatchingPayer.hasErrors()) return patterMatchingPayer
+
+        Payer invalidSpecialsPayer = validateInvalidSpecials(parameterMap)
+        if (invalidSpecialsPayer.hasErrors()) return invalidSpecialsPayer
+        
+        Payer validatedPayer = new Payer()
+        
+        if (!CpfCnpjUtils.validate(parameterMap.cpfCnpj as String)) {
+            validatedPayer.errors.rejectValue("cpfCnpj", "invalid")
+        }
+        
+        return validatedPayer
+    }
+    
+     private Map parseParameterMap(Map parameterMap) {
+        List<String> toParseParameterList = [
+            "name",
+            "email",
+            "cpfCnpj",
+            "phone",
+            "state",
+            "city",
+            "district",
+            "addressNumber",
+            "postalCode",
+            "address",
+            "addressComplement",
+            "id",
+            "customerId"
+        ]
+        
+        Map parsedParameterMap = [:]
+        for (String parameter : toParseParameterList) {
+            parsedParameterMap[parameter] = parameterMap[parameter]
+        }
+        
+        return parsedParameterMap
+    }
+    
+     private Map sanitizeParameterMap(Map parameterMap) {
+        List<String> mustRemoveNonNumericsParameterList = ["cpfCnpj", "phone", "postalCode"]
+
+        Map sanitizedParameterMap = [:]
+        for (def parameter : parameterMap) {
+            if (!(parameter.value instanceof String)) {
+                sanitizedParameterMap[parameter.key] = parameter.value
+                continue
+            }
+            
+            if (mustRemoveNonNumericsParameterList.contains(parameter.key)) {
+                sanitizedParameterMap[parameter.key] = Utils.removeNonNumeric(parameter.value as String)
+                continue
+            }
+            
+            sanitizedParameterMap[parameter.key] = (parameter.value as String).trim()
+        }
+
+        return sanitizedParameterMap
     }
 }
