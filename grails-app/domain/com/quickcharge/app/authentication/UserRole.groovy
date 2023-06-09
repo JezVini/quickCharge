@@ -6,10 +6,11 @@ import groovy.transform.ToString
 
 import org.codehaus.groovy.util.HashCodeHelper
 import grails.compiler.GrailsCompileStatic
+import utils.entity.BaseEntity
 
 @GrailsCompileStatic
 @ToString(cache=true, includeNames=true, includePackage=false)
-class UserRole implements Serializable {
+class UserRole extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1
 
