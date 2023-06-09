@@ -21,17 +21,6 @@ class Payment extends BaseEntity {
         value min: 0.01D
         status blank: false
         paymentDate nullable: true
-        dueDate validator: {val, obj, errors ->
-            if (!val.before(new Date())) return
-
-            if (obj.deleted && obj.paymentDate != null) {
-                errors.rejectValue("dueDate", "delete.payed")
-                return
-            }
-
-            if (obj.status != PaymentStatus.PENDING) return
-            errors.rejectValue("dueDate", "past.date")
-        }
     }
 
     static namedQueries = {

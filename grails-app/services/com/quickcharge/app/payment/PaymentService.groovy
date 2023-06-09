@@ -6,9 +6,7 @@ import grails.gorm.transactions.Transactional
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.validation.ValidationException
 import org.apache.commons.lang3.EnumUtils
-import org.apache.commons.lang3.time.DateUtils
-import utils.payment.BillingType
-import utils.payment.PaymentStatus
+import utils.payment.BillingType    
 
 import java.text.SimpleDateFormat
 
@@ -29,9 +27,7 @@ class PaymentService {
         Payer payer = Payer.query([id: parameterMap.payerId, customerId: customer.id]).get()
         BillingType billingType = BillingType[parameterMap.billingType as String] as BillingType
         Double value = parameterMap.double("value")
-        
-        Date selectedDay = new SimpleDateFormat("yyyy-MM-dd").parse(parameterMap.dueDate as String) 
-        Date dueDate = DateUtils.addDays(selectedDay, 1)
+        Date dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(parameterMap.dueDate as String) 
         
         payment.payer = payer
         payment.customer = customer
@@ -55,6 +51,13 @@ class PaymentService {
         
         if(!parameterMap.dueDate) {
             validatedPayment.errors.rejectValue("dueDate", "not.selected",)
+            return validatedPayment
+        }
+
+        SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd")
+        Date dueDate = simpleDate.parse(parameterMap.dueDate as String)
+        if(dueDate.before(simpleDate.parse(simpleDate.format(new Date())))) {
+            validatedPayment.errors.rejectValue("dueDate", "past.date")
         }
         
         return validatedPayment
@@ -81,9 +84,6 @@ class PaymentService {
         Payment payment = Payment.query([id: parameterMap.id, customerId: customerId]).get()
         if (!payment) {
             validatedPayment.errors.rejectValue("id", "not.found")
-        } else {
-//          TODO: REMOVER AO IMPLEMENTAR JOB
-            changePaymentStatusIfOverDue(payment)
         }
         
         return validatedPayment
@@ -110,17 +110,8 @@ class PaymentService {
         Payment payment = Payment.query([id: parameterMap.id, customerId: customerId, deletedOnly: true]).get()
         if (!payment) {
             validatedPayment.errors.rejectValue("id", "not.found")
-        } else {
-//          TODO: REMOVER AO IMPLEMENTAR JOB
-            changePaymentStatusIfOverDue(payment)
         }
 
         return validatedPayment
-    }
-    
-//  TODO: REMOVER AO IMPLEMENTAR JOB 
-    private void changePaymentStatusIfOverDue(Payment payment) {
-        if(!payment.dueDate.before(new Date())) return
-        payment.status = PaymentStatus.OVERDUE
     }
 }
