@@ -9,9 +9,7 @@
     <g:if test="${payer}">
         <form action="${createLink(controller: "payer", action: "update" )}" method="post">
 
-            <input type="hidden" name="id" value="${id}">
-
-            <input type="hidden" name="customerId" value="${customerId}">
+                <input type="hidden" name="id" value="${payer.id}">
 
             <label for="name">Nome</label>
             <input type="text" name="name" id="name" placeholder="Digite seu nome" value="${payer.name}">
