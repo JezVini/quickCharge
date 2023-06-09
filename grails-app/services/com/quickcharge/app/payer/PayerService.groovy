@@ -167,6 +167,10 @@ class PayerService {
         if (!CpfCnpjUtils.validate(parameterMap.cpfCnpj as String)) {
             validatedPayer.errors.rejectValue("cpfCnpj", "invalid")
         }
+
+        if (!State.validate(parameterMap.state)) {
+            validatedPayer.errors.rejectValue("state", "invalid")
+        }
         
         return validatedPayer
     }

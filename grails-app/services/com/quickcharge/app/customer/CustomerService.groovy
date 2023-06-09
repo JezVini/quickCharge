@@ -118,6 +118,10 @@ class CustomerService {
         if (!CpfCnpjUtils.validate(parameterMap.cpfCnpj as String)) {
             validatedCustomer.errors.reject("", null, "CPF ou CNPJ inválido")
         }
+        
+        if (!State.validate(parameterMap.state)) {
+            validatedCustomer.errors.rejectValue("state", "invalid")
+        }
 
         return validatedCustomer
     }
