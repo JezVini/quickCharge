@@ -84,7 +84,7 @@ class PaymentService {
         Payment validatedPayment = validatePayment(parameterQuery)
 
         if (validatedPayment.hasErrors()) {
-            throw new ValidationException("Erro ao remover cobrança", validatedPayment.errors)
+            throw new ValidationException("Erro ao restaurar cobrança", validatedPayment.errors)
         }
         
         Payment payment = Payment.query(parameterQuery).get()
