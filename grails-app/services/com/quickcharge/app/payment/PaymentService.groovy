@@ -7,6 +7,7 @@ import grails.plugin.springsecurity.SpringSecurityService
 import grails.validation.ValidationException
 import org.apache.commons.lang3.EnumUtils
 import utils.payment.BillingType
+import utils.payment.PaymentStatus
 
 import java.text.SimpleDateFormat
 
@@ -101,4 +102,19 @@ class PaymentService {
 
         return validatedPayment
     }
+    
+    public Payment receiveInCash(Map parameterMap) {
+        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+        Map parameterQuery = [id: parameterMap.id, customerId: customerId]
+        Payment validatedPayment = validatePayment(parameterQuery)
+
+        if (validatedPayment.hasErrors()) {
+            throw new ValidationException("Erro ao confirmar pagamento em dinheiro da cobrança", validatedPayment.errors)
+        }
+
+        Payment payment = Payment.query(parameterQuery).get()
+        payment.status = PaymentStatus.RECEIVED_IN_CASH
+        
+        return payment.save(failOnError: true)
+    } 
 }
