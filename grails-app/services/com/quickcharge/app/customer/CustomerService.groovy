@@ -35,7 +35,7 @@ class CustomerService {
         }
 
         Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
-        Customer customer = Customer.query([id: sanitizedParameterMap.id])
+        Customer customer = Customer.query([id: sanitizedParameterMap.id]).get()
 
         setCustomerProperties(customer, sanitizedParameterMap)
 
