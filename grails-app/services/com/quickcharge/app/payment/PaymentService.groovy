@@ -8,6 +8,7 @@ import grails.validation.ValidationException
 import org.apache.commons.lang3.EnumUtils
 import org.apache.commons.lang3.time.DateUtils
 import utils.payment.BillingType
+import utils.payment.PaymentStatus
 
 import java.text.SimpleDateFormat
 
@@ -58,5 +59,9 @@ class PaymentService {
         
         return validatedPayment
     }
-    
+
+    public void updateStatus(Payment payment, PaymentStatus paymentStatus) {
+        payment.status = paymentStatus
+        payment.save(failOnError: true)
+    }
 }
