@@ -39,7 +39,7 @@ class CustomerController extends BaseController{
             ])
         }
     }
-    
+
     def update() {
         try {
             customerService.update(params)
