@@ -6,7 +6,6 @@ import utils.baseperson.PersonType
 
 class Payer extends BasePerson {
     Customer customer
-    PersonType personType
 
     static namedQueries = {
         query { Map search ->
