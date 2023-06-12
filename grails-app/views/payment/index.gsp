@@ -87,9 +87,16 @@
                                 </g:link>
                             </g:if>
                             <g:else>
-                                <g:link action="delete" params="${parameterMap}">
-                                    <button style="background-color: #f00">Remover</button>
-                                </g:link>
+                                <g:if test="${payment.status == utils.payment.PaymentStatus.PENDING}">
+                                    <g:link action="receivedInCash" params="${parameterMap}">
+                                        <button style="background-color: #07bfff">Confirmar recebimento em dinheiro</button>
+                                    </g:link>
+                                </g:if>
+                                <g:if test="${payment.status != utils.payment.PaymentStatus.RECEIVED && payment.status != utils.payment.PaymentStatus.RECEIVED_IN_CASH}">
+                                    <g:link action="delete" params="${parameterMap}">
+                                        <button style="background-color: #f00">Remover</button>
+                                    </g:link>
+                                </g:if>
                             </g:else>
                         </td>
 
