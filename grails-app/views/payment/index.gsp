@@ -86,11 +86,11 @@
                                     <button style="background-color: #0f0">Restaurar</button>
                                 </g:link>
                             </g:if>
-                            <g:else>
+                            <g:elseif test="${payment.status.canUpdate()}">
                                 <g:link action="delete" params="${parameterMap}">
                                     <button style="background-color: #f00">Remover</button>
                                 </g:link>
-                            </g:else>
+                            </g:elseif>
                         </td>
 
                     </tr>
