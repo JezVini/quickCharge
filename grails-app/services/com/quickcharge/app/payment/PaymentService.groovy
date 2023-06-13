@@ -3,7 +3,6 @@ package com.quickcharge.app.payment
 import com.quickcharge.app.customer.Customer
 import com.quickcharge.app.payer.Payer
 import grails.gorm.transactions.Transactional
-import grails.plugin.springsecurity.SpringSecurityService
 import grails.validation.ValidationException
 import org.apache.commons.lang3.EnumUtils
 import utils.payment.BillingType    
@@ -13,9 +12,7 @@ import java.text.SimpleDateFormat
 @Transactional
 class PaymentService {
 
-    SpringSecurityService springSecurityService
-    
-    def save(Map parameterMap) {
+    def save(Map parameterMap, Long customerId) {
         Payment validatedPayment = validateSave(parameterMap)
         
         if (validatedPayment.hasErrors()) {
@@ -23,8 +20,8 @@ class PaymentService {
         }
         
         Payment payment = new Payment()
-        Customer customer = (springSecurityService.getCurrentUser().customer)
-        Payer payer = Payer.query([id: parameterMap.payerId, customerId: customer.id]).get()
+        Customer customer = Customer.query([id: customerId]).get()
+        Payer payer = Payer.query([id: parameterMap.payerId, customerId: customerId]).get()
         BillingType billingType = BillingType[parameterMap.billingType as String] as BillingType
         Double value = parameterMap.double("value")
         Date dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(parameterMap.dueDate as String) 
