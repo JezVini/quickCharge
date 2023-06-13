@@ -60,24 +60,22 @@ class PaymentService {
         return validatedPayment
     }
     
-    public Payment delete(Map parameterMap) {
-        Payment validatedPayment = validateDelete(parameterMap)
+    public Payment delete(Map parameterMap, Long customerId) {
+        Payment validatedPayment = validateDelete(parameterMap, customerId)
 
         if (validatedPayment.hasErrors()) {
             throw new ValidationException("Erro ao remover cobrança", validatedPayment.errors)
         }
 
-        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
         Payment payment = Payment.query([id: parameterMap.id, customerId: customerId]).get()
         payment.deleted = true
 
         return payment.save(failOnError: true)
     }
  
-    private Payment validateDelete(Map parameterMap) {
+    private Payment validateDelete(Map parameterMap, Long customerId) {
         Payment validatedPayment = new Payment()
 
-        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
         Payment payment = Payment.query([id: parameterMap.id, customerId: customerId]).get()
         if (!payment) {
             validatedPayment.errors.rejectValue("id", "not.found")
