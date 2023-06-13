@@ -1,6 +1,5 @@
 package com.quickcharge.app.payment
 
-
 import com.quickcharge.app.payer.Payer
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.validation.ValidationException
