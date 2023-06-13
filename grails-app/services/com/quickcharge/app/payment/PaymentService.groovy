@@ -85,8 +85,7 @@ class PaymentService {
         return validatedPayment
     }
 
-    public Payment restore(Map parameterMap) {
-        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+    public Payment restore(Map parameterMap, Long customerId) {
         Map parameterQuery = [id: parameterMap.id, customerId: customerId, deletedOnly: true]
         Payment validatedPayment = validatePayment(parameterQuery)
 

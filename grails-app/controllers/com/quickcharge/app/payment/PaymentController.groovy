@@ -81,7 +81,8 @@ class PaymentController extends BaseController{
     
     def restore() {
         try {
-            paymentService.restore(params)
+            Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+            paymentService.restore(params, customerId)
             flash.message = "Cobrança restaurada com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
