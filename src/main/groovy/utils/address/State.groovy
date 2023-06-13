@@ -49,8 +49,4 @@ enum State {
             return false
         }
     }
-
-    static State findByDescription(String description) {
-        return State.values().find {state -> state.description == description}
-    }
 }
