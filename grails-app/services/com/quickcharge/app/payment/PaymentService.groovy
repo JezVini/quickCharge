@@ -59,9 +59,21 @@ class PaymentService {
         
         return validatedPayment
     }
-
-    public void updateStatus(Payment payment, PaymentStatus paymentStatus) {
-        payment.status = paymentStatus
-        payment.save(failOnError: true)
+    
+    public void updateStatus(List<Payment> overduePendingPayments, PaymentStatus paymentStatus) {
+        if (!overduePendingPayments.isEmpty()) {
+            for (Payment payment : overduePendingPayments) {
+                Payment.withNewTransaction { status ->
+                    try {
+                        payment.status = paymentStatus
+                        payment.save(failOnError: true)
+                    }
+                    catch (Exception exception) {
+                        log.info("DueDatePaymentJob.execute >> Erro ao atualizar status da cobrança: [${overduePendingPayments}] [Mensagem de erro]: ${exception.message}")
+                        status.setRollbackOnly()
+                    }
+                }
+            }
+        }
     }
 }
