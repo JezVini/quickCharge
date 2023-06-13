@@ -16,14 +16,14 @@ class SideBarTagLib {
             icon: "hand-shake", 
             text: "Criar Cobrança",
             href: "#",
-            value: "#"
+            value: "#",
         ])
 
         menuItemsList.add([
             icon: "money",
             text: "Minhas Cobranças",
             href: "#",
-            value: "#"
+            value: "#",
         ])
 
         menuItemsList.add([
@@ -31,15 +31,29 @@ class SideBarTagLib {
             text: "Meus Clientes",
             href: createLink(controller: "payer", action: "index"),
             value: "payer",
-            active: (controllerName == "payer") && (actionName == "index")
+            active: (controllerName == "payer") && (actionName == "index"),
         ])
 
         menuItemsList.add([
             icon: "user",
             text: "Meu Perfil",
-            href: createLink(controller: "customer", action: "edit"),
             value: "customer",
-            active: (controllerName == "customer") && (actionName == "edit")
+            active: (controllerName == "customer") && (actionName == "edit"),
+            dropdownItemsList: [
+                [
+                    icon: "user",
+                    text:  "Editar Perfil",
+                    href:  "${createLink(controller: 'customer', action: 'edit')}",
+                    value:  "customer",
+                    active: (controllerName == "customer") && (actionName == "edit"),
+                ],
+                [
+                    icon: "power",
+                    text: "Logout",
+                    href: "${createLink(controller:'logout')}",
+                    value: "logout"
+                ]
+            ]
         ])
         
         return menuItemsList

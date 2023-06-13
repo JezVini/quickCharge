@@ -12,24 +12,19 @@
                 href="${menu.href}"
                 value="${menu.value}"
                 ${menu.active ? 'active' : ''}>
+                
+                <g:if test="${(menu.containsKey('dropdownItemsList'))}">
+                    <g:each var="menuItem" in="${menu.dropdownItemsList}">
+                        <atlas-sidebar-menu-item
+                            icon="${menuItem.icon}"
+                            text="${menuItem.text}"
+                            href="${menuItem.href}"
+                            value="${menuItem.value}"
+                            ${menuItem.active ? 'active' : ''}>
+                        </atlas-sidebar-menu-item>
+                    </g:each>
+                </g:if>
             </atlas-sidebar-menu-item>
         </g:each>
-                
-        <atlas-sidebar-menu-item
-            icon="user"
-            text= "Meu Perfil"
-            value= "customer">
-            <atlas-sidebar-menu-item
-                icon="user"
-                text= "Editar Perfil"
-                href= "${createLink(controller: 'customer', action: 'edit')}"
-                value= "customer"></atlas-sidebar-menu-item>
-            <atlas-sidebar-menu-item
-                icon="power"
-                text="Logout"
-                href="${createLink(controller:'logout')}"
-                value="logout">
-            </atlas-sidebar-menu-item>
-        </atlas-sidebar-menu-item>
     </atlas-sidebar-menu>
 </atlas-sidebar>
