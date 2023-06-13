@@ -36,6 +36,10 @@ class Payment extends BaseEntity {
             }
             
             eq("customer.id", Long.valueOf(search.customerId))
+
+            if (search.containsKey("id")) {
+                eq("id", Long.valueOf(search.id))
+            }
         }
     }
 }
