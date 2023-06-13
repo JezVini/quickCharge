@@ -7,9 +7,6 @@
     <body>
         <g:message code="${flash.message}"/>
         <form action="${createLink(controller: "payer", action: "save")}" method="post">
-            <label for="name">Customer Id</label>
-            <input type="number"  name="customerId" id="customerId" value="1">
-            <br>
             <label for="name">Nome</label>
             <input type="text"  name="name" id="name" placeholder="Digite seu nome" value="${name}">
             <br>
