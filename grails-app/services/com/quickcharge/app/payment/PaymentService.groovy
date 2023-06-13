@@ -13,9 +13,7 @@ import java.text.SimpleDateFormat
 @Transactional
 class PaymentService {
 
-    SpringSecurityService springSecurityService
-    
-    def save(Map parameterMap) {
+    def save(Map parameterMap, Long customerId) {
         Payment validatedPayment = validateSave(parameterMap)
         
         if (validatedPayment.hasErrors()) {
@@ -23,8 +21,8 @@ class PaymentService {
         }
         
         Payment payment = new Payment()
-        Customer customer = (springSecurityService.getCurrentUser().customer)
-        Payer payer = Payer.query([id: parameterMap.payerId, customerId: customer.id]).get()
+        Customer customer = Customer.query([id: customerId]).get()
+        Payer payer = Payer.query([id: parameterMap.payerId, customerId: customerId]).get()
         BillingType billingType = BillingType[parameterMap.billingType as String] as BillingType
         Double value = parameterMap.double("value")
         Date dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(parameterMap.dueDate as String) 
