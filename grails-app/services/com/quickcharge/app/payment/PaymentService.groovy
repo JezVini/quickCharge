@@ -81,6 +81,10 @@ class PaymentService {
             validatedPayment.errors.rejectValue("id", "not.found")
         }
         
+        if (!payment.status.canUpdate()) {
+            validatedPayment.errors.rejectValue("status", "can.not.delete")
+        }
+        
         return validatedPayment
     }
 }
