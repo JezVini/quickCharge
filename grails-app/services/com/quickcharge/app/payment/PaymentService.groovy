@@ -63,7 +63,7 @@ class PaymentService {
     
     public Payment delete(Map parameterMap, Long customerId) {
         Map parameterQuery = [id: parameterMap.id, customerId: customerId]
-        Payment validatedPayment = validateDelete(parameterQuery)
+        Payment validatedPayment = validateUpdatablePayment(parameterQuery)
 
         if (validatedPayment.hasErrors()) {
             throw new ValidationException("Erro ao remover cobrança", validatedPayment.errors)
@@ -73,17 +73,6 @@ class PaymentService {
         payment.deleted = true
 
         return payment.save(failOnError: true)
-    }
-
-    private Payment validateDelete(Map parameterQuery) {
-        Payment validatedPayment = validatePayment(parameterQuery)
-        if (validatedPayment.hasErrors()) return validatedPayment
-        
-        if (!(Payment.query(parameterQuery).get() as Payment).status.canUpdate()) {
-            validatedPayment.errors.rejectValue("status", "can.not.delete")
-        }
-
-        return validatedPayment
     }
 
     public Payment restore(Map parameterMap, Long customerId) {
@@ -111,7 +100,7 @@ class PaymentService {
     
     public Payment receiveInCash(Map parameterMap, Long customerId) {
         Map parameterQuery = [id: parameterMap.id, customerId: customerId]
-        Payment validatedPayment = validateReceiveInCash(parameterQuery)
+        Payment validatedPayment = validateUpdatablePayment(parameterQuery)
 
         if (validatedPayment.hasErrors()) {
             throw new ValidationException("Erro ao confirmar pagamento em dinheiro da cobrança", validatedPayment.errors)
@@ -123,7 +112,7 @@ class PaymentService {
         return payment.save(failOnError: true)
     } 
     
-    private Payment validateReceiveInCash(Map parameterQuery) {
+    private Payment validateUpdatablePayment(Map parameterQuery) {
         Payment validatedPayment = validatePayment(parameterQuery)
         if (validatedPayment.hasErrors()) return validatedPayment
         
