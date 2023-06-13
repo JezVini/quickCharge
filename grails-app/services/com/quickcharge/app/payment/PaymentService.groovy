@@ -6,6 +6,7 @@ import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import org.apache.commons.lang3.EnumUtils
 import utils.payment.BillingType
+import utils.payment.PaymentStatus
 
 import java.text.SimpleDateFormat
 
@@ -108,8 +109,7 @@ class PaymentService {
         return validatedPayment
     }
     
-    public Payment receiveInCash(Map parameterMap) {
-        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+    public Payment receiveInCash(Map parameterMap, Long customerId) {
         Map parameterQuery = [id: parameterMap.id, customerId: customerId]
         Payment validatedPayment = validateReceiveInCash(parameterQuery)
 
@@ -127,8 +127,8 @@ class PaymentService {
         Payment validatedPayment = validatePayment(parameterQuery)
         if (validatedPayment.hasErrors()) return validatedPayment
         
-        if ((Payment.query(parameterQuery).get() as Payment).status.canUpdate()) {
-            validatedPayment.errors.rejectValue("status", "can.not.receiveInCash")
+        if (!(Payment.query(parameterQuery).get() as Payment).status.canUpdate()) {
+            validatedPayment.errors.rejectValue("status", "already.received")
         }
         
         return validatedPayment
