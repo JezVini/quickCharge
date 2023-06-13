@@ -24,11 +24,19 @@ class Payment extends BaseEntity {
     }
 
     static namedQueries = {
-        
-        queryOverduePendingPayments {
-            Date now = new Date()
-            lt('dueDate', now)
-            eq("status", PaymentStatus.PENDING)
+        query { Map search ->
+            if (search.column) {
+                projections {
+                    property "${search.column}"
+                }
+            }
+            
+            if (search.onlyOverduePendingPayments) {
+                Date now = new Date()
+                lt('dueDate', now)
+                eq("status", PaymentStatus.PENDING)
+            }
+            
         }
     }
 }
