@@ -100,7 +100,7 @@ class PaymentController extends BaseController{
         }
     }
 
-    def receivedInCash() {
+    def receiveInCash() {
         try {
             paymentService.receiveInCash(params)
             flash.message = "Recebimento em dinheiro confirmado com sucesso"
