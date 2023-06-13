@@ -118,12 +118,12 @@ class PaymentService {
         return payment.save(failOnError: true)
     } 
     
-    private validateReceiveInCash(Map parameterQuery) {
+    private Payment validateReceiveInCash(Map parameterQuery) {
         Payment validatedPayment = validatePayment(parameterQuery)
         if (validatedPayment.hasErrors()) return validatedPayment
         
-        if ((Payment.query(parameterQuery).get() as Payment).status != PaymentStatus.PENDING) {
-            validatedPayment.errors.rejectValue("status", "not.pending")
+        if ((Payment.query(parameterQuery).get() as Payment).status.canUpdate()) {
+            validatedPayment.errors.rejectValue("status", "can.not.receiveInCash")
         }
         
         return validatedPayment
