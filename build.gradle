@@ -78,6 +78,8 @@ dependencies {
     testRuntimeOnly "org.seleniumhq.selenium:selenium-firefox-driver:4.0.0"
     runtimeOnly "mysql:mysql-connector-java:8.0.33"
     implementation "org.grails.plugins:spring-security-core:5.2.1"
+    implementation "org.grails.plugins:quartz:2.0.13"
+    implementation "org.quartz-scheduler:quartz:2.2.1"
 }
 
 bootRun {

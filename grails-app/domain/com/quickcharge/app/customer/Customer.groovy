@@ -5,8 +5,6 @@ import utils.baseperson.PersonType
 
 class Customer extends BasePerson {
     
-    PersonType personType
-    
     static namedQueries = {
         query { Map search ->
             if (!search.containsKey("id")) {
