@@ -15,6 +15,7 @@ abstract class BasePerson extends BaseEntity {
     String postalCode
     String address
     String addressComplement
+    PersonType personType
 
     static constraints = {
         name blank: false
