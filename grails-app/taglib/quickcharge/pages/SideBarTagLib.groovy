@@ -16,14 +16,14 @@ class SideBarTagLib {
             icon: "hand-shake", 
             text: "Criar Cobrança",
             href: "#",
-            value: "#",
+            value: "#"
         ])
 
         menuItemsList.add([
             icon: "money",
             text: "Minhas Cobranças",
             href: "#",
-            value: "#",
+            value: "#"
         ])
 
         menuItemsList.add([
@@ -31,7 +31,7 @@ class SideBarTagLib {
             text: "Meus Clientes",
             href: createLink(controller: "payer", action: "index"),
             value: "payer",
-            active: (controllerName == "payer") && (actionName == "index"),
+            active: (controllerName == "payer") && (actionName == "index")
         ])
 
         menuItemsList.add([
