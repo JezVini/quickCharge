@@ -40,9 +40,11 @@
                         <td>${payment.dueDate}</td>
                         <td><g:message code="ENUM.PaymentStatus.${payment.status}"/></td>
 
-                        <td><g:link action="delete" params="${[id: payment.id, customerId: payment.customer.id]}">
+                        <g:if test="${payment.status.canUpdate()}">
+                            <td><g:link action="delete" params="${[id: payment.id, customerId: payment.customer.id]}">
                                 <button style="background-color: #f00">Remover</button>
-                        </g:link></td>
+                            </g:link></td>
+                        </g:if>
                         
                     </tr>
                 </g:each>
