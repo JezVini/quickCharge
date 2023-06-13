@@ -12,7 +12,7 @@ class CpfCnpjUtils {
 
     public static Boolean isCpfCnpjPatternMatch(String cpfCnpj) {
         final Pattern CPF_PATTERN = ~/\d{3}\.\d{3}\.\d{3}-\d{2}/
-        final Pattern CNPJ_PATTERN = ~/\d{2}\.\d{3}\.\d{3}\/\d{4}-{2}/
+        final Pattern CNPJ_PATTERN = ~/\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}/
         return cpfCnpj.matches(CPF_PATTERN) || cpfCnpj.matches(CNPJ_PATTERN)
     }
     
