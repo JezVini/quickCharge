@@ -106,7 +106,7 @@ class PaymentService {
     public Payment receiveInCash(Map parameterMap) {
         Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
         Map parameterQuery = [id: parameterMap.id, customerId: customerId]
-        Payment validatedPayment = validatePayment(parameterQuery)
+        Payment validatedPayment = validateReceiveInCash(parameterQuery)
 
         if (validatedPayment.hasErrors()) {
             throw new ValidationException("Erro ao confirmar pagamento em dinheiro da cobrança", validatedPayment.errors)
@@ -117,4 +117,16 @@ class PaymentService {
         
         return payment.save(failOnError: true)
     } 
+    
+    private validateReceiveInCash(Map parameterQuery) {
+        Payment validatedPayment = validatePayment(parameterQuery)
+        if (validatedPayment.hasErrors()) return validatedPayment
+        
+        if ((Payment.query(parameterQuery).get() as Payment).status != PaymentStatus.PENDING) {
+            validatedPayment.errors.rejectValue("status", "not.pending")
+        }
+        
+        return validatedPayment
+    }
+    
 }
