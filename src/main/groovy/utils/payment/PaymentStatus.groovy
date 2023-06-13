@@ -9,5 +9,4 @@ public enum PaymentStatus {
     public Boolean canUpdate() {
         return [PaymentStatus.PENDING, PaymentStatus.OVERDUE].contains(this)
     }
-
 }

@@ -3,20 +3,16 @@ package com.quickcharge.app.payment
 import com.quickcharge.app.customer.Customer
 import com.quickcharge.app.payer.Payer
 import grails.gorm.transactions.Transactional
-import grails.plugin.springsecurity.SpringSecurityService
 import grails.validation.ValidationException
 import org.apache.commons.lang3.EnumUtils
 import utils.payment.BillingType
-import utils.payment.PaymentStatus
 
 import java.text.SimpleDateFormat
 
 @Transactional
 class PaymentService {
 
-    SpringSecurityService springSecurityService
-    
-    def save(Map parameterMap) {
+    def save(Map parameterMap, Long customerId) {
         Payment validatedPayment = validateSave(parameterMap)
         
         if (validatedPayment.hasErrors()) {
@@ -24,8 +20,8 @@ class PaymentService {
         }
         
         Payment payment = new Payment()
-        Customer customer = (springSecurityService.getCurrentUser().customer)
-        Payer payer = Payer.query([id: parameterMap.payerId, customerId: customer.id]).get()
+        Customer customer = Customer.query([id: customerId]).get()
+        Payer payer = Payer.query([id: parameterMap.payerId, customerId: customerId]).get()
         BillingType billingType = BillingType[parameterMap.billingType as String] as BillingType
         Double value = parameterMap.double("value")
         Date dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(parameterMap.dueDate as String) 
@@ -64,10 +60,9 @@ class PaymentService {
         return validatedPayment
     }
     
-    public Payment delete(Map parameterMap) {
-        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+    public Payment delete(Map parameterMap, Long customerId) {
         Map parameterQuery = [id: parameterMap.id, customerId: customerId]
-        Payment validatedPayment = validatePayment(parameterQuery)
+        Payment validatedPayment = validateDelete(parameterQuery)
 
         if (validatedPayment.hasErrors()) {
             throw new ValidationException("Erro ao remover cobrança", validatedPayment.errors)
@@ -79,15 +74,25 @@ class PaymentService {
         return payment.save(failOnError: true)
     }
 
-    public Payment restore(Map parameterMap) {
-        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+    private Payment validateDelete(Map parameterQuery) {
+        Payment validatedPayment = validatePayment(parameterQuery)
+        if (validatedPayment.hasErrors()) return validatedPayment
+        
+        if (!(Payment.query(parameterQuery).get() as Payment).status.canUpdate()) {
+            validatedPayment.errors.rejectValue("status", "can.not.delete")
+        }
+
+        return validatedPayment
+    }
+
+    public Payment restore(Map parameterMap, Long customerId) {
         Map parameterQuery = [id: parameterMap.id, customerId: customerId, deletedOnly: true]
         Payment validatedPayment = validatePayment(parameterQuery)
 
         if (validatedPayment.hasErrors()) {
             throw new ValidationException("Erro ao restaurar cobrança", validatedPayment.errors)
         }
-        
+
         Payment payment = Payment.query(parameterQuery).get()
         payment.deleted = false
 
@@ -99,7 +104,7 @@ class PaymentService {
         if (!Payment.query(parameterQuery).get()) {
             validatedPayment.errors.rejectValue("id", "not.found")
         }
-
+        
         return validatedPayment
     }
     
@@ -128,5 +133,4 @@ class PaymentService {
         
         return validatedPayment
     }
-    
 }

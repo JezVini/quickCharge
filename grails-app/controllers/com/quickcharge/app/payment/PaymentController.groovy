@@ -1,6 +1,5 @@
 package com.quickcharge.app.payment
 
-
 import com.quickcharge.app.payer.Payer
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.validation.ValidationException
@@ -42,7 +41,8 @@ class PaymentController extends BaseController{
     
     def save() {
         try {
-            paymentService.save(params)
+            Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+            paymentService.save(params, customerId)
             flash.message = "Cobrança criada com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
@@ -58,7 +58,8 @@ class PaymentController extends BaseController{
     
     def delete() {
         try {
-            paymentService.delete(params)
+            Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+            paymentService.delete(params, customerId)
             flash.message = "Cobrança removida com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
@@ -80,7 +81,8 @@ class PaymentController extends BaseController{
     
     def restore() {
         try {
-            paymentService.restore(params)
+            Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+            paymentService.restore(params, customerId)
             flash.message = "Cobrança restaurada com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
