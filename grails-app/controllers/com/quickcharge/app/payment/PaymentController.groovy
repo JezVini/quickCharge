@@ -20,7 +20,8 @@ class PaymentController extends BaseController{
 
     def save() {
         try {
-            paymentService.save(params)
+            Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+            paymentService.save(params, customerId)
             flash.message = "Cobrança criada com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
