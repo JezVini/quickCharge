@@ -16,5 +16,13 @@
 
 <body>
     <g:layoutBody/>
+
+    <footer>
+        <div>
+            <form name="logout" method="POST" action="${createLink(controller: 'logout')}">
+                <input type="submit" value="logout">
+            </form>
+        </div>
+    </footer>
 </body>
 </html>

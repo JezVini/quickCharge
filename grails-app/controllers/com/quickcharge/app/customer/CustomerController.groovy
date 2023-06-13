@@ -1,5 +1,6 @@
 package com.quickcharge.app.customer
 
+import grails.plugin.springsecurity.annotation.Secured
 import grails.validation.ValidationException
 import utils.controller.BaseController
 import utils.message.MessageType
@@ -7,16 +8,19 @@ import utils.message.MessageType
 class CustomerController extends BaseController{
 
     def customerService
+    def springSecurityService
 
+    @Secured(['permitAll'])
     def create() {
         return params
     }
-
+    
     def edit() {
-        Customer customer = Customer.query([id: params.id]).get()
+        Customer customer = springSecurityService.getCurrentUser().customer
         return [customer: customer]
     }
 
+    @Secured(['permitAll'])
     def save() {
         try {
             customerService.save(params)
@@ -39,12 +43,12 @@ class CustomerController extends BaseController{
     def update() {
         try {
             customerService.update(params)
-            flash.message = "Conta alterada com sucesso"
+            flash.message = "Cadastro alterado com sucesso"
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro, contate o desenvolvimento"
-            log.info("CustomerController.save >> Erro ao alterar conta com os parâmetros: [${params}]")
+            log.info("CustomerController.save >> Erro ao alterar cadastro com os parâmetros: [${params}]")
         } finally {
             redirect([
                 action: "edit",

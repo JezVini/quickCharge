@@ -12,6 +12,8 @@ import java.util.regex.Pattern
 @Transactional
 class PayerService {
 
+    def springSecurityService
+    
     public Payer save(Map parameterMap) {
         Payer validatedPayer = validateSave(parameterMap)
 
@@ -20,7 +22,8 @@ class PayerService {
         }
 
         Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
-        Customer customer = Customer.query([id: sanitizedParameterMap.customerId]).get()
+        Customer customer = (springSecurityService.getCurrentUser().customer)
+        
         Payer payer = new Payer()
 
         payer.customer = customer
@@ -35,9 +38,9 @@ class PayerService {
         if (validatedPayer.hasErrors()) {
             throw new ValidationException("Erro ao salvar pagador", validatedPayer.errors)
         }
-
+        
         Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
-        Payer payer = Payer.query([id: sanitizedParameterMap.id, customerId: sanitizedParameterMap.customerId]).get()
+        Payer payer = Payer.query([id: parameterMap.id, customerId: parameterMap.customerId]).get()
 
         setPayerProperties(payer, sanitizedParameterMap)
 
