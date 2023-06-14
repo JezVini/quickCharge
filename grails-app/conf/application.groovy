@@ -26,6 +26,8 @@ grails.plugin.springsecurity.filterChain.chainMap = [
 	[pattern: '/**',             filters: 'JOINED_FILTERS']
 ]
 
+grails.assets.excludes = ["mixins/*.scss"]
+
 grails {
     mail {
         host = "smtp.gmail.com"
