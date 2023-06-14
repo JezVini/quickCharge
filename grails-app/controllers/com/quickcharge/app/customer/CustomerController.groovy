@@ -8,7 +8,6 @@ import utils.message.MessageType
 class CustomerController extends BaseController{
 
     def customerService
-    def springSecurityService
 
     @Secured(['permitAll'])
     def create() {
@@ -16,8 +15,7 @@ class CustomerController extends BaseController{
     }
 
     def edit() {
-        Customer customer = springSecurityService.getCurrentUser().customer
-        return [customer: customer]
+        return [customer: getCurrentCustomer()]
     }
 
     @Secured(['permitAll'])
