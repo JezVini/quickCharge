@@ -14,7 +14,13 @@ abstract class BaseController {
         return springSecurityService.getCurrentUser().customer
     }
     
-    def validateExceptionHandler(ValidationException validationException) {
+    SpringSecurityService springSecurityService
+    
+    protected Customer getCurrentCustomer() {
+        return springSecurityService.getCurrentUser().customer
+    }
+    
+    protected void validateExceptionHandler(ValidationException validationException) {
         ObjectError error = validationException.errors.allErrors.first()
         String subMessage
         
