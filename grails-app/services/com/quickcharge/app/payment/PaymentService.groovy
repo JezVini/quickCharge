@@ -67,17 +67,15 @@ class PaymentService {
             throw new ValidationException("Erro ao remover cobrança", validatedPayment.errors)
         }
 
-        Payment payment = Payment.query(parameterQuery).get()
+        Payment payment = Payment.getPayment(parameterQuery)
         payment.deleted = true
 
         return payment.save(failOnError: true)
     }
 
     private Payment validateDelete(Map parameterQuery) {
-        Payment validatedPayment = validatePayment(parameterQuery)
-        if (validatedPayment.hasErrors()) return validatedPayment
-        
-        if (!(Payment.query(parameterQuery).get() as Payment).status.canUpdate()) {
+        Payment validatedPayment = new Payment()
+        if (!Payment.getPayment(parameterQuery).status.canUpdate()) {
             validatedPayment.errors.rejectValue("status", "can.not.delete")
         }
 
@@ -86,24 +84,10 @@ class PaymentService {
 
     public Payment restore(Map parameterMap, Customer customer) {
         Map parameterQuery = [id: parameterMap.id, customerId: customer.id, deletedOnly: true]
-        Payment validatedPayment = validatePayment(parameterQuery)
 
-        if (validatedPayment.hasErrors()) {
-            throw new ValidationException("Erro ao restaurar cobrança", validatedPayment.errors)
-        }
-
-        Payment payment = Payment.query(parameterQuery).get()
+        Payment payment = Payment.getPayment(parameterQuery)
         payment.deleted = false
 
         return payment.save(failOnError: true)
-    }
-    
-    private Payment validatePayment(Map parameterQuery) {
-        Payment validatedPayment = new Payment()
-        if (!Payment.query(parameterQuery).get()) {
-            validatedPayment.errors.rejectValue("id", "not.found")
-        }
-        
-        return validatedPayment
     }
 }
