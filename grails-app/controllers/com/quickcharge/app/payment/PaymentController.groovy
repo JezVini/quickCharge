@@ -12,8 +12,7 @@ class PaymentController extends BaseController{
     
     def index() {
         try {
-            List<Payment> paymentList = Payment.query([customerId: getCurrentCustomer().id]).list()
-            return [paymentList: paymentList]
+            return [paymentList: Payment.query([customerId: getCurrentCustomer().id]).list()]
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao buscar cobranças, contate o desenvolvimento"
             flash.type = MessageType.ERROR
