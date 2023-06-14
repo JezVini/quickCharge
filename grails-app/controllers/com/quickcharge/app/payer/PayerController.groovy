@@ -1,7 +1,6 @@
 package com.quickcharge.app.payer
 
 import com.quickcharge.app.customer.Customer
-import grails.plugin.springsecurity.SpringSecurityService
 import grails.validation.ValidationException
 import utils.controller.BaseController
 import utils.message.MessageType
@@ -9,7 +8,6 @@ import utils.message.MessageType
 class PayerController extends BaseController {
 
     PayerService payerService
-    SpringSecurityService springSecurityService
     
     def create() {
         return params
@@ -17,10 +15,7 @@ class PayerController extends BaseController {
     
     def edit() {
         try {
-            Long id = params.long("id")
-            Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-
-            return [payer: Payer.query([id: id, customerId: customerId]).get()]
+            return [payer: Payer.query([id: params.long("id"), customerId: getCurrentCustomer().id]).get()]
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao buscar dados do pagador, contate o desenvolvimento"
             flash.type = MessageType.ERROR
@@ -30,11 +25,9 @@ class PayerController extends BaseController {
 
     def index () {
         try {
-            Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-            
             return [
                 payerList: Payer.query([
-                    customerId: customerId,
+                    customerId: getCurrentCustomer().id,
                     deletedOnly: params.deletedOnly,
                     includeDeleted: params.includeDeleted
                 ]).list(),
