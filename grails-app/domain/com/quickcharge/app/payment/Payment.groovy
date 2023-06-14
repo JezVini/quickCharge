@@ -4,7 +4,9 @@ import com.quickcharge.app.customer.Customer
 import com.quickcharge.app.payer.Payer
 import utils.entity.BaseEntity
 import utils.payment.BillingType
-import utils.payment.PaymentStatus 
+import utils.payment.PaymentStatus
+
+import javax.xml.bind.ValidationException
 
 class Payment extends BaseEntity {
 
@@ -41,5 +43,15 @@ class Payment extends BaseEntity {
                 eq("id", Long.valueOf(search.id))
             }
         }
+    }
+    
+    static Payment getPayment(Map parameterQuery) {
+        Payment validatedPayment = new Payment()
+        
+        Payment payment = Payment.query(parameterQuery).get()
+        if (payment) return payment
+
+        validatedPayment.errors.rejectValue("id", "not.found")
+        throw new ValidationException("Erro ao buscar cobrança", validatedPayment.errors)
     }
 }
