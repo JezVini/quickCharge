@@ -97,8 +97,8 @@ class PaymentService {
         return validatedPayment
     }
     
-    public Payment receiveInCash(Map parameterMap, Long customerId) {
-        Map parameterQuery = [id: parameterMap.id, customerId: customerId]
+    public Payment receiveInCash(Map parameterMap, Customer customer) {
+        Map parameterQuery = [id: parameterMap.id, customerId: customer.id]
         Payment validatedPayment = validateUpdatablePayment(parameterQuery)
 
         if (validatedPayment.hasErrors()) {

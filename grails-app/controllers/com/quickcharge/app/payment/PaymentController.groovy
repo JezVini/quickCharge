@@ -96,8 +96,7 @@ class PaymentController extends BaseController{
 
     def receiveInCash() {
         try {
-            Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-            paymentService.receiveInCash(params, customerId)
+            paymentService.receiveInCash(params, getCurrentCustomer())
             flash.message = "Recebimento em dinheiro confirmado com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
