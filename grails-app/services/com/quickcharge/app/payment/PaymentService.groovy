@@ -59,8 +59,9 @@ class PaymentService {
         return validatedPayment
     }
     
-    public Payment delete(Map parameterMap, Long customerId) {
-        Payment validatedPayment = validateDelete(parameterMap, customerId)
+    public Payment delete(Map parameterMap, Customer customer) {
+        Map parameterQuery = [id: parameterMap.id, customerId: customer.id]
+        Payment validatedPayment = validateDelete(parameterQuery)
 
         if (validatedPayment.hasErrors()) {
             throw new ValidationException("Erro ao remover cobrança", validatedPayment.errors)

@@ -42,8 +42,7 @@ class PaymentController extends BaseController{
     
     def delete() {
         try {
-            Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-            paymentService.delete(params, customerId)
+            paymentService.delete(params, getCurrentCustomer())
             flash.message = "Cobrança removida com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
