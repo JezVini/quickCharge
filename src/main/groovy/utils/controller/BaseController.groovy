@@ -7,12 +7,6 @@ import org.springframework.validation.ObjectError
 import utils.message.MessageType 
 
 abstract class BaseController {
-
-    SpringSecurityService springSecurityService
-    
-    protected Customer getCurrentCustomer() {
-        return springSecurityService.getCurrentUser().customer
-    }
     
     SpringSecurityService springSecurityService
     
