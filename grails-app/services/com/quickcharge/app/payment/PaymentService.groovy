@@ -65,18 +65,18 @@ class PaymentService {
     public void updatePendingPaymentStatus(PaymentStatus paymentStatus) {
         List<Long> overduePendingPaymentsIdList = Payment.query(["column": "id", "onlyOverduePendingPayments": true]).list()
 
-        if (!overduePendingPaymentsIdList.isEmpty()) {
-            for (Long paymentId : overduePendingPaymentsIdList) {
-                Payment.withNewTransaction { status ->
-                    Payment payment = Payment.get(paymentId)
-                    try {
-                        payment.status = paymentStatus
-                        payment.save(failOnError: true)
-                    }
-                    catch (Exception exception) {
-                        log.info("updatePendingPaymentStatus >> Erro ao atualizar status da cobrança: [${payment}] [Mensagem de erro]: ${exception.message}")
-                        status.setRollbackOnly()
-                    }
+        if (overduePendingPaymentsIdList.isEmpty()) return
+        
+        for (Long paymentId : overduePendingPaymentsIdList) {
+            Payment.withNewTransaction { status ->
+                Payment payment = Payment.get(paymentId)
+                try {
+                    payment.status = paymentStatus
+                    payment.save(failOnError: true)
+                }
+                catch (Exception exception) {
+                    log.info("updatePendingPaymentStatus >> Erro ao atualizar status da cobrança: [${payment}] [Mensagem de erro]: ${exception.message}")
+                    status.setRollbackOnly()
                 }
             }
         }

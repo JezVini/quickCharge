@@ -3,7 +3,7 @@ package com.quickcharge.app
 import com.quickcharge.app.payment.PaymentService
 import utils.payment.PaymentStatus
 
-class ProcessOverduePendingPaymentsJob {
+class ProcessPaymentOverdueJob {
     PaymentService paymentService
 
     static triggers = {
