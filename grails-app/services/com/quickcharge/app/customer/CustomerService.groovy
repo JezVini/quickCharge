@@ -3,6 +3,7 @@ package com.quickcharge.app.customer
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import utils.CpfCnpjUtils
+import utils.address.State
 import utils.Utils
 import utils.baseperson.PersonType
 import java.util.regex.Pattern
@@ -121,6 +122,10 @@ class CustomerService {
 
         if (!CpfCnpjUtils.validate(parameterMap.cpfCnpj as String)) {
             validatedCustomer.errors.reject("", null, "CPF ou CNPJ inválido")
+        }
+        
+        if (!State.validate(parameterMap.state)) {
+            validatedCustomer.errors.rejectValue("state", "invalid")
         }
 
         return validatedCustomer
