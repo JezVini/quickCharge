@@ -1,7 +1,6 @@
 package com.quickcharge.app.payment
 
 import com.quickcharge.app.payer.Payer
-import grails.plugin.springsecurity.SpringSecurityService
 import grails.validation.ValidationException
 import utils.controller.BaseController
 import utils.message.MessageType
@@ -10,12 +9,10 @@ import utils.payment.BillingType
 class PaymentController extends BaseController{
 
     PaymentService paymentService
-    SpringSecurityService springSecurityService
-
+    
     def index() {
         try {
-            Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-            List<Payment> paymentList = Payment.query([customerId: customerId]).list()
+            List<Payment> paymentList = Payment.query([customerId: getCurrentCustomer().id]).list()
             return [paymentList: paymentList]
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao buscar cobranças, contate o desenvolvimento"
@@ -25,15 +22,13 @@ class PaymentController extends BaseController{
     }
     
     def create() {
-        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-        List<Payer> payerList = Payer.query([customerId: customerId]).list()
+        List<Payer> payerList = Payer.query([customerId: getCurrentCustomer().id]).list()
         return [payerList: payerList, billingType: BillingType]
     }
 
     def save() {
         try {
-            Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-            paymentService.save(params, customerId)
+            paymentService.save(params, getCurrentCustomer())
             flash.message = "Cobrança criada com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
