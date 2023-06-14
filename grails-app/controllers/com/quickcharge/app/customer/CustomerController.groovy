@@ -38,7 +38,7 @@ class CustomerController extends BaseController{
 
     def update() {
         try {
-            customerService.update(params)
+            customerService.update(params, getCurrentCustomer())
             flash.message = "Cadastro alterado com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
