@@ -21,8 +21,7 @@ class PaymentController extends BaseController{
     }
     
     def create() {
-        List<Payer> payerList = Payer.query([customerId: getCurrentCustomer().id]).list()
-        return [payerList: payerList, billingType: BillingType]
+        return [payerList: Payer.query([customerId: getCurrentCustomer().id]).list(), billingType: BillingType]
     }
 
     def save() {
