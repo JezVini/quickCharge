@@ -9,7 +9,6 @@ import utils.message.MessageType
 class PayerController extends BaseController {
 
     PayerService payerService
-    SpringSecurityService springSecurityService
     
     def create() {
         return params
@@ -18,16 +17,16 @@ class PayerController extends BaseController {
     def edit() {
         try {
             Long id = params.long("id")
-            Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-            Map parsedParams = [id: id, customerId: customerId]
+            Customer customer = getCurrentCustomer() 
+            Map parsedParams = [id: id, customerId: customer.id]
             
-            if (!springSecurityService.getCurrentUser().customer) {
+            if (!customer) {
                 flash.message = "Cliente inexistente"
                 flash.type = MessageType.WARNING
                 return parsedParams
             }
 
-            Payer payer = Payer.query([id: id, customerId: customerId]).get()
+            Payer payer = Payer.query([id: id, customerId: customer.id]).get()
             if (!payer) {
                 flash.message = "Não foi possível buscar os dados do pagador"
                 flash.type = MessageType.WARNING
@@ -44,9 +43,9 @@ class PayerController extends BaseController {
 
     def index () {
         try {
-            Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+            Customer customer = getCurrentCustomer()
 
-            if (!springSecurityService.getCurrentUser().customer) {
+            if (!customer) {
                 flash.message = "Cliente inexistente"
                 flash.type = MessageType.WARNING
                 return
@@ -54,12 +53,12 @@ class PayerController extends BaseController {
             
             return [
                 payerList: Payer.query([
-                    customerId: customerId,
+                    customerId: customer.id,
                     deletedOnly: params.deletedOnly,
                     includeDeleted: params.includeDeleted
                 ]).list(),
                 
-                customerId: customerId,
+                customerId: customer.id,
                 deletedOnly: params.deletedOnly,
                 includeDeleted: params.includeDeleted
             ]
@@ -83,11 +82,11 @@ class PayerController extends BaseController {
             flash.type = MessageType.ERROR
             log.info("PayerController.delete >> Erro ao remover pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
-            Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+            Customer customer = getCurrentCustomer()
             redirect([
                 action: "index",
                 params: [
-                    customerId: customerId,
+                    customerId: customer.id,
                     deletedOnly: params.deletedOnly,
                     includeDeleted: params.includeDeleted
                 ]
@@ -146,12 +145,12 @@ class PayerController extends BaseController {
             flash.type = MessageType.ERROR
             log.info("PayerController.update >> Erro ao alterar pagador com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
-            Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
+            Customer customer = getCurrentCustomer()
             redirect([
                 action: "edit",
                 params: [
                     id: params.id,
-                    customerId: customerId
+                    customerId: customer.id
                 ]
             ])
         }
