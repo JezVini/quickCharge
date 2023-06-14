@@ -50,7 +50,7 @@ class SideBarTagLib {
                 [
                     icon: "power",
                     text: "Logout",
-                    href: "${createLink(controller:'logout')}",
+                    href: "${createLink(controller:'logout', action: 'index')}",
                     value: "logout"
                 ]
             ]
