@@ -5,8 +5,7 @@ import com.quickcharge.app.payer.Payer
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import org.apache.commons.lang3.EnumUtils
-import utils.payment.BillingType    
-
+import utils.payment.BillingType
 import java.text.SimpleDateFormat
 
 @Transactional

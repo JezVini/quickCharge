@@ -5,8 +5,7 @@ import com.quickcharge.app.payer.Payer
 import utils.entity.BaseEntity
 import utils.payment.BillingType
 import utils.payment.PaymentStatus
-
-import javax.xml.bind.ValidationException
+import grails.validation.ValidationException
 
 class Payment extends BaseEntity {
 
