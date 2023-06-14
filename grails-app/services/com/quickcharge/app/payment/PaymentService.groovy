@@ -84,8 +84,8 @@ class PaymentService {
         return validatedPayment
     }
 
-    public Payment restore(Map parameterMap, Long customerId) {
-        Map parameterQuery = [id: parameterMap.id, customerId: customerId, deletedOnly: true]
+    public Payment restore(Map parameterMap, Customer customer) {
+        Map parameterQuery = [id: parameterMap.id, customerId: customer.id, deletedOnly: true]
         Payment validatedPayment = validatePayment(parameterQuery)
 
         if (validatedPayment.hasErrors()) {
