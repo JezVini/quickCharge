@@ -12,9 +12,7 @@ import utils.address.State
 @Transactional
 class PayerService {
 
-    def springSecurityService
-    
-    public Payer save(Map parameterMap) {
+    public Payer save(Map parameterMap, Customer customer) {
         Payer validatedPayer = validateSave(parameterMap)
 
         if (validatedPayer.hasErrors()) {
@@ -22,7 +20,6 @@ class PayerService {
         }
 
         Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
-        Customer customer = (springSecurityService.getCurrentUser().customer)
         Payer payer = new Payer()
 
         payer.customer = customer
@@ -31,7 +28,7 @@ class PayerService {
         return payer.save(failOnError: true)
     }
     
-    public Payer update(Map parameterMap) {
+    public Payer update(Map parameterMap, Customer customer) {
         Payer validatedPayer = validateSave(parameterMap)
 
         if (validatedPayer.hasErrors()) {
@@ -39,8 +36,7 @@ class PayerService {
         }
 
         Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
-        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-        Payer payer = Payer.query([id: sanitizedParameterMap.id, customerId: customerId]).get()
+        Payer payer = Payer.query([id: sanitizedParameterMap.id, customerId: customer.id]).get()
 
         setPayerProperties(payer, sanitizedParameterMap)
 
@@ -62,50 +58,48 @@ class PayerService {
         payer.personType = CpfCnpjUtils.isCpf(parameterMap.cpfCnpj) ? PersonType.NATURAL : PersonType.LEGAL
     }
     
-    public Payer delete(Map parameterMap) {
-        Payer validatedPayer = validateDelete(parameterMap)
+    public Payer delete(Map parameterMap, Customer customer) {
+        Map parameterQuery = [id: parameterMap.id, customerId: customer.id]
+        Payer validatedPayer = validateDelete(parameterQuery)
 
         if (validatedPayer.hasErrors()) {
             throw new ValidationException("Erro ao remover pagador", validatedPayer.errors)
         }
 
-        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-        Payer payer = Payer.query([id: parameterMap.id, customerId: customerId]).get()
+        Payer payer = Payer.query(parameterQuery).get()
         payer.deleted = true
         
         return payer.save(failOnError: true)
     }
     
-    public Payer restore(Map parameterMap) {
-        Payer validatedPayer = validateRestore(parameterMap)
+    public Payer restore(Map parameterMap, Customer customer) {
+        Map parameterQuery = [id: parameterMap.id, customerId: customer.id, deletedOnly: true]
+        Payer validatedPayer = validateRestore(parameterQuery)
 
         if (validatedPayer.hasErrors()) {
             throw new ValidationException("Erro ao restaurar pagador", validatedPayer.errors)
         }
 
-        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-        Payer payer = Payer.query([id: parameterMap.id, customerId: customerId, deletedOnly: true]).get()
+        Payer payer = Payer.query(parameterQuery).get()
         payer.deleted = false
 
         return payer.save(failOnError: true)
     }
 
-    private Payer validateRestore(Map parameterMap) {
+    private Payer validateRestore(Map parameterQuery) {
         Payer validatedPayer = new Payer()
 
-        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-        if (!Payer.query([id: parameterMap.id, customerId: customerId, deletedOnly: true]).get()) {
+        if (!Payer.query(parameterQuery).get()) {
             validatedPayer.errors.rejectValue("id", "not.found")
         }
 
         return validatedPayer
     }
     
-    private Payer validateDelete(Map parameterMap) {
+    private Payer validateDelete(Map parameterQuery) {
         Payer validatedPayer = new Payer()
-
-        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-        if (!Payer.query([id: parameterMap.id, customerId: customerId]).get()) {
+        
+        if (!Payer.query(parameterQuery).get()) {
             validatedPayer.errors.rejectValue("id", "not.found")
         }
         

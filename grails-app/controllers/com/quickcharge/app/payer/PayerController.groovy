@@ -1,6 +1,5 @@
 package com.quickcharge.app.payer
 
-import com.quickcharge.app.customer.Customer
 import grails.validation.ValidationException
 import utils.controller.BaseController
 import utils.message.MessageType
@@ -45,7 +44,7 @@ class PayerController extends BaseController {
     
     def delete() {
         try {
-            payerService.delete(params)
+            payerService.delete(params, getCurrentCustomer())
             flash.message = "Pagador removido com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
@@ -67,7 +66,7 @@ class PayerController extends BaseController {
     
     def restore() {
         try {
-            payerService.restore(params)
+            payerService.restore(params, getCurrentCustomer())
             flash.message = "Pagador restaurado com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
@@ -89,7 +88,7 @@ class PayerController extends BaseController {
     
     def save() {
         try {
-            Payer payer = payerService.save(params)
+            Payer payer = payerService.save(params, getCurrentCustomer())
             flash.message = "Pagador criado com sucesso"
             flash.type = MessageType.SUCCESS
             redirect([action: "edit", params: [id: payer.id]])
@@ -106,7 +105,7 @@ class PayerController extends BaseController {
     
     def update() {
         try {
-            payerService.update(params)
+            payerService.update(params, getCurrentCustomer())
             flash.message = "Pagador alterado com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
