@@ -1,10 +1,18 @@
 package utils.controller
 
+import com.quickcharge.app.customer.Customer
+import grails.plugin.springsecurity.SpringSecurityService
 import grails.validation.ValidationException
 import org.springframework.validation.ObjectError
 import utils.message.MessageType 
 
 abstract class BaseController {
+
+    SpringSecurityService springSecurityService
+    
+    protected Customer getCurrentCustomer() {
+        return springSecurityService.getCurrentUser().customer
+    }
     
     def validateExceptionHandler(ValidationException validationException) {
         ObjectError error = validationException.errors.allErrors.first()
