@@ -6,15 +6,14 @@ import utils.CpfCnpjUtils
 import utils.address.State
 import utils.Utils
 import utils.baseperson.PersonType
-
 import java.util.regex.Pattern
 
 @Transactional
 class CustomerService {
-
+    
     def userService
     def springSecurityService
-    
+
     public Customer save(Map parameterMap) {
         Customer validatedCustomer = validateSave(parameterMap)
 
@@ -40,7 +39,7 @@ class CustomerService {
         if (validatedCustomer.hasErrors()) {
             throw new ValidationException("Erro ao salvar conta", validatedCustomer.errors)
         }
-
+        
         Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
         Customer customer = springSecurityService.getCurrentUser().customer
 

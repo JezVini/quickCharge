@@ -12,7 +12,7 @@ class Payment extends BaseEntity {
     Customer customer
     BillingType billingType
     Double value
-    PaymentStatus status
+    PaymentStatus status = PaymentStatus.PENDING
     Date dueDate
     Date paymentDate
     
@@ -21,5 +21,21 @@ class Payment extends BaseEntity {
         value min: 0.01D
         status blank: false
         paymentDate nullable: true
+    }
+
+    static namedQueries = {
+        query { Map search ->
+            if (!search.containsKey("customerId")) {
+                throw new RuntimeException("Payer.query(): o atributo [customerId] é obrigatório para executar a consulta.")
+            }
+
+            if (Boolean.valueOf(search.deletedOnly)) {
+                eq("deleted", true)
+            } else if (!Boolean.valueOf(search.includeDeleted)) {
+                eq("deleted", false)
+            }
+            
+            eq("customer.id", Long.valueOf(search.customerId))
+        }
     }
 }

@@ -37,9 +37,23 @@ class SideBarTagLib {
         menuItemsList.add([
             icon: "user",
             text: "Meu Perfil",
-            href: createLink(controller: "customer", action: "edit"),
             value: "customer",
-            active: (controllerName == "customer") && (actionName == "edit")
+            active: (controllerName == "customer") && (actionName == "edit"),
+            dropdownItemsList: [
+                [
+                    icon: "user",
+                    text:  "Editar Perfil",
+                    href:  "${createLink(controller: 'customer', action: 'edit')}",
+                    value:  "customer",
+                    active: (controllerName == "customer") && (actionName == "edit"),
+                ],
+                [
+                    icon: "power",
+                    text: "Logout",
+                    href: "${createLink(controller:'logout', action: 'index')}",
+                    value: "logout"
+                ]
+            ]
         ])
         
         return menuItemsList
