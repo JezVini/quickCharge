@@ -12,7 +12,6 @@ import java.util.regex.Pattern
 class CustomerService {
     
     def userService
-    def springSecurityService
 
     public Customer save(Map parameterMap) {
         Customer validatedCustomer = validateSave(parameterMap)
@@ -33,7 +32,7 @@ class CustomerService {
         return customer
     }
 
-    public Customer update(Map parameterMap) {
+    public Customer update(Map parameterMap, Customer customer) {
         Customer validatedCustomer = validateSave(parameterMap)
 
         if (validatedCustomer.hasErrors()) {
@@ -41,8 +40,7 @@ class CustomerService {
         }
 
         Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
-        Customer customer = springSecurityService.getCurrentUser().customer
-
+        
         setCustomerProperties(customer, sanitizedParameterMap)
 
         return customer.save(failOnError: true)
