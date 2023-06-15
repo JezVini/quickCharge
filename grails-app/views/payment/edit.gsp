@@ -16,7 +16,11 @@
                     <br>
 
                     <label for="billingType">Forma de pagamento</label>
-                    <input type="text" name="billingType" id="billingType" value="${payment.billingType}" disabled="">
+                    <g:select name="billingType" id="billingType"
+                              from="${billingType}"
+                              valueMessagePrefix="ENUM.BillingType"
+                              value="${payment.billingType}"
+                              disabled=""/>
                     <br>
 
                     <label for="value">Valor da cobrança</label>
