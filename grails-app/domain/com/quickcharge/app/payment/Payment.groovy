@@ -53,4 +53,3 @@ class Payment extends BaseEntity {
         throw new ValidationException("Erro ao buscar cobrança", validatedPayment.errors)
     }
 }
-
