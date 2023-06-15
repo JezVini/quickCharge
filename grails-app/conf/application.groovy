@@ -28,3 +28,7 @@ grails.plugin.springsecurity.filterChain.chainMap = [
 
 grails.assets.excludes = ["mixins/*.scss"]
 grails.plugin.springsecurity.logout.postOnly = false
+
+grails.config.locations = [
+    "file:///quickcharge/application.groovy",
+]
