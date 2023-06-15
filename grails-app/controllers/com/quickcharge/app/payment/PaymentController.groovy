@@ -6,6 +6,7 @@ import grails.validation.ValidationException
 import utils.controller.BaseController
 import utils.message.MessageType
 import utils.payment.BillingType
+import utils.payment.PaymentStatus
 
 class PaymentController extends BaseController{
 
@@ -21,7 +22,8 @@ class PaymentController extends BaseController{
                 ]).list(),
 
                 deletedOnly: params.deletedOnly,
-                includeDeleted: params.includeDeleted
+                includeDeleted: params.includeDeleted,
+                paymentStatus: PaymentStatus
             ]
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao buscar cobranças, contate o desenvolvimento"
@@ -113,6 +115,41 @@ class PaymentController extends BaseController{
                     includeDeleted: params.includeDeleted
                 ]
             ])
+        }
+    }
+
+    def edit() {
+        try {
+            Long customerId = getCurrentCustomer().id
+            Long id = params.long("id")
+            Payment payment = Payment.query([customerId: customerId, id: id, includeDeleted: true]).get()
+
+            if (payment.status != PaymentStatus.PENDING || payment.deleted) {
+                redirect(action: "index")
+            }
+
+            return [payment: payment]
+        } catch (Exception exception) {
+            flash.message = "Ocorreu um erro ao buscar dados da cobrança, contate o desenvolvimento"
+            flash.type = MessageType.ERROR
+            log.info("PaymentController.edit >> Erro ao consultar cobrança com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+        }
+    }
+
+    def update() {
+        try {
+            Long customerId = getCurrentCustomer().id
+            paymentService.update(params, customerId)
+            flash.message = "Cobrança alterada com sucesso"
+            flash.type = MessageType.SUCCESS
+        } catch (ValidationException validationException) {
+            this.validateExceptionHandler(validationException)
+        } catch (Exception exception) {
+            flash.message = "Ocorreu um erro ao alterar cobrança, contate o desenvolvimento"
+            flash.type = MessageType.ERROR
+            log.info("PaymentController.update >> Erro ao alterar cobrança com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+        } finally {
+            redirect([action: "edit", params: params])
         }
     }
 }

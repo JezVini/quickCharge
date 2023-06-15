@@ -105,4 +105,35 @@ class PaymentService {
         
         return validatedPayment
     }
+
+    public Payment update(Map parameterMap, Long customerId) {
+        Payment validatedPayment = validateUpdate(parameterMap.dueDate as String)
+
+        if (validatedPayment.hasErrors()) {
+            throw new ValidationException("Erro ao salvar cobrança", validatedPayment.errors)
+        }
+
+        Long paymentId = parameterMap.long("id")
+        Payment payment = Payment.query([id: paymentId, customerId: customerId]).get()
+
+        Double value = parameterMap.double("value")
+        Date dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(parameterMap.dueDate as String)
+
+        payment.value = value
+        payment.dueDate = dueDate
+
+        return payment.save(failOnError: true)
+    }
+
+    public Payment validateUpdate(String dueDate) {
+        Payment validatedPayment = new Payment()
+
+        SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd")
+        Date dueDateValidate = simpleDate.parse(dueDate)
+        if(dueDateValidate.before(simpleDate.parse(simpleDate.format(new Date())))) {
+            validatedPayment.errors.rejectValue("dueDate", "past.date")
+        }
+
+        return validatedPayment
+    }
 }
