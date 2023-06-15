@@ -45,11 +45,10 @@ class Payment extends BaseEntity {
     }
     
     static Payment getPayment(Map parameterQuery) {
-        Payment validatedPayment = new Payment()
-        
         Payment payment = Payment.query(parameterQuery).get()
         if (payment) return payment
-
+        
+        Payment validatedPayment = new Payment()
         validatedPayment.errors.rejectValue("id", "not.found")
         throw new ValidationException("Erro ao buscar cobrança", validatedPayment.errors)
     }
