@@ -1,8 +1,6 @@
-package com.quickcharge.app.email
+package com.quickcharge.app.email_notify
 
 import com.quickcharge.app.customer.Customer
-import com.quickcharge.app.email_notify.EmailNotify
-
 import grails.gorm.transactions.Transactional
 import grails.plugin.springsecurity.SpringSecurityService
 import utils.message.MessagePattern
