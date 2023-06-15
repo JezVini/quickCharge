@@ -11,19 +11,21 @@ class SideBarTagLib {
     
     private List<Map> buildMenu() {
         List<Map> menuItemsList = []
-        
+
         menuItemsList.add([
-            icon: "hand-shake", 
+            icon: "hand-shake",
             text: "Criar Cobrança",
-            href: "#",
-            value: "#"
+            href: createLink(controller: "payment", action: "create"),
+            value: "paymentCreate",
+            active: (controllerName == "payment") && (actionName == "create")
         ])
 
         menuItemsList.add([
             icon: "money",
             text: "Minhas Cobranças",
-            href: "#",
-            value: "#"
+            href: createLink(controller: "payment", action: "index"),
+            value: "paymentIndex",
+            active: (controllerName == "payment") && (actionName == "index")
         ])
 
         menuItemsList.add([
