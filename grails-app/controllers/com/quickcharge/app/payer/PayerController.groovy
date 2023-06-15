@@ -106,10 +106,11 @@ class PayerController extends BaseController {
             flash.type = MessageType.ERROR
             log.info("PayerController.restore >> Erro ao restaurar pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
+            Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
             redirect([
                 action: "index",
                 params: [
-                    customerId: params.customerId,
+                    customerId: customerId,
                     deletedOnly: params.deletedOnly,
                     includeDeleted: params.includeDeleted
                 ]
