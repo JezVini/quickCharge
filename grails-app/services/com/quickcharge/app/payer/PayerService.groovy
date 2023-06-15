@@ -1,11 +1,14 @@
 package com.quickcharge.app.payer
 
 import com.quickcharge.app.customer.Customer
+import com.quickcharge.app.payment.Payment
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import utils.CpfCnpjUtils
 import utils.Utils
 import utils.baseperson.PersonType
+import utils.payment.PaymentStatus
+
 import java.util.regex.Pattern
 import utils.address.State
 
@@ -74,38 +77,29 @@ class PayerService {
     
     public Payer restore(Map parameterMap, Customer customer) {
         Map parameterQuery = [id: parameterMap.id, customerId: customer.id, deletedOnly: true]
-        Payer validatedPayer = validateRestore(parameterQuery)
-
-        if (validatedPayer.hasErrors()) {
-            throw new ValidationException("Erro ao restaurar pagador", validatedPayer.errors)
-        }
-
-        Payer payer = Payer.query(parameterQuery).get()
+        
+        Payer payer = Payer.getPayer(parameterQuery)
         payer.deleted = false
 
         return payer.save(failOnError: true)
     }
-
-    private Payer validateRestore(Map parameterQuery) {
-        Payer validatedPayer = new Payer()
-
-        if (!Payer.query(parameterQuery).get()) {
-            validatedPayer.errors.rejectValue("id", "not.found")
-        }
-
-        return validatedPayer
-    }
     
     private Payer validateDelete(Map parameterQuery) {
-        Payer validatedPayer = new Payer()
+        Payer validatedPayer = Payer.getPayer(parameterQuery)
+
+        Map paymentQuery = [
+            payerId: parameterQuery.id, 
+            customerId: parameterQuery.customerId, 
+            status: PaymentStatus.UPDATABLE_STATUS
+        ]
         
-        if (!Payer.query(parameterQuery).get()) {
-            validatedPayer.errors.rejectValue("id", "not.found")
+        if (Payment.query(paymentQuery).get()) {
+            validatedPayer.errors.rejectValue("id", "has.updatable.payment")
         }
         
         return validatedPayer
     }
-    
+
     private Payer validatePatternMatching(Map parameterMap) {
         final String DEFAULT_FIELD_INVALID_PATTERN = "default.field.invalid.pattern"
 
