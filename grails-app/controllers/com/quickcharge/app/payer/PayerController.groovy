@@ -1,7 +1,7 @@
 package com.quickcharge.app.payer
 
 import com.quickcharge.app.customer.Customer
-import grails.plugin.springsecurity.SpringSecurityService
+import com.quickcharge.app.email.EmailNotifyService
 import grails.validation.ValidationException
 import utils.controller.BaseController
 import utils.message.MessageType
@@ -120,9 +120,10 @@ class PayerController extends BaseController {
     
     def save() {
         try {
-            payerService.save(params)
+            Payer payer = payerService.save(params)
             flash.message = "Pagador criado com sucesso"
             flash.type = MessageType.SUCCESS
+            EmailNotifyService.notifyPayerCreated()
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
         } catch (Exception exception) {

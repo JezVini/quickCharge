@@ -1,20 +1,19 @@
 package quickcharge
 
+import com.quickcharge.app.email.EmailNotifyService
+import com.quickcharge.app.email_notify.EmailNotify
+
 class SendMailJob {
-    static List<Map> emailQueue = [] 
+    private static List<Map> emailQueue = [] 
     
     def mailService
     
     static triggers = {
-      simple repeatInterval: 5000l // execute job once in 5 seconds
+        simple repeatInterval: 5000l
     }
-    
+
+
     def execute() {
-        if (!this.emailQueue) return
-        
-        for (def email : emailQueue) {
-            mailService.sendMail = email;
-        }
-        
+        EmailNotifyService.sendEmails()
     }
 }

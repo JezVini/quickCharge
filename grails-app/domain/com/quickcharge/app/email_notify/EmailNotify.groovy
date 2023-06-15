@@ -12,7 +12,15 @@ class EmailNotify extends BaseEntity{
     
     static constraints = {
         to email: true
-        subject nullable: true
-        text nullable: true
+    }
+    
+    static namedQueries = {
+        query { Map search ->
+            if (!search.containsKey("wasSend")) {
+                throw new RuntimeException("EmailNotify.query(): o atributo [wasSent] é obrigatório para executar a consulta.")
+            }
+            
+            eq("wasSend", Boolean.valueOf(search.wasSent))
+        }
     }
 }
