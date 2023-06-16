@@ -27,10 +27,10 @@ class PayerService {
 
         payer.customer = customer
         setPayerProperties(payer, sanitizedParameterMap)
-        
+
         return payer.save(failOnError: true)
     }
-    
+
     public Payer update(Map parameterMap, Customer customer) {
         Payer validatedPayer = validateSave(parameterMap)
 
@@ -39,7 +39,7 @@ class PayerService {
         }
 
         Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
-        Payer payer = Payer.query([id: sanitizedParameterMap.id, customerId: customer.id]).get()
+        Payer payer = Payer.getById(sanitizedParameterMap.id, customer.id)
 
         setPayerProperties(payer, sanitizedParameterMap)
 
@@ -60,51 +60,42 @@ class PayerService {
         payer.addressComplement = parameterMap.addressComplement
         payer.personType = CpfCnpjUtils.isCpf(parameterMap.cpfCnpj) ? PersonType.NATURAL : PersonType.LEGAL
     }
-    
-    public Payer delete(Map parameterMap, Customer customer) {
-        Map parameterQuery = [id: parameterMap.id, customerId: customer.id]
-        Payer validatedPayer = validateDelete(parameterQuery)
 
-        if (validatedPayer.hasErrors()) {
-            throw new ValidationException("Erro ao remover pagador", validatedPayer.errors)
+    public Payer delete(Map parameterMap, Customer customer) {
+        Map paymentQuery = [
+            payerId   : parameterMap.id,
+            customerId: customer.id,
+            status    : PaymentStatus.getUpdatableList()
+        ]
+
+        Payer payer = Payer.getById(parameterMap.id, customer.id)
+        if (Payment.query(paymentQuery).get()) {
+            payer.errors.rejectValue("id", "has.updatable.payment")
+            throw new ValidationException("Erro ao remover pagador", payer.errors)
         }
 
-        Payer payer = Payer.query(parameterQuery).get()
         payer.deleted = true
-        
+
         return payer.save(failOnError: true)
     }
-    
+
     public Payer restore(Map parameterMap, Customer customer) {
-        Map parameterQuery = [id: parameterMap.id, customerId: customer.id, deletedOnly: true]
-        
-        Payer payer = Payer.getById(parameterQuery)
+        Payer payer = Payer.query([id: parameterMap.id, customerId: customer.id, deletedOnly: true]).get()
+        if (!payer) {
+            payer.errors.rejectValue("id", "not.found")
+            throw new ValidationException("Erro ao remover cobrança", payer.errors)
+        }
+
         payer.deleted = false
 
         return payer.save(failOnError: true)
-    }
-    
-    private Payer validateDelete(Map parameterQuery) {
-        Payer validatedPayer = Payer.getById(parameterQuery)
-
-        Map paymentQuery = [
-            payerId: parameterQuery.id, 
-            customerId: parameterQuery.customerId, 
-            status: PaymentStatus.getUpdatableList()
-        ]
-        
-        if (Payment.query(paymentQuery).get()) {
-            validatedPayer.errors.rejectValue("id", "has.updatable.payment")
-        }
-        
-        return validatedPayer
     }
 
     private Payer validatePatternMatching(Map parameterMap) {
         final String DEFAULT_FIELD_INVALID_PATTERN = "default.field.invalid.pattern"
 
         Payer validatedPayer = new Payer()
-        
+
         if (!CpfCnpjUtils.isCpfCnpjPatternMatch(parameterMap.cpfCnpj as String)) {
             validatedPayer.errors.rejectValue("cpfCnpj", "", DEFAULT_FIELD_INVALID_PATTERN)
         }
@@ -120,16 +111,16 @@ class PayerService {
         if (!Utils.isStatePatternMatch(parameterMap.state as String)) {
             validatedPayer.errors.rejectValue("state", "invalid")
         }
-        
+
         return validatedPayer
     }
 
     private Payer validateInvalidSpecials(Map parameterMap) {
         final Pattern INVALID_CHARACTERS_PATTERN = ~/(.*)\p{Punct}+(.*)/
         final String DEFAULT_FIELD_INVALID_SPECIAL_CHARACTERS = "default.field.invalid.special.characters"
-        
+
         Payer validatedPayer = new Payer()
-        
+
         List<String> shouldNotHaveSpecialsFieldList = [
             "name",
             "state",
@@ -149,15 +140,15 @@ class PayerService {
     }
 
     private Payer validateSave(Map parameterMap) {
-        
+
         Payer patterMatchingPayer = validatePatternMatching(parameterMap)
         if (patterMatchingPayer.hasErrors()) return patterMatchingPayer
 
         Payer invalidSpecialsPayer = validateInvalidSpecials(parameterMap)
         if (invalidSpecialsPayer.hasErrors()) return invalidSpecialsPayer
-        
+
         Payer validatedPayer = new Payer()
-        
+
         if (!CpfCnpjUtils.validate(parameterMap.cpfCnpj as String)) {
             validatedPayer.errors.rejectValue("cpfCnpj", "invalid")
         }
@@ -165,10 +156,10 @@ class PayerService {
         if (!State.validate(parameterMap.state)) {
             validatedPayer.errors.rejectValue("state", "invalid")
         }
-        
+
         return validatedPayer
     }
-    
+
     private Map sanitizeParameterMap(Map parameterMap) {
         List<String> mustRemoveNonNumericsParameterList = ["cpfCnpj", "phone", "postalCode"]
 
@@ -178,12 +169,12 @@ class PayerService {
                 sanitizedParameterMap[parameter.key] = parameter.value
                 continue
             }
-            
+
             if (mustRemoveNonNumericsParameterList.contains(parameter.key)) {
                 sanitizedParameterMap[parameter.key] = Utils.removeNonNumeric(parameter.value as String)
                 continue
             }
-            
+
             sanitizedParameterMap[parameter.key] = (parameter.value as String).trim()
         }
 
