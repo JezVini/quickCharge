@@ -7,10 +7,10 @@ class ProcessPaymentOverdueJob {
     PaymentService paymentService
 
     static triggers = {
-        cron name: "processOverduePendingPaymentsTrigger", cronExpression: "0 0 0 * * ?"
+        cron name: "processOverduePendingPaymentsTrigger", cronExpression: "0 0 1 ? * MON-FRI"
     }
 
     def execute() {
-        paymentService.updatePendingPaymentStatus(PaymentStatus.OVERDUE)
+        paymentService.processPaymentOverdue()
     }
 }

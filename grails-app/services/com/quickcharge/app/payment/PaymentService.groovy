@@ -61,8 +61,8 @@ class PaymentService {
         return validatedPayment
     }
 
-    public void updatePendingPaymentStatus(PaymentStatus paymentStatus) {
-        List<Long> overduePendingPaymentsIdList = Payment.query(["column": "id", "onlyOverduePendingPayments": true]).list()
+    public void processPaymentOverdue() {
+        List<Long> overduePendingPaymentsIdList = Payment.query(["column": "id", "dueDateLesserThanNow": true, "includePendingPayments": true]).list()
 
         if (overduePendingPaymentsIdList.isEmpty()) return
         
@@ -70,7 +70,7 @@ class PaymentService {
             Payment.withNewTransaction { status ->
                 Payment payment = Payment.get(paymentId)
                 try {
-                    payment.status = paymentStatus
+                    payment.status = PaymentStatus.OVERDUE
                     payment.save(failOnError: true)
                 }
                 catch (Exception exception) {
