@@ -7,7 +7,6 @@ import grails.validation.ValidationException
 import org.apache.commons.lang3.EnumUtils
 import utils.payment.BillingType
 import utils.payment.PaymentStatus
-
 import java.text.SimpleDateFormat
 
 @Transactional
@@ -61,48 +60,34 @@ class PaymentService {
     }
     
     public Payment delete(Map parameterMap, Customer customer) {
-        Map parameterQuery = [id: parameterMap.id, customerId: customer.id]
-        Payment validatedPayment = validatePaymentStatus(parameterQuery)
-
-        if (validatedPayment.hasErrors()) {
-            throw new ValidationException("Erro ao remover cobrança", validatedPayment.errors)
+        Payment payment = Payment.getById([id: parameterMap.id, customerId: customer.id])
+        if (!payment.status.canUpdate()) {
+            payment.errors.rejectValue("status", "already.received")
+            throw new ValidationException("Erro ao remover cobrança", payment.errors)
         }
-
-        Payment payment = Payment.getPayment(parameterQuery)
+        
         payment.deleted = true
 
         return payment.save(failOnError: true)
     }
 
     public Payment restore(Map parameterMap, Customer customer) {
-        Map parameterQuery = [id: parameterMap.id, customerId: customer.id, deletedOnly: true]
-
-        Payment payment = Payment.getPayment(parameterQuery)
+        Payment payment = Payment.getById([id: parameterMap.id, customerId: customer.id, deletedOnly: true])
         payment.deleted = false
 
         return payment.save(failOnError: true)
     }
     
     public Payment receiveInCash(Map parameterMap, Customer customer) {
-        Map parameterQuery = [id: parameterMap.id, customerId: customer.id]
-        Payment validatedPayment = validatePaymentStatus(parameterQuery)
-
-        if (validatedPayment.hasErrors()) {
-            throw new ValidationException("Erro ao confirmar pagamento em dinheiro da cobrança", validatedPayment.errors)
+        Payment payment = Payment.getById([id: parameterMap.id, customerId: customer.id])
+        if (!payment.status.canUpdate()) {
+            payment.errors.rejectValue("status", "already.received")
+            throw new ValidationException("Erro ao confirmar pagamento em dinheiro da cobrança", payment.errors)
         }
 
-        Payment payment = Payment.getPayment(parameterQuery)
         payment.status = PaymentStatus.RECEIVED_IN_CASH
+        payment.paymentDate = new Date()
         
         return payment.save(failOnError: true)
-    } 
-    
-    private Payment validatePaymentStatus(Map parameterQuery) {
-        Payment validatedPayment = new Payment()
-        if (!Payment.getPayment(parameterQuery).status.canUpdate()) {
-            validatedPayment.errors.rejectValue("status", "already.received")
-        }
-        
-        return validatedPayment
     }
 }
