@@ -40,6 +40,14 @@ class Payment extends BaseEntity {
                 eq("id", Long.valueOf(search.id))
             }
 
+            if (search.containsKey("payerId")) {
+                eq("payer.id", Long.valueOf(search.payerId))
+            }
+            
+            if (search.containsKey("status")) {
+                inList("status", PaymentStatus.getUpdatableList())
+            }
+            
             eq("customer.id", Long.valueOf(search.customerId))
         }
     }
