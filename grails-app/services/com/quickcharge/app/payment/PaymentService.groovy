@@ -59,7 +59,7 @@ class PaymentService {
     }
     
     public Payment delete(Map parameterMap, Customer customer) {
-        Payment payment = Payment.getById([id: parameterMap.id, customerId: customer.id])
+        Payment payment = Payment.getById(parameterMap.id, customer.id)
         if (!payment.status.canUpdate()) {
             payment.errors.rejectValue("status", "can.not.delete")
             throw new ValidationException("Erro ao remover cobrança", payment.errors)
