@@ -7,6 +7,7 @@ import utils.CpfCnpjUtils
 import utils.Utils
 import utils.baseperson.PersonType
 import java.util.regex.Pattern
+import utils.address.State
 
 @Transactional
 class PayerService {
@@ -171,6 +172,10 @@ class PayerService {
         
         if (!CpfCnpjUtils.validate(parameterMap.cpfCnpj as String)) {
             validatedPayer.errors.rejectValue("cpfCnpj", "invalid")
+        }
+
+        if (!State.validate(parameterMap.state)) {
+            validatedPayer.errors.rejectValue("state", "invalid")
         }
         
         return validatedPayer
