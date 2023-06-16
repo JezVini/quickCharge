@@ -59,9 +59,7 @@ class PaymentService {
     }
     
     public Payment delete(Map parameterMap, Customer customer) {
-        Map parameterQuery = [id: parameterMap.id, customerId: customer.id]
-        Payment payment = Payment.getPayment(parameterQuery)
-        
+        Payment payment = Payment.getById([id: parameterMap.id, customerId: customer.id])
         if (!payment.status.canUpdate()) {
             throw new ValidationException("Erro ao remover cobrança")
         }
@@ -72,9 +70,7 @@ class PaymentService {
     }
 
     public Payment restore(Map parameterMap, Customer customer) {
-        Map parameterQuery = [id: parameterMap.id, customerId: customer.id, deletedOnly: true]
-
-        Payment payment = Payment.getPayment(parameterQuery)
+        Payment payment = Payment.getById([id: parameterMap.id, customerId: customer.id, deletedOnly: true])
         payment.deleted = false
 
         return payment.save(failOnError: true)
