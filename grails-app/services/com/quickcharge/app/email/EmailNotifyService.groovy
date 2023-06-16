@@ -1,4 +1,4 @@
-package com.quickcharge.app.email_notify
+package com.quickcharge.app.email
 
 import com.quickcharge.app.customer.Customer
 import grails.gorm.transactions.Transactional

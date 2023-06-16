@@ -1,7 +1,7 @@
 package com.quickcharge.app.payer
 
 import com.quickcharge.app.customer.Customer
-import com.quickcharge.app.email_notify.EmailNotifyService
+import com.quickcharge.app.email.EmailNotifyService
 import grails.validation.ValidationException
 import utils.controller.BaseController
 import utils.message.MessageType

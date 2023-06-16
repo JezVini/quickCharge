@@ -1,7 +1,6 @@
 package quickcharge
 
-import com.quickcharge.app.email.EmailNotifyService
-import com.quickcharge.app.email_notify.EmailNotify
+import com.quickcharge.app.email.EmailNotify
 
 class SendMailJob {
     private static List<Map> emailQueue = [] 

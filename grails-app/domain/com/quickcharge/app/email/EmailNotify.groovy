@@ -1,8 +1,8 @@
-package com.quickcharge.app.email_notify
+package com.quickcharge.app.email
 
 import utils.entity.BaseEntity
 
-class EmailNotify extends BaseEntity{
+class EmailNotify extends BaseEntity {
 
     String to
     String subject
@@ -19,7 +19,7 @@ class EmailNotify extends BaseEntity{
             if (!search.containsKey("wasSend")) {
                 throw new RuntimeException("EmailNotify.query(): o atributo [wasSent] é obrigatório para executar a consulta.")
             }
-            
+
             eq("wasSend", Boolean.valueOf(search.wasSent))
         }
     }
