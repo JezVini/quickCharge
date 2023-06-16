@@ -27,12 +27,11 @@ class Payer extends BasePerson {
         }
     }
 
-    static Payer getPayer(Map parameterQuery) {
-        Payer validatedPayer = new Payer()
-
-        Payer payment = Payer.query(parameterQuery).get()
+    static Payer getById(id, customerId) {
+        Payer payment = Payer.query([id: id, customerId: customerId]).get()
         if (payment) return payment
 
+        Payer validatedPayer = new Payer()
         validatedPayer.errors.rejectValue("id", "not.found")
         throw new ValidationException("Erro ao buscar pagador", validatedPayer.errors)
     }
