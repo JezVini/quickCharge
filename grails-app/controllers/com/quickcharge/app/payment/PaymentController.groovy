@@ -23,7 +23,7 @@ class PaymentController extends BaseController{
     def create() {
         return [payerList: Payer.query([customerId: getCurrentCustomer().id]).list(), billingType: BillingType]
     }
-
+    
     def save() {
         try {
             paymentService.save(params, getCurrentCustomer())
@@ -37,6 +37,28 @@ class PaymentController extends BaseController{
             log.info("PaymentController.save >> Erro ao salvar cobrança com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
             redirect([action: "create", params: params])
+        }
+    }
+    
+    def delete() {
+        try {
+            paymentService.delete(params, getCurrentCustomer())
+            flash.message = "Cobrança removida com sucesso"
+            flash.type = MessageType.SUCCESS
+        } catch (ValidationException validationException) {
+            this.validateExceptionHandler(validationException)
+        } catch (Exception exception) {
+            flash.message = "Ocorreu um erro ao remover cobrança, contate o desenvolvimento"
+            flash.type = MessageType.ERROR
+            log.info("PaymentController.delete >> Erro ao remover cobrança com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+        } finally {
+            redirect([
+                action: "index",
+                params: [
+                    deletedOnly: params.deletedOnly,
+                    includeDeleted: params.includeDeleted
+                ]
+            ])
         }
     }
 }

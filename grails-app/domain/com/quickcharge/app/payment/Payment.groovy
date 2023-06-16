@@ -36,7 +36,7 @@ class Payment extends BaseEntity {
                 eq("deleted", false)
             }
 
-            if (!search.containsKey("id")) {
+            if (search.containsKey("id")) {
                 eq("id", Long.valueOf(search.id))
             }
 
