@@ -5,8 +5,7 @@ import com.quickcharge.app.payer.Payer
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import org.apache.commons.lang3.EnumUtils
-import utils.payment.BillingType    
-
+import utils.payment.BillingType
 import java.text.SimpleDateFormat
 
 @Transactional
@@ -63,10 +62,22 @@ class PaymentService {
         Payment payment = Payment.getById(parameterMap.id, customer.id)
         if (!payment.status.canUpdate()) {
             payment.errors.rejectValue("status", "can.not.delete")
-            throw new ValidationException("Erro ao remover cobrança", validatedPayment.errors)
+            throw new ValidationException("Erro ao remover cobrança", payment.errors)
+        }
+        
+        payment.deleted = true
+
+        return payment.save(failOnError: true)
+    }
+
+    public Payment restore(Map parameterMap, Customer customer) {
+        Payment payment = Payment.query([id: parameterMap.id, customerId: customer.id, deletedOnly: true]).get()
+        if (!payment) {
+            payment.errors.rejectValue("status", "can.not.delete")
+            throw new ValidationException("Erro ao remover cobrança", payment.errors)
         }
 
-        payment.deleted = true
+        payment.deleted = false
 
         return payment.save(failOnError: true)
     }
