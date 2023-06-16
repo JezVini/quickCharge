@@ -84,7 +84,7 @@ class PaymentService {
     }
     
     public Payment receiveInCash(Map parameterMap, Customer customer) {
-        Payment payment = Payment.getById(id: parameterMap.id, customerId: customer.id)
+        Payment payment = Payment.getById(parameterMap.id, customer.id)
         if (!payment.status.canUpdate()) {
             payment.errors.rejectValue("status", "already.received")
             throw new ValidationException("Erro ao confirmar pagamento em dinheiro da cobrança", payment.errors)
