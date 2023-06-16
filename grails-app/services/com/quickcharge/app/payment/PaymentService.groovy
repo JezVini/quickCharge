@@ -71,7 +71,12 @@ class PaymentService {
     }
 
     public Payment restore(Map parameterMap, Customer customer) {
-        Payment payment = Payment.getById([id: parameterMap.id, customerId: customer.id, deletedOnly: true])
+        Payment payment = Payment.query([id: parameterMap.id, customerId: customer.id, deletedOnly: true]).get()
+        if (!payment) {
+            payment.errors.rejectValue("status", "can.not.delete")
+            throw new ValidationException("Erro ao remover cobrança", payment.errors)
+        }
+
         payment.deleted = false
 
         return payment.save(failOnError: true)
