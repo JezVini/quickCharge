@@ -78,19 +78,19 @@ class PayerService {
     public Payer restore(Map parameterMap, Customer customer) {
         Map parameterQuery = [id: parameterMap.id, customerId: customer.id, deletedOnly: true]
         
-        Payer payer = Payer.getPayer(parameterQuery)
+        Payer payer = Payer.getById(parameterQuery)
         payer.deleted = false
 
         return payer.save(failOnError: true)
     }
     
     private Payer validateDelete(Map parameterQuery) {
-        Payer validatedPayer = Payer.getPayer(parameterQuery)
+        Payer validatedPayer = Payer.getById(parameterQuery)
 
         Map paymentQuery = [
             payerId: parameterQuery.id, 
             customerId: parameterQuery.customerId, 
-            status: PaymentStatus.UPDATABLE_STATUS
+            status: PaymentStatus.getUpdatableList()
         ]
         
         if (Payment.query(paymentQuery).get()) {

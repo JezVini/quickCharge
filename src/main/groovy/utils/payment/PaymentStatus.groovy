@@ -5,10 +5,12 @@ public enum PaymentStatus {
     OVERDUE,
     RECEIVED,
     RECEIVED_IN_CASH,
-
-    public static final List<PaymentStatus> UPDATABLE_STATUS = [PaymentStatus.PENDING, PaymentStatus.OVERDUE] 
+    
+    public static List<PaymentStatus> getUpdatableList() {
+        return [PaymentStatus.PENDING, PaymentStatus.OVERDUE]
+    }
     
     public Boolean canUpdate() {
-        return PaymentStatus.UPDATABLE_STATUS.contains(this)
+        return PaymentStatus.getUpdatableList().contains(this)
     }
 }
