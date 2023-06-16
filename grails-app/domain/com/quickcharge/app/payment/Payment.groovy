@@ -26,33 +26,33 @@ class Payment extends BaseEntity {
 
     static namedQueries = {
         query { Map search ->
-            if (!search.containsKey("customerId")) {
-                throw new RuntimeException("Payer.query(): o atributo [customerId] é obrigatório para executar a consulta.")
-            }
-            
             if (Boolean.valueOf(search.deletedOnly)) {
                 eq("deleted", true)
             } else if (!Boolean.valueOf(search.includeDeleted)) {
                 eq("deleted", false)
             }
 
-            if (!search.containsKey("id")) {
+            if (search.containsKey("id")) {
                 eq("id", Long.valueOf(search.id))
             }
+            
+            if (search.containsKey("customerId")) {
+                eq("customer.id", Long.valueOf(search.customerId))
+            }
 
-            if (search.column) {
+            if (search.containsKey("column")) {
                 projections {
                     property "${search.column}"
                 }
             }
 
-            if (search.onlyOverduePendingPayments) {
-                Date now = new Date()
-                lt('dueDate', now)
+            if (search.containsKey("dueDateLesserThanNow")) {
+                lt('dueDate', new Date())
+            }
+            
+            if (search.containsKey("includePendingPayments")) {
                 eq("status", PaymentStatus.PENDING)
             }
-
-            eq("customer.id", Long.valueOf(search.customerId))
         }
     }
 
