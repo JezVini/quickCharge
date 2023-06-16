@@ -93,6 +93,7 @@ class PaymentService {
 
         Payment payment = Payment.getPayment(parameterQuery)
         payment.status = PaymentStatus.RECEIVED_IN_CASH
+        payment.paymentDate = new Date()
         
         return payment.save(failOnError: true)
     } 
