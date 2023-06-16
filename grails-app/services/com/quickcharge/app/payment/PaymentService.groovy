@@ -6,6 +6,7 @@ import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import org.apache.commons.lang3.EnumUtils
 import utils.payment.BillingType
+import utils.payment.PaymentStatus
 import java.text.SimpleDateFormat
 
 @Transactional
@@ -61,7 +62,7 @@ class PaymentService {
     public Payment delete(Map parameterMap, Customer customer) {
         Payment payment = Payment.getById(parameterMap.id, customer.id)
         if (!payment.status.canUpdate()) {
-            payment.errors.rejectValue("status", "can.not.delete")
+            payment.errors.rejectValue("status", "already.received")
             throw new ValidationException("Erro ao remover cobrança", payment.errors)
         }
         
@@ -79,6 +80,19 @@ class PaymentService {
 
         payment.deleted = false
 
+        return payment.save(failOnError: true)
+    }
+    
+    public Payment receiveInCash(Map parameterMap, Customer customer) {
+        Payment payment = Payment.getById(id: parameterMap.id, customerId: customer.id)
+        if (!payment.status.canUpdate()) {
+            payment.errors.rejectValue("status", "already.received")
+            throw new ValidationException("Erro ao confirmar pagamento em dinheiro da cobrança", payment.errors)
+        }
+
+        payment.status = PaymentStatus.RECEIVED_IN_CASH
+        payment.paymentDate = new Date()
+        
         return payment.save(failOnError: true)
     }
 }

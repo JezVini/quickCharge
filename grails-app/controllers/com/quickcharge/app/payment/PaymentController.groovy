@@ -5,7 +5,7 @@ import com.quickcharge.app.payer.Payer
 import grails.validation.ValidationException
 import utils.controller.BaseController
 import utils.message.MessageType
-import utils.payment.BillingType 
+import utils.payment.BillingType
 
 class PaymentController extends BaseController{
 
@@ -83,6 +83,28 @@ class PaymentController extends BaseController{
             flash.message = "Ocorreu um erro ao restaurar cobrança, contate o desenvolvimento"
             flash.type = MessageType.ERROR
             log.info("PaymentController.restore >> Erro ao restaurar cobrança com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+        } finally {
+            redirect([
+                action: "index",
+                params: [
+                    deletedOnly: params.deletedOnly,
+                    includeDeleted: params.includeDeleted
+                ]
+            ])
+        }
+    }
+
+    def receiveInCash() {
+        try {
+            paymentService.receiveInCash(params, getCurrentCustomer())
+            flash.message = "Recebimento em dinheiro confirmado com sucesso"
+            flash.type = MessageType.SUCCESS
+        } catch (ValidationException validationException) {
+            this.validateExceptionHandler(validationException)
+        } catch (Exception exception) {
+            flash.message = "Ocorreu um erro ao confirmar recebimento em dinheiro, contate o desenvolvimento"
+            flash.type = MessageType.ERROR
+            log.info("PaymentController.receivedInCash >> Erro ao confirmar recebimento em dinheiro com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
             redirect([
                 action: "index",
