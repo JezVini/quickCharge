@@ -115,7 +115,7 @@ class PaymentService {
         }
 
         Long paymentId = parameterMap.long("id")
-        Payment payment = Payment.query([id: paymentId, customerId: customerId]).get()
+        Payment payment = Payment.getById(paymentId, customerId)
 
         Double value = parameterMap.double("value")
         Date dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(parameterMap.dueDate as String)

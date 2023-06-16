@@ -35,12 +35,13 @@ class Payment extends BaseEntity {
             } else if (!Boolean.valueOf(search.includeDeleted)) {
                 eq("deleted", false)
             }
-            
-            eq("customer.id", Long.valueOf(search.customerId))
 
             if (search.containsKey("id")) {
                 eq("id", Long.valueOf(search.id))
             }
+            
+            eq("customer.id", Long.valueOf(search.customerId))
+
         }
     }
     
@@ -50,6 +51,15 @@ class Payment extends BaseEntity {
         Payment payment = Payment.query(parameterQuery).get()
         if (payment) return payment
 
+        validatedPayment.errors.rejectValue("id", "not.found")
+        throw new ValidationException("Erro ao buscar cobrança", validatedPayment.errors)
+    }
+
+    static Payment getById(id, customerId) {
+        Payment payment = Payment.query([id: id, customerId: customerId]).get()
+        if (payment) return payment
+
+        Payment validatedPayment = new Payment()
         validatedPayment.errors.rejectValue("id", "not.found")
         throw new ValidationException("Erro ao buscar cobrança", validatedPayment.errors)
     }

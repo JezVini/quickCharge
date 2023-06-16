@@ -121,14 +121,11 @@ class PaymentController extends BaseController{
     def edit() {
         try {
             Long customerId = getCurrentCustomer().id
-            Long id = params.long("id")
-            Payment payment = Payment.query([customerId: customerId, id: id, includeDeleted: true]).get()
-
-            if (payment.status != PaymentStatus.PENDING || payment.deleted) {
-                redirect(action: "index")
-            }
-
+            Long paymentId = params.long("id")
+            Payment payment = Payment.getById(paymentId, customerId)
             return [payment: payment, billingType: BillingType]
+        } catch (ValidationException validationException) {
+            this.validateExceptionHandler(validationException) 
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao buscar dados da cobrança, contate o desenvolvimento"
             flash.type = MessageType.ERROR
