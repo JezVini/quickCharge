@@ -12,7 +12,6 @@ import java.util.regex.Pattern
 class CustomerService {
     
     def userService
-    def springSecurityService
 
     public Customer save(Map parameterMap) {
         Customer validatedCustomer = validateSave(parameterMap)
@@ -33,16 +32,15 @@ class CustomerService {
         return customer
     }
 
-    public Customer update(Map parameterMap) {
+    public Customer update(Map parameterMap, Customer customer) {
         Customer validatedCustomer = validateSave(parameterMap)
 
         if (validatedCustomer.hasErrors()) {
             throw new ValidationException("Erro ao salvar conta", validatedCustomer.errors)
         }
-        
-        Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
-        Customer customer = springSecurityService.getCurrentUser().customer
 
+        Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
+        
         setCustomerProperties(customer, sanitizedParameterMap)
 
         return customer.save(failOnError: true)
@@ -121,7 +119,7 @@ class CustomerService {
         Customer validatedCustomer = new Customer()
 
         if (!CpfCnpjUtils.validate(parameterMap.cpfCnpj as String)) {
-            validatedCustomer.errors.reject("", null, "CPF ou CNPJ inválido")
+            validatedCustomer.errors.rejectValue("cpfCnpj", "invalid")
         }
         
         if (!State.validate(parameterMap.state)) {

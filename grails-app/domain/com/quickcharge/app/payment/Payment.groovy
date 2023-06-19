@@ -2,10 +2,10 @@ package com.quickcharge.app.payment
 
 import com.quickcharge.app.customer.Customer
 import com.quickcharge.app.payer.Payer
+import grails.validation.ValidationException
 import utils.entity.BaseEntity
 import utils.payment.BillingType
 import utils.payment.PaymentStatus
-import grails.validation.ValidationException
 
 class Payment extends BaseEntity {
 
@@ -16,7 +16,7 @@ class Payment extends BaseEntity {
     PaymentStatus status = PaymentStatus.PENDING
     Date dueDate
     Date paymentDate
-    
+
     static constraints = {
         billingType blank: false
         value min: 0.01D
@@ -29,7 +29,7 @@ class Payment extends BaseEntity {
             if (!search.containsKey("customerId")) {
                 throw new RuntimeException("Payer.query(): o atributo [customerId] é obrigatório para executar a consulta.")
             }
-
+            
             if (Boolean.valueOf(search.deletedOnly)) {
                 eq("deleted", true)
             } else if (!Boolean.valueOf(search.includeDeleted)) {
@@ -39,20 +39,9 @@ class Payment extends BaseEntity {
             if (search.containsKey("id")) {
                 eq("id", Long.valueOf(search.id))
             }
-            
+
             eq("customer.id", Long.valueOf(search.customerId))
-
         }
-    }
-    
-    static Payment getPayment(Map parameterQuery) {
-        Payment validatedPayment = new Payment()
-        
-        Payment payment = Payment.query(parameterQuery).get()
-        if (payment) return payment
-
-        validatedPayment.errors.rejectValue("id", "not.found")
-        throw new ValidationException("Erro ao buscar cobrança", validatedPayment.errors)
     }
 
     static Payment getById(id, customerId) {

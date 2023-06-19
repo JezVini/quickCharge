@@ -11,19 +11,21 @@ class SideBarTagLib {
     
     private List<Map> buildMenu() {
         List<Map> menuItemsList = []
-        
+
         menuItemsList.add([
-            icon: "hand-shake", 
+            icon: "hand-shake",
             text: "Criar Cobrança",
-            href: "#",
-            value: "#"
+            href: createLink(controller: "payment", action: "create"),
+            value: "paymentCreate",
+            active: (controllerName == "payment") && (actionName == "create")
         ])
 
         menuItemsList.add([
             icon: "money",
             text: "Minhas Cobranças",
-            href: "#",
-            value: "#"
+            href: createLink(controller: "payment", action: "index"),
+            value: "paymentIndex",
+            active: (controllerName == "payment") && (actionName == "index")
         ])
 
         menuItemsList.add([
@@ -37,9 +39,23 @@ class SideBarTagLib {
         menuItemsList.add([
             icon: "user",
             text: "Meu Perfil",
-            href: createLink(controller: "customer", action: "edit"),
             value: "customer",
-            active: (controllerName == "customer") && (actionName == "edit")
+            active: (controllerName == "customer") && (actionName == "edit"),
+            dropdownItemsList: [
+                [
+                    icon: "user",
+                    text:  "Editar Perfil",
+                    href:  "${createLink(controller: 'customer', action: 'edit')}",
+                    value:  "customer",
+                    active: (controllerName == "customer") && (actionName == "edit"),
+                ],
+                [
+                    icon: "power",
+                    text: "Logout",
+                    href: "${createLink(controller:'logout', action: 'index')}",
+                    value: "logout"
+                ]
+            ]
         ])
         
         return menuItemsList
