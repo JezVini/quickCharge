@@ -5,9 +5,9 @@ import com.quickcharge.app.payer.Payer
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import org.apache.commons.lang3.EnumUtils
-import org.apache.commons.lang3.time.DateUtils
 import utils.payment.BillingType
 import utils.payment.PaymentStatus
+import org.apache.commons.lang3.time.DateUtils
 
 import java.text.SimpleDateFormat
 
@@ -60,12 +60,49 @@ class PaymentService {
         
         return validatedPayment
     }
+    
+    public Payment delete(Map parameterMap, Customer customer) {
+        Payment payment = Payment.getById(parameterMap.id, customer.id)
+        if (!payment.status.canUpdate()) {
+            payment.errors.rejectValue("status", "already.received")
+            throw new ValidationException("Erro ao remover cobrança", payment.errors)
+        }
+        
+        payment.deleted = true
+
+        return payment.save(failOnError: true)
+    }
+
+    public Payment restore(Map parameterMap, Customer customer) {
+        Payment payment = Payment.query([id: parameterMap.id, customerId: customer.id, deletedOnly: true]).get()
+        if (!payment) {
+            payment.errors.rejectValue("status", "can.not.delete")
+            throw new ValidationException("Erro ao remover cobrança", payment.errors)
+        }
+
+        payment.deleted = false
+
+        return payment.save(failOnError: true)
+    }
+    
+    public Payment receiveInCash(Map parameterMap, Customer customer) {
+        Payment payment = Payment.getById(id: parameterMap.id, customerId: customer.id)
+        if (!payment.status.canUpdate()) {
+            payment.errors.rejectValue("status", "already.received")
+            throw new ValidationException("Erro ao confirmar pagamento em dinheiro da cobrança", payment.errors)
+        }
+
+        payment.status = PaymentStatus.RECEIVED_IN_CASH
+        payment.paymentDate = new Date()
+        
+        return payment.save(failOnError: true)
+    }
 
     public void processPaymentOverdue() {
         List<Long> overduePendingPaymentsIdList = Payment.query(["column": "id", "dueDateLesserThanNow": true, "includePendingPayments": true]).list()
 
         if (overduePendingPaymentsIdList.isEmpty()) return
-        
+
         for (Long paymentId : overduePendingPaymentsIdList) {
             Payment.withNewTransaction { status ->
                 Payment payment = Payment.get(paymentId)
