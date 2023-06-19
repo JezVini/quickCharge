@@ -35,7 +35,7 @@ class Payment extends BaseEntity {
             if (search.containsKey("id")) {
                 eq("id", Long.valueOf(search.id))
             }
-            
+
             if (search.containsKey("customerId")) {
                 eq("customer.id", Long.valueOf(search.customerId))
             }
@@ -52,6 +52,10 @@ class Payment extends BaseEntity {
             
             if (search.containsKey("includePendingPayments")) {
                 eq("status", PaymentStatus.PENDING)
+            }
+
+            if (search.containsKey("payerId")) {
+                eq("payer.id", Long.valueOf(search.payerId))
             }
         }
     }

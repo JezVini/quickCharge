@@ -1,6 +1,7 @@
 package com.quickcharge.app.payer
 
 import com.quickcharge.app.customer.Customer
+import com.quickcharge.app.payment.Payment
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import utils.CpfCnpjUtils
@@ -72,6 +73,9 @@ class PayerService {
 
         Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
         Payer payer = Payer.query([id: parameterMap.id, customerId: customerId]).get()
+
+        List<Payment> paymentList = Payment.query([payerId: payer.id, onlyPendingPayments: true]).list()
+        
         payer.deleted = true
         
         return payer.save(failOnError: true)
