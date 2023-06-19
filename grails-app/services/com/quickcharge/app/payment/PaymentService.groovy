@@ -12,6 +12,8 @@ import java.text.SimpleDateFormat
 @Transactional
 class PaymentService {
 
+    PaymentReceiptService paymentReceiptService
+
     def save(Map parameterMap, Customer customer) {
         Payment validatedPayment = validateSave(parameterMap)
         
@@ -92,6 +94,9 @@ class PaymentService {
 
         payment.status = PaymentStatus.RECEIVED_IN_CASH
         payment.paymentDate = new Date()
+        
+        PaymentReceipt paymentReceipt = paymentReceiptService.createReceipt(payment)
+        payment.receiptUniqueId = paymentReceipt.uniqueId
         
         return payment.save(failOnError: true)
     }

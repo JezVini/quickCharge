@@ -9,4 +9,8 @@ public enum PaymentStatus {
     public Boolean canUpdate() {
         return [PaymentStatus.PENDING, PaymentStatus.OVERDUE].contains(this)
     }
+
+    public Boolean isReceived() {
+        return [PaymentStatus.RECEIVED, PaymentStatus.RECEIVED_IN_CASH].contains(this)
+    }
 }

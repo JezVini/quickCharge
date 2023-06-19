@@ -128,7 +128,7 @@ class PaymentController extends BaseController{
                 redirect(action: "index")
             }
 
-            return [payment: payment]
+            return [payment: payment,  billingType: BillingType]
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao buscar dados da cobrança, contate o desenvolvimento"
             flash.type = MessageType.ERROR

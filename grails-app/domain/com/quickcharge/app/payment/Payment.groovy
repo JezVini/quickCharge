@@ -16,6 +16,7 @@ class Payment extends BaseEntity {
     PaymentStatus status = PaymentStatus.PENDING
     Date dueDate
     Date paymentDate
+    String receiptUniqueId
 
     static constraints = {
         billingType blank: false
@@ -26,10 +27,7 @@ class Payment extends BaseEntity {
 
     static namedQueries = {
         query { Map search ->
-            if (!search.containsKey("customerId")) {
-                throw new RuntimeException("Payer.query(): o atributo [customerId] é obrigatório para executar a consulta.")
-            }
-            
+           
             if (Boolean.valueOf(search.deletedOnly)) {
                 eq("deleted", true)
             } else if (!Boolean.valueOf(search.includeDeleted)) {
@@ -40,7 +38,9 @@ class Payment extends BaseEntity {
                 eq("id", Long.valueOf(search.id))
             }
 
-            eq("customer.id", Long.valueOf(search.customerId))
+            if (search.containsKey("customerId")) {
+                eq("customer.id", Long.valueOf(search.customerId))
+            }
         }
     }
 

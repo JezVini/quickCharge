@@ -101,6 +101,12 @@
                                         <button style="background-color: #f00">Remover</button>
                                     </g:link>
                                 </g:if>
+
+                                <g:if test="${(payment.status.isReceived())}">
+                                    <g:link controller="paymentReceipt" action="show" target="_blank" params="${[paymentReceiptUniqueId: payment.receiptUniqueId]}">
+                                        <button>Comprovante de Pagamento</button>
+                                    </g:link>
+                                </g:if>
                             </g:else>
                         </td>
 
