@@ -23,10 +23,14 @@ class Payment extends BaseEntity {
         value min: 0.01D
         status blank: false
         paymentDate nullable: true
+        receiptUniqueId nullable: true
     }
 
     static namedQueries = {
         query { Map search ->
+            if (!search.containsKey("customerId")) {
+                throw new RuntimeException("Payer.query(): o atributo [customerId] é obrigatório para executar a consulta.")
+            }
            
             if (Boolean.valueOf(search.deletedOnly)) {
                 eq("deleted", true)
@@ -38,9 +42,7 @@ class Payment extends BaseEntity {
                 eq("id", Long.valueOf(search.id))
             }
 
-            if (search.containsKey("customerId")) {
-                eq("customer.id", Long.valueOf(search.customerId))
-            }
+            eq("customer.id", Long.valueOf(search.customerId))
         }
     }
 
