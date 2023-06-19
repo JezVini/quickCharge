@@ -99,7 +99,7 @@ class PaymentService {
     }
 
     public void processPaymentOverdue() {
-        List<Long> overduePendingPaymentsIdList = Payment.query(["column": "id", "dueDate[lt]": new Date(), "includePendingPayments": true]).list()
+        List<Long> overduePendingPaymentsIdList = Payment.query(["column": "id", "dueDate[lt]": new Date(), "onlyPendingPayments": true]).list()
 
         if (overduePendingPaymentsIdList.isEmpty()) return
 
