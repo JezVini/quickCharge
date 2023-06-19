@@ -50,7 +50,7 @@ class Payment extends BaseEntity {
                 lt("dueDate", search."dueDate[lt]")
             }
             
-            if (search.containsKey("includePendingPayments")) {
+            if (search.containsKey("onlyPendingPayments")) {
                 eq("status", PaymentStatus.PENDING)
             }
 
