@@ -46,8 +46,8 @@ class Payment extends BaseEntity {
                 }
             }
 
-            if (search.containsKey("dueDateLesserThanNow")) {
-                lt('dueDate', new Date())
+            if (search.containsKey("dueDate[lt]")) {
+                lt("dueDate", search."dueDate[lt]")
             }
             
             if (search.containsKey("includePendingPayments")) {
