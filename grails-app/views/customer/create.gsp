@@ -1,7 +1,12 @@
 <html>
     <head>
-        <meta name="layout" content="main">
         <title>Registrar Cliente</title>
+        <link rel="stylesheet" href="https://atlas.asaas.com/v7.5.0/atlas.css"
+              integrity="sha384-TNq7rPEaeJzo2yVc9iwEks5VwcqkV651ULn51l5YiJxYQGLxfHFFgsk3nWSBiD0A"
+              crossorigin="anonymous">
+        <script defer src="https://atlas.asaas.com/v7.5.0/atlas.js"
+                integrity="sha384-ZrJyf8Bowh8ESuZeAX1awzuL0VeximAlaKYvOIfcGLqavQDguQXgMxKJ5hRRUL53"
+                crossorigin="anonymous"></script>
         <asset:javascript src="cep/cepAutomatically.js"/>
     </head>
 
@@ -9,62 +14,113 @@
 
         <g:message code="${flash.message}"/>
 
-        <form action="${createLink(controller: "customer", action: "save")}">
+        <atlas-form action="${createLink(controller: "customer", action: "save")}" method="post">
+            <atlas-input
+                label="Nome"
+                name="name"
+                value="${name}"
+                size="md"
+                placeholder="Digite o nome"
+                required></atlas-input>
 
-            <label for="name">Nome</label>
-            <input type="text" name="name" id="name" placeholder="Digite seu nome" value="${name}">
-            <br>
+            <atlas-masked-input
+                mask-alias="email"
+                label="E-mail"
+                name="email"
+                value="${email}"
+                size="md"
+                placeholder="Digite o e-mail"
+                required></atlas-masked-input>
 
-            <label for="email">E-mail</label>
-            <input type="email" name="email" id="email" placeholder="Digite seu e-mail" value="${email}">
-            <br>
+            <atlas-password-input
+                label="Senha"
+                name="password"
+                size="md"
+                placeholder="Digite a senha"
+                required></atlas-password-input>
 
-            <label for="password">Senha</label>
-            <input type="password" name="password" id="password" placeholder="Digite sua senha">
-            <br>
+            <atlas-masked-input
+                mask-alias="cpf-cnpj"
+                label="CPF ou CNPJ"
+                name="cpfCnpj"
+                value="${cpfCnpj}"
+                size="md"
+                required></atlas-masked-input>
 
-            <label for="cpfCnpj">CPF ou CNPJ</label>
-            <input type="text" name="cpfCnpj" id="cpfCnpj" placeholder="Digite o CPF ou CNPJ" value="${cpfCnpj}">
-            <br>
+            <atlas-masked-input
+                mask-alias="phone"
+                label="Telefone ou celular"
+                name="phone"
+                value="${phone}"
+                size="md"
+                required></atlas-masked-input>
 
-            <label for="phone">Telefone</label>
-            <input type="tel" name="phone" id="phone" placeholder="Digite o número de telefone/celular"
-                   value="${phone}">
-            <br>
+            <atlas-postal-code
+                label="CEP"
+                name="postalCode"
+                value="${postalCode}"
+                size="md"
+                required
+                disable-search
+                placeholder="Digite o CEP"
+                onblur="cepSearch(this.value)"></atlas-postal-code>
 
-            <label for="postalCode">CEP</label>
-            <input type="text" name="postalCode" id="postalCode" onblur="cepSearch(this.value)"
-                   placeholder="Digite o CEP" value="${postalCode}">
-            <br>
+            <atlas-input
+                label="Estado"
+                name="state"
+                id="state"
+                value="${state}"
+                size="md"
+                maxlength="2"
+                placeholder="Digite o estado"
+                required></atlas-input>
 
-            <label for="state">Estado</label>
-            <input type="text" name="state" id="state" placeholder="Digite seu estado" value="${state}">
-            <br>
+            <atlas-input
+                label="Cidade"
+                name="city"
+                id="city"
+                value="${city}"
+                size="md"
+                placeholder="Digite a cidade"
+                required></atlas-input>
 
-            <label for="city">Cidade</label>
-            <input type="text" name="city" id="city" placeholder="Digite sua cidade" value="${city}">
-            <br>
+            <atlas-input
+                label="Bairro"
+                name="district"
+                id="district"
+                value="${district}"
+                size="md"
+                placeholder="Digite o bairro"
+                required></atlas-input>
 
-            <label for="district">Bairro</label>
-            <input type="text" name="district" id="district" placeholder="Digite o distrito" value="${district}">
-            <br>
+            <atlas-input
+                label="Rua"
+                name="address"
+                id="address"
+                value="${address}"
+                size="md"
+                placeholder="Digite a rua"
+                required></atlas-input>
 
-            <label for="address">Rua</label>
-            <input type="text" name="address" id="address" placeholder="Digite a rua" value="${address}">
-            <br>
+            <atlas-input
+                label="Número"
+                name="addressNumber"
+                value="${addressNumber}"
+                size="md"
+                placeholder="Digite o número"
+                required></atlas-input>
 
-            <label for="addressNumber">Número</label>
-            <input type="text" name="addressNumber" id="addressNumber" placeholder="Digite o número"
-                   value="${addressNumber}">
-            <br>
+            <atlas-input
+                label="Complemento"
+                name="addressComplement"
+                value="${addressComplement}"
+                size="md"
+                placeholder="Digite o complemento"
+                required></atlas-input>
 
-            <label for="addressComplement">Complemento</label>
-            <input type="text" name="addressComplement" id="addressComplement" placeholder="Digite o complemento"
-                   value="${addressComplement}">
-            <br>
-
-            <button type="submit">Criar</button>
-
-        </form>
+            <atlas-button submit
+                          size="md"
+                          description="Criar"></atlas-button>
+        </atlas-form>
     </body>
 </html>
