@@ -7,6 +7,8 @@ import grails.validation.ValidationException
 import org.apache.commons.lang3.EnumUtils
 import utils.payment.BillingType
 import utils.payment.PaymentStatus
+import org.apache.commons.lang3.time.DateUtils
+
 import java.text.SimpleDateFormat
 
 @Transactional
@@ -94,5 +96,25 @@ class PaymentService {
         payment.paymentDate = new Date()
         
         return payment.save(failOnError: true)
+    }
+
+    public void processPaymentOverdue() {
+        List<Long> overduePendingPaymentsIdList = Payment.query(["column": "id", "dueDate[lt]": new Date(), "onlyPendingPayments": true]).list()
+
+        if (overduePendingPaymentsIdList.isEmpty()) return
+
+        for (Long paymentId : overduePendingPaymentsIdList) {
+            Payment.withNewTransaction { status ->
+                try {
+                    Payment payment = Payment.get(paymentId)
+                    payment.status = PaymentStatus.OVERDUE
+                    payment.save(failOnError: true)
+                }
+                catch (Exception exception) {
+                    log.info("updatePendingPaymentStatus >> Erro ao atualizar status da cobrança de id: [${paymentId}] [Mensagem de erro]: ${exception.message}")
+                    status.setRollbackOnly()
+                }
+            }
+        }
     }
 }
