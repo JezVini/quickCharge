@@ -5,6 +5,8 @@
     </head>
 
     <body>
+        <%@ page import="utils.payment.BillingType" %>
+        
         <main>
             <g:message code="${flash.message}"/>
             <g:if test="${payment}">
@@ -17,7 +19,7 @@
 
                     <label for="billingType">Forma de pagamento</label>
                     <g:select name="billingType" id="billingType"
-                              from="${billingType}"
+                              from="${BillingType.values()}"
                               valueMessagePrefix="ENUM.BillingType"
                               value="${payment.billingType}"
                               disabled=""/>
