@@ -27,7 +27,7 @@ class Payer extends BasePerson {
         }
     }
 
-    static Payer getById(id, customerId) {
+    static Payer getById(Long id, Long customerId) {
         Payer payment = Payer.query([id: id, customerId: customerId]).get()
         if (payment) return payment
 
