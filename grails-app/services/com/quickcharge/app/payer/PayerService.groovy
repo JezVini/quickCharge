@@ -38,9 +38,9 @@ class PayerService {
             throw new ValidationException("Erro ao salvar pagador", validatedPayer.errors)
         }
 
-        Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
-        Payer payer = Payer.getById(sanitizedParameterMap.id, customer.id)
+        Payer payer = Payer.getById(parameterMap.long("id"), customer.id)
 
+        Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
         setPayerProperties(payer, sanitizedParameterMap)
 
         return payer.save(failOnError: true)
@@ -68,7 +68,7 @@ class PayerService {
             status    : PaymentStatus.getUpdatableList()
         ]
 
-        Payer payer = Payer.getById(parameterMap.id, customer.id)
+        Payer payer = Payer.getById(parameterMap.long("id"), customer.id)
         if (Payment.query(paymentQuery).get()) {
             payer.errors.rejectValue("id", "has.updatable.payment")
             throw new ValidationException("Erro ao remover pagador", payer.errors)
