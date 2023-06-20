@@ -22,8 +22,7 @@ class PaymentController extends BaseController{
                 ]).list(),
 
                 deletedOnly: params.deletedOnly,
-                includeDeleted: params.includeDeleted,
-                paymentStatus: PaymentStatus
+                includeDeleted: params.includeDeleted
             ]
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao buscar cobranças, contate o desenvolvimento"

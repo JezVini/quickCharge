@@ -87,7 +87,7 @@
                                 </g:link>
                             </g:if>
                             <g:else>
-                                <g:if test="${(payment.status == paymentStatus.PENDING)}">
+                                <g:if test="${(payment.status.canUpdate())}">
                                     <g:link action="edit" params="${parameterMap}">
                                         <button>Editar</button>
                                     </g:link>
