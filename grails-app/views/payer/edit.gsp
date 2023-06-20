@@ -5,6 +5,8 @@
     <asset:javascript src="cep/cepAutomatically.js"/>
 </head>
 <body>
+    <g:set var="pageName" scope="request" value="Alterar dados de cliente"/>
+    
     <g:message code="${flash.message}"/>
     <g:if test="${payer}">
         <form action="${createLink(controller: "payer", action: "update" )}" method="post">

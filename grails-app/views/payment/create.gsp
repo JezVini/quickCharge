@@ -5,6 +5,8 @@
     </head>
 
     <body>
+        <g:set var="pageName" scope="request" value="Criar cobrança"/>
+        
         <g:message code="${flash.message}"/>
         <form action="${createLink(controller: "payment", action: "save")}" method="post">
 

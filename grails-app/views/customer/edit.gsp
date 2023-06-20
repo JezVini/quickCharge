@@ -6,6 +6,8 @@
     </head>
 
     <body>
+        <g:set var="pageName" scope="request" value="Alterar dados da conta"/>
+        
         <g:message code="${flash.message}"/>
         <form action="${createLink(controller: "customer", action: "update")}" method="post">
             <input type="hidden" name="id" value="${customer.id}">

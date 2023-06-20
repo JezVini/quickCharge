@@ -4,7 +4,9 @@
     <title>Registrar Pagador</title>
     <asset:javascript src="cep/cepAutomatically.js"/>
 </head>
-    <body>
+    <body>        
+        <g:set var="pageName" scope="request" value="Cadastrar cliente"/>
+        
         <g:message code="${flash.message}"/>
         <form action="${createLink(controller: "payer", action: "save")}" method="post">
             <label for="name">Nome</label>

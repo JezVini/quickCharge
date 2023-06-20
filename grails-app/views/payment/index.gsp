@@ -5,6 +5,7 @@
     </head>
 
     <body>
+        <g:set var="pageName" scope="request" value="Minhas cobranças"/>
 
         <h1>
             <g:if test="${deletedOnly}">

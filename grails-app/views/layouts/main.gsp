@@ -27,8 +27,7 @@
         <atlas-screen>
             <sideBar:render/>
             <atlas-page>
-                <atlas-page-header slot="header" page-name="">
-                </atlas-page-header>
+                <atlas-page-header slot="header" page-name="${pageName}"></atlas-page-header>
                 <atlas-page-content slot="content" class="js-atlas-content">
                     <g:layoutBody/>
                 </atlas-page-content>
