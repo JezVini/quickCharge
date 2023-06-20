@@ -83,7 +83,7 @@ class PayerService {
         Payer payer = Payer.query([id: parameterMap.id, customerId: customer.id, deletedOnly: true]).get()
         if (!payer) {
             payer.errors.rejectValue("id", "not.found")
-            throw new ValidationException("Erro ao remover cobrança", payer.errors)
+            throw new ValidationException("Erro ao remover pagador", payer.errors)
         }
 
         payer.deleted = false
