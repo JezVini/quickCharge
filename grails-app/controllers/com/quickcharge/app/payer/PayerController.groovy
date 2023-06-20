@@ -14,7 +14,7 @@ class PayerController extends BaseController {
     
     def edit() {
         try {
-            return [payer: Payer.query([id: params.long("id"), customerId: getCurrentCustomer().id]).get()]
+            return [payer: Payer.getById(params.long("id"), getCurrentCustomer().id)]
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao buscar dados do pagador, contate o desenvolvimento"
             flash.type = MessageType.ERROR
