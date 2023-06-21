@@ -3,7 +3,6 @@
         <meta name="layout" content="main">
         <title>Listagem de pagadores</title>
     </head>
-
     <body>
 
         <h1>
@@ -31,13 +30,13 @@
                         <button>Mostrar apenas pagadores ativos</button>
                     </g:link>
                 </th>
-                
+
                 <th>
                     <g:link action="index" params="${[deletedOnly: true]}">
                         <button>Mostrar apenas pagadores desativados</button>
                     </g:link>
                 </th>
-                
+
                 <th>
                     <g:link action="index" params="${[includeDeleted: true]}">
                         <button>Mostrar todos os pagadores</button>
@@ -53,16 +52,15 @@
             </tr>
             <g:if test="${payerList}">
                 <g:each in="${payerList}" var="payer">
-                    
+
                     <%
                         Map parameterMap = [
-                            id: payer.id,
-                            customerId: customerId,
-                            deletedOnly: deletedOnly,
+                            id            : payer.id,
+                            deletedOnly   : deletedOnly,
                             includeDeleted: includeDeleted
                         ]
                     %>
-                    
+
                     <tr>
                         <td>${payer.name}</td>
                         <td>${payer.email}</td>
@@ -75,10 +73,10 @@
                                 </g:link>
                             </g:if>
                             <g:else>
-                                <g:link action="edit" params="${parameterMap}">
+                                <g:link action="edit" params="${[id: payer.id]}">
                                     <button style="background-color: yellow ">Editar</button>
                                 </g:link>
-                                
+
                                 <g:link action="delete" params="${parameterMap}">
                                     <button style="background-color: #f00">Remover</button>
                                 </g:link>
