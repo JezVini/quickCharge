@@ -1,14 +1,17 @@
 package utils.controller
 
 import com.quickcharge.app.customer.Customer
+import com.quickcharge.app.email.BuildEmailContentService
+import com.quickcharge.app.payment.Payment
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.validation.ValidationException
 import org.springframework.validation.ObjectError
 import utils.message.MessageType 
 
-abstract class BaseController {
-    
+class BaseController {
+
     SpringSecurityService springSecurityService
+    BuildEmailContentService buildEmailContentService
     
     protected Customer getCurrentCustomer() {
         return springSecurityService.getCurrentUser().customer
@@ -27,5 +30,21 @@ abstract class BaseController {
         
         flash.message = subMessage
         flash.type = MessageType.WARNING
+    }
+    
+    void sendPaymentCreatedEmail(Payment payment) {
+        buildEmailContentService.savePaymentCreatedEmail(payment, getCurrentCustomer())
+    }
+    
+    void sendPaymentDeletedEmail(Payment payment) {
+        buildEmailContentService.savePaymentDeletedEmail(payment, getCurrentCustomer())
+    }
+    
+    void sendPaymentRestoredEmail(Payment payment) {
+        buildEmailContentService.savePaymentRestoredEmail(payment, getCurrentCustomer())
+    }
+    
+    void sendPaymentReceivedEmail(Payment payment) {
+        buildEmailContentService.savePaymentReceivedEmail(payment, getCurrentCustomer())
     }
 }
