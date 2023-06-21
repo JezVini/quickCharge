@@ -22,7 +22,7 @@
                 href="${menu.href}"
                 value="${menu.value}"
                 ${menu.active ? 'active' : ''}>
-
+                
                 <g:if test="${(menu.containsKey('dropdownItemsList'))}">
                     <g:each var="menuItem" in="${menu.dropdownItemsList}">
                         <atlas-sidebar-menu-item
@@ -34,6 +34,7 @@
                         </atlas-sidebar-menu-item>
                     </g:each>
                 </g:if>
+                
             </atlas-sidebar-menu-item>
         </g:each>
     </atlas-sidebar-menu>
