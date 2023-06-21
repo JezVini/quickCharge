@@ -128,7 +128,7 @@ class PaymentController extends BaseController{
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao buscar dados da cobrança, contate o desenvolvimento"
             flash.type = MessageType.ERROR
-            log.info("PaymentController.edit >> Erro ao consultar cobrança com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            log.error("PaymentController.edit >> Erro ao consultar cobrança com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         }
     }
 
