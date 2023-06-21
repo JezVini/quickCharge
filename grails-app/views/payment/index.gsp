@@ -87,6 +87,12 @@
                                 </g:link>
                             </g:if>
                             <g:else>
+                                <g:if test="${(payment.status.canUpdate())}">
+                                    <g:link action="edit" params="${parameterMap}">
+                                        <button>Editar</button>
+                                    </g:link>
+                                </g:if>
+                                
                                 <g:if test="${payment.status.canUpdate()}">
                                     <g:link action="receiveInCash" params="${parameterMap}">
                                         <button style="background-color: #07bfff">Confirmar recebimento em dinheiro</button>
