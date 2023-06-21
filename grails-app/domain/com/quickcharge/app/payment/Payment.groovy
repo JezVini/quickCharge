@@ -26,10 +26,6 @@ class Payment extends BaseEntity {
 
     static namedQueries = {
         query { Map search ->
-            if (!search.containsKey("customerId")) {
-                throw new RuntimeException("Payer.query(): o atributo [customerId] é obrigatório para executar a consulta.")
-            }
-            
             if (Boolean.valueOf(search.deletedOnly)) {
                 eq("deleted", true)
             } else if (!Boolean.valueOf(search.includeDeleted)) {
@@ -40,7 +36,31 @@ class Payment extends BaseEntity {
                 eq("id", Long.valueOf(search.id))
             }
 
-            eq("customer.id", Long.valueOf(search.customerId))
+            if (search.containsKey("customerId")) {
+                eq("customer.id", Long.valueOf(search.customerId))
+            }
+
+            if (search.containsKey("column")) {
+                projections {
+                    property "${search.column}"
+                }
+            }
+
+            if (search.containsKey("dueDate[lt]")) {
+                lt("dueDate", search."dueDate[lt]")
+            }
+            
+            if (search.containsKey("onlyPendingPayments")) {
+                eq("status", PaymentStatus.PENDING)
+            }
+
+            if (search.containsKey("payerId")) {
+                eq("payer.id", Long.valueOf(search.payerId))
+            }
+            
+            if (search.containsKey("status")) {
+                inList("status", PaymentStatus.getUpdatableList())
+            }
         }
     }
 

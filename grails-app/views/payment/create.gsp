@@ -5,6 +5,8 @@
     </head>
 
     <body>
+        <%@ page import="utils.payment.BillingType" %>
+
         <g:message code="${flash.message}"/>
         <atlas-form action="${createLink(controller: "payment", action: "save")}" method="post">
             <atlas-layout gap="4">
@@ -28,7 +30,7 @@
                 <atlas-select label="Forma de pagamento"
                               name="billingType"
                               required>
-                    <g:each var="type" in="${billingType}">
+                    <g:each var="type" in="${BillingType.values()}">
                         <atlas-option
                             label="${message(code: 'ENUM.BillingType.' + type.toString())}"
                             value="${type}"></atlas-option>

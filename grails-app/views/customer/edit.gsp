@@ -94,8 +94,7 @@
                 name="addressComplement"
                 value="${customer.addressComplement}"
                 size="md"
-                placeholder="Digite o complemento"
-                required></atlas-input>
+                placeholder="Digite o complemento"></atlas-input>
 
             <atlas-button submit
                           size="md"
