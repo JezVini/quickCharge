@@ -13,11 +13,11 @@ class PaymentReceiptController extends BaseController {
     def show() {
         try {
             PaymentReceipt receipt = PaymentReceipt.query([uniqueId: params.paymentReceiptUniqueId]).get()
-            return [receipt: receipt, billingType: BillingType]
+            return [receipt: receipt]
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao buscar comprovante de pagamento, contate o desenvolvimento"
             flash.type = MessageType.ERROR
-            log.info("PaymentReceiptController.show >> Erro ao consultar comprovante com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            log.error("PaymentReceiptController.show >> Erro ao consultar comprovante com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         }
     }
 }
