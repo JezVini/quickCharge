@@ -144,9 +144,12 @@ class PaymentController extends BaseController {
     def update() {
         try {
             Long customerId = getCurrentCustomer().id
-            paymentService.update(params, customerId)
+            Payment payment = paymentService.update(params, customerId)
+        
             flash.message = "Cobrança alterada com sucesso"
             flash.type = MessageType.SUCCESS
+        
+            sendPaymentUpdatedEmail(payment)
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
         } catch (Exception exception) {

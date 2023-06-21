@@ -47,4 +47,8 @@ class BaseController {
     void sendPaymentReceivedEmail(Payment payment) {
         buildEmailContentService.savePaymentReceivedEmail(payment, getCurrentCustomer())
     }
+    
+    void sendPaymentUpdatedEmail(Payment payment) {
+        buildEmailContentService.savePaymentUpdatedEmail(payment, getCurrentCustomer())
+    }
 }

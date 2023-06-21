@@ -14,7 +14,7 @@ class BuildEmailContentService {
         EmailRequest emailRequest = new EmailRequest()
 
         String viewPath = "/email/_payment"
-        String subject = "Cobrança ${state} com sucesso!"
+        String subject = "Cobrança para ${payment.payer.name} ${state} com sucesso!"
         Map args = [customer: customer, payment: payment, subject: subject]
 
         emailRequest.emailTo = customer.email
@@ -41,6 +41,11 @@ class BuildEmailContentService {
     
     public void savePaymentReceivedEmail(Payment payment, Customer customer) {
         EmailRequest emailRequest = createEmailRequest(payment, customer, "recebida")
+        emailRequest.save(failOnError: true)
+    }
+    
+    public void savePaymentUpdatedEmail(Payment payment, Customer customer) {
+        EmailRequest emailRequest = createEmailRequest(payment, customer, "modificada")
         emailRequest.save(failOnError: true)
     }
 }
