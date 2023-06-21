@@ -6,6 +6,8 @@ import utils.email.EmailStatus
 @Transactional
 class EmailRequestService {
 
+    def mailService
+    
     public void addEmail(Map email) {
         EmailRequest emailRequest = new EmailRequest()
         
@@ -16,7 +18,7 @@ class EmailRequestService {
         emailRequest.save(failOnErro: true)
     }
     
-    public void sendPendingEmails(def mailService) {
+    public void sendPendingEmails() {
         List<EmailRequest> emailRequestList = EmailRequest.query([status: EmailStatus.PENDING]).list()
         
         while (emailRequestList) {

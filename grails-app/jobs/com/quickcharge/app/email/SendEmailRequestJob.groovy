@@ -2,7 +2,6 @@ package com.quickcharge.app.email
 
 class SendEmailRequestJob {
     
-    def mailService
     EmailRequestService emailRequestService
     
     static triggers = {
@@ -10,6 +9,6 @@ class SendEmailRequestJob {
     }
 
     def execute() {
-        emailRequestService.sendPendingEmails(mailService)
+        emailRequestService.sendPendingEmails()
     }
 }
