@@ -6,29 +6,43 @@
 
     <body>
         <g:message code="${flash.message}"/>
-        <form action="${createLink(controller: "payment", action: "save")}" method="post">
+        <atlas-form action="${createLink(controller: "payment", action: "save")}" method="post">
+            <atlas-layout gap="4">
+                <atlas-select label="Cliente"
+                              name="payerId"
+                              required>
+                    <g:each var="payer" in="${payerList}">
+                        <atlas-option
+                            label="${payer.name}"
+                            value="${payer.id}"></atlas-option>
+                    </g:each>
+                </atlas-select>
 
-            <label for="payerId">Pagador</label>
-            <g:select name="payerId" id="payerId" from="${payerList}" optionValue="name" optionKey="id"
-                      noSelection="['': 'Selecione o pagador']" value="${params.payerId}"/>
-            <br>
+                <atlas-money
+                    label="Valor da cobrança"
+                    name="value"
+                    min-value="5"
+                    min-value-error-message="O valor mínimo é 5 reais"
+                    required></atlas-money>
 
-            <label for="billingType">Forma de pagamento</label>
-            <g:select name="billingType" id="billingType" from="${billingType}" valueMessagePrefix="ENUM.BillingType"
-                      noSelection="['': 'Selecione a forma de pagamento']" value="${params.billingType}"/>
-            <br>
+                <atlas-select label="Forma de pagamento"
+                              name="billingType"
+                              required>
+                    <g:each var="type" in="${billingType}">
+                        <atlas-option
+                            label="${message(code: 'ENUM.BillingType.' + type.toString())}"
+                            value="${type}"></atlas-option>
+                    </g:each>
+                </atlas-select>
 
-            <label for="value">Valor da cobrança</label>
-            <input type="number" min="0.01" step="any" name="value" id="value" value="${params.value}"
-                   placeholder="Digite o valor da cobrança">
-            <br>
+                <atlas-datepicker label="Data de vencimento"
+                                  icon="calendar"
+                                  required-error-message="Necessário preencher"
+                                  required
+                                  name="dueDate"></atlas-datepicker>
 
-            <label for="dueDate">Data de vencimento</label>
-            <input type="date" name="dueDate" id="dueDate" value="${params.dueDate}"
-                   placeholder="Insira a data de vencimento">
-            <br>
-
-            <button type="submit">Criar cobrança</button>
-        </form>
+                <atlas-button submit description="Criar Cobrança"></atlas-button>
+            </atlas-layout>
+        </atlas-form>
     </body>
 </html>

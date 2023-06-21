@@ -24,4 +24,8 @@ class Utils {
         final Pattern STATE_PATTERN = ~/[A-Z]{2}/
         return state.matches(STATE_PATTERN)
     }
+    
+    public static BigDecimal toBigDecimalFormatted(String value) {
+        return new BigDecimal(value.replaceAll('\\.', "").replaceAll(',', "."))
+    }
 }
