@@ -1,26 +1,25 @@
 package com.quickcharge.app.payment
 
-import com.quickcharge.app.customer.Customer
 import com.quickcharge.app.payer.Payer
 import grails.validation.ValidationException
 import utils.controller.BaseController
 import utils.message.MessageType
-import utils.payment.BillingType
+import utils.payment.BillingType 
 
-class PaymentController extends BaseController{
-
-    PaymentService paymentService
+class PaymentController extends BaseController {
     
+    PaymentService paymentService
+
     def index() {
         try {
             return [
-                paymentList: Payment.query([
-                    customerId: getCurrentCustomer().id,
-                    deletedOnly: params.deletedOnly,
+                paymentList   : Payment.query([
+                    customerId    : getCurrentCustomer().id,
+                    deletedOnly   : params.deletedOnly,
                     includeDeleted: params.includeDeleted
                 ]).list(),
 
-                deletedOnly: params.deletedOnly,
+                deletedOnly   : params.deletedOnly,
                 includeDeleted: params.includeDeleted
             ]
         } catch (Exception exception) {
@@ -29,16 +28,19 @@ class PaymentController extends BaseController{
             log.info("PaymentController.index >> Erro ao consultar cobranças com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         }
     }
-    
+
     def create() {
         return [payerList: Payer.query([customerId: getCurrentCustomer().id]).list(), billingType: BillingType]
     }
-    
+
     def save() {
         try {
-            paymentService.save(params, getCurrentCustomer())
+            Payment payment = paymentService.save(params, getCurrentCustomer())
+            
             flash.message = "Cobrança criada com sucesso"
             flash.type = MessageType.SUCCESS
+            
+            sendPaymentCreatedEmail(payment)
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
@@ -49,12 +51,15 @@ class PaymentController extends BaseController{
             redirect([action: "create", params: params])
         }
     }
-    
+
     def delete() {
         try {
-            paymentService.delete(params, getCurrentCustomer())
+            Payment payment = paymentService.delete(params, getCurrentCustomer())
+            
             flash.message = "Cobrança removida com sucesso"
             flash.type = MessageType.SUCCESS
+            
+            sendPaymentDeletedEmail(payment)
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
@@ -65,18 +70,21 @@ class PaymentController extends BaseController{
             redirect([
                 action: "index",
                 params: [
-                    deletedOnly: params.deletedOnly,
+                    deletedOnly   : params.deletedOnly,
                     includeDeleted: params.includeDeleted
                 ]
             ])
         }
-    }    
-    
+    }
+
     def restore() {
         try {
-            paymentService.restore(params, getCurrentCustomer())
+            Payment payment = paymentService.restore(params, getCurrentCustomer())
+        
             flash.message = "Cobrança restaurada com sucesso"
             flash.type = MessageType.SUCCESS
+
+            sendPaymentRestoredEmail(payment)
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
@@ -87,7 +95,7 @@ class PaymentController extends BaseController{
             redirect([
                 action: "index",
                 params: [
-                    deletedOnly: params.deletedOnly,
+                    deletedOnly   : params.deletedOnly,
                     includeDeleted: params.includeDeleted
                 ]
             ])
@@ -96,9 +104,12 @@ class PaymentController extends BaseController{
 
     def receiveInCash() {
         try {
-            paymentService.receiveInCash(params, getCurrentCustomer())
+            Payment payment = paymentService.receiveInCash(params, getCurrentCustomer())
+            
             flash.message = "Recebimento em dinheiro confirmado com sucesso"
             flash.type = MessageType.SUCCESS
+
+            sendPaymentReceivedEmail(payment)
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
@@ -109,7 +120,7 @@ class PaymentController extends BaseController{
             redirect([
                 action: "index",
                 params: [
-                    deletedOnly: params.deletedOnly,
+                    deletedOnly   : params.deletedOnly,
                     includeDeleted: params.includeDeleted
                 ]
             ])
