@@ -75,7 +75,7 @@ class PayerService {
         }
 
         payer.deleted = true
-
+        
         return payer.save(failOnError: true)
     }
 
@@ -95,7 +95,7 @@ class PayerService {
         final String DEFAULT_FIELD_INVALID_PATTERN = "default.field.invalid.pattern"
 
         Payer validatedPayer = new Payer()
-
+        
         if (!CpfCnpjUtils.isCpfCnpjPatternMatch(parameterMap.cpfCnpj as String)) {
             validatedPayer.errors.rejectValue("cpfCnpj", "", DEFAULT_FIELD_INVALID_PATTERN)
         }
@@ -140,15 +140,15 @@ class PayerService {
     }
 
     private Payer validateSave(Map parameterMap) {
-
+        
         Payer patterMatchingPayer = validatePatternMatching(parameterMap)
         if (patterMatchingPayer.hasErrors()) return patterMatchingPayer
 
         Payer invalidSpecialsPayer = validateInvalidSpecials(parameterMap)
         if (invalidSpecialsPayer.hasErrors()) return invalidSpecialsPayer
-
+        
         Payer validatedPayer = new Payer()
-
+        
         if (!CpfCnpjUtils.validate(parameterMap.cpfCnpj as String)) {
             validatedPayer.errors.rejectValue("cpfCnpj", "invalid")
         }
@@ -156,11 +156,11 @@ class PayerService {
         if (!State.validate(parameterMap.state)) {
             validatedPayer.errors.rejectValue("state", "invalid")
         }
-
+        
         return validatedPayer
     }
-
-    private Map sanitizeParameterMap(Map parameterMap) {
+    
+     private Map sanitizeParameterMap(Map parameterMap) {
         List<String> mustRemoveNonNumericsParameterList = ["cpfCnpj", "phone", "postalCode"]
 
         Map sanitizedParameterMap = [:]
