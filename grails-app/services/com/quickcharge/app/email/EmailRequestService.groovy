@@ -9,16 +9,6 @@ class EmailRequestService {
 
     def mailService
     
-    public void addEmail(Map email) {
-        EmailRequest emailRequest = new EmailRequest()
-        
-        emailRequest.emailTo = email.to
-        emailRequest.subject = email.subject
-        emailRequest.html = email.html
-        
-        emailRequest.save(failOnErro: true)
-    }
-    
     public void sendPendingEmails() {
         List<EmailRequest> emailRequestList = EmailRequest.query([status: EmailStatus.PENDING]).list()
         
