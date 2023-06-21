@@ -1,7 +1,5 @@
 package com.quickcharge.app.payer
 
-import com.quickcharge.app.customer.Customer
-import grails.plugin.springsecurity.SpringSecurityService
 import grails.validation.ValidationException
 import utils.controller.BaseController
 import utils.message.MessageType
@@ -16,24 +14,7 @@ class PayerController extends BaseController {
     
     def edit() {
         try {
-            Long id = params.long("id")
-            Customer customer = getCurrentCustomer() 
-            Map parsedParams = [id: id, customerId: customer.id]
-            
-            if (!customer) {
-                flash.message = "Cliente inexistente"
-                flash.type = MessageType.WARNING
-                return parsedParams
-            }
-
-            Payer payer = Payer.query([id: id, customerId: customer.id]).get()
-            if (!payer) {
-                flash.message = "Não foi possível buscar os dados do pagador"
-                flash.type = MessageType.WARNING
-                return parsedParams
-            }   
-
-            return parsedParams + [payer: payer]
+            return [payer: Payer.getById(params.long("id"), getCurrentCustomer().id)]
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao buscar dados do pagador, contate o desenvolvimento"
             flash.type = MessageType.ERROR
@@ -43,22 +24,13 @@ class PayerController extends BaseController {
 
     def index () {
         try {
-            Customer customer = getCurrentCustomer()
-
-            if (!customer) {
-                flash.message = "Cliente inexistente"
-                flash.type = MessageType.WARNING
-                return
-            }
-            
             return [
                 payerList: Payer.query([
-                    customerId: customer.id,
+                    customerId: getCurrentCustomer().id,
                     deletedOnly: params.deletedOnly,
                     includeDeleted: params.includeDeleted
                 ]).list(),
                 
-                customerId: customer.id,
                 deletedOnly: params.deletedOnly,
                 includeDeleted: params.includeDeleted
             ]
@@ -72,7 +44,7 @@ class PayerController extends BaseController {
     
     def delete() {
         try {
-            payerService.delete(params)
+            payerService.delete(params, getCurrentCustomer())
             flash.message = "Pagador removido com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
@@ -82,11 +54,9 @@ class PayerController extends BaseController {
             flash.type = MessageType.ERROR
             log.info("PayerController.delete >> Erro ao remover pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
-            Customer customer = getCurrentCustomer()
             redirect([
                 action: "index",
                 params: [
-                    customerId: customer.id,
                     deletedOnly: params.deletedOnly,
                     includeDeleted: params.includeDeleted
                 ]
@@ -96,7 +66,7 @@ class PayerController extends BaseController {
     
     def restore() {
         try {
-            payerService.restore(params)
+            payerService.restore(params, getCurrentCustomer())
             flash.message = "Pagador restaurado com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
@@ -106,11 +76,9 @@ class PayerController extends BaseController {
             flash.type = MessageType.ERROR
             log.info("PayerController.restore >> Erro ao restaurar pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
-            Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
             redirect([
                 action: "index",
                 params: [
-                    customerId: customerId,
                     deletedOnly: params.deletedOnly,
                     includeDeleted: params.includeDeleted
                 ]
@@ -120,23 +88,24 @@ class PayerController extends BaseController {
     
     def save() {
         try {
-            payerService.save(params)
+            Payer payer = payerService.save(params, getCurrentCustomer())
             flash.message = "Pagador criado com sucesso"
             flash.type = MessageType.SUCCESS
+            redirect([action: "edit", params: [id: payer.id]])
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
+            redirect([action: "create", params: params])
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao criar pagador, contate o desenvolvimento"
             flash.type = MessageType.ERROR
             log.info("PayerController.save >> Erro ao salvar pagador com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
-        } finally {
             redirect([action: "create", params: params])
         }
     }
     
     def update() {
         try {
-            payerService.update(params)
+            payerService.update(params, getCurrentCustomer())
             flash.message = "Pagador alterado com sucesso"
             flash.type = MessageType.SUCCESS
         } catch (ValidationException validationException) {
@@ -146,13 +115,9 @@ class PayerController extends BaseController {
             flash.type = MessageType.ERROR
             log.info("PayerController.update >> Erro ao alterar pagador com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
-            Customer customer = getCurrentCustomer()
             redirect([
                 action: "edit",
-                params: [
-                    id: params.id,
-                    customerId: customer.id
-                ]
+                params: [id: params.id]
             ])
         }
     }

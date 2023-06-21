@@ -7,15 +7,15 @@ import grails.validation.ValidationException
 import utils.CpfCnpjUtils
 import utils.Utils
 import utils.baseperson.PersonType
+import utils.payment.PaymentStatus
+
 import java.util.regex.Pattern
 import utils.address.State
 
 @Transactional
 class PayerService {
 
-    def springSecurityService
-    
-    public Payer save(Map parameterMap) {
+    public Payer save(Map parameterMap, Customer customer) {
         Payer validatedPayer = validateSave(parameterMap)
 
         if (validatedPayer.hasErrors()) {
@@ -23,27 +23,24 @@ class PayerService {
         }
 
         Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
-        Customer customer = (springSecurityService.getCurrentUser().customer)
-        
         Payer payer = new Payer()
 
         payer.customer = customer
         setPayerProperties(payer, sanitizedParameterMap)
-        
+
         return payer.save(failOnError: true)
     }
-    
-    public Payer update(Map parameterMap) {
+
+    public Payer update(Map parameterMap, Customer customer) {
         Payer validatedPayer = validateSave(parameterMap)
 
         if (validatedPayer.hasErrors()) {
             throw new ValidationException("Erro ao salvar pagador", validatedPayer.errors)
         }
 
-        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-        Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
-        Payer payer = Payer.query([id: sanitizedParameterMap.id, customerId: customerId]).get()
+        Payer payer = Payer.getById(parameterMap.long("id"), customer.id)
 
+        Map sanitizedParameterMap = sanitizeParameterMap(parameterMap)
         setPayerProperties(payer, sanitizedParameterMap)
 
         return payer.save(failOnError: true)
@@ -63,65 +60,37 @@ class PayerService {
         payer.addressComplement = parameterMap.addressComplement
         payer.personType = CpfCnpjUtils.isCpf(parameterMap.cpfCnpj) ? PersonType.NATURAL : PersonType.LEGAL
     }
-    
-    public Payer delete(Map parameterMap) {
-        Payer validatedPayer = validateDelete(parameterMap)
 
-        if (validatedPayer.hasErrors()) {
-            throw new ValidationException("Erro ao remover pagador", validatedPayer.errors)
+    public Payer delete(Map parameterMap, Customer customer) {
+        Map paymentQuery = [
+            payerId   : parameterMap.id,
+            customerId: customer.id,
+            status    : PaymentStatus.getUpdatableList()
+        ]
+
+        Payer payer = Payer.getById(parameterMap.long("id"), customer.id)
+        if (Payment.query(paymentQuery).get()) {
+            payer.errors.rejectValue("id", "has.updatable.payment")
+            throw new ValidationException("Erro ao remover pagador", payer.errors)
         }
 
-        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-        Payer payer = Payer.query([id: parameterMap.id, customerId: customerId]).get()
-        
         payer.deleted = true
         
         return payer.save(failOnError: true)
     }
-    
-    public Payer restore(Map parameterMap) {
-        Payer validatedPayer = validateRestore(parameterMap)
 
-        if (validatedPayer.hasErrors()) {
-            throw new ValidationException("Erro ao restaurar pagador", validatedPayer.errors)
+    public Payer restore(Map parameterMap, Customer customer) {
+        Payer payer = Payer.query([id: parameterMap.id, customerId: customer.id, deletedOnly: true]).get()
+        if (!payer) {
+            payer.errors.rejectValue("id", "not.found")
+            throw new ValidationException("Erro ao remover pagador", payer.errors)
         }
 
-        Payer payer = Payer.query([id: parameterMap.id, customerId: parameterMap.customerId, deletedOnly: true]).get()
         payer.deleted = false
 
         return payer.save(failOnError: true)
     }
 
-    private Payer validateRestore(Map parameterMap) {
-        Payer validatedPayer = new Payer()
-
-        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-        if (!Payer.query([id: parameterMap.id, customerId: customerId, deletedOnly: true]).get()) {
-            validatedPayer.errors.rejectValue("id", "not.found")
-        }
-
-        return validatedPayer
-    }
-    
-    private Payer validateDelete(Map parameterMap) {
-        Payer validatedPayer = new Payer()
-
-        Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-
-        validatedPayer = Payer.query([id: parameterMap.id, customerId: customerId]).get()
-        
-        if (!validatedPayer) {
-            validatedPayer.errors.rejectValue("id", "not.found")
-        }
-        
-        List<Payment> pendingPaymentList = Payment.query([customerId: customerId, payerId: validatedPayer.id, onlyPendingPayments: true]).list()
-        if (!pendingPaymentList.isEmpty()) {
-            validatedPayer.errors.rejectValue("id", "pending.payment")
-        }
-        
-        return validatedPayer
-    }
-    
     private Payer validatePatternMatching(Map parameterMap) {
         final String DEFAULT_FIELD_INVALID_PATTERN = "default.field.invalid.pattern"
 
@@ -142,16 +111,16 @@ class PayerService {
         if (!Utils.isStatePatternMatch(parameterMap.state as String)) {
             validatedPayer.errors.rejectValue("state", "invalid")
         }
-        
+
         return validatedPayer
     }
 
     private Payer validateInvalidSpecials(Map parameterMap) {
         final Pattern INVALID_CHARACTERS_PATTERN = ~/(.*)\p{Punct}+(.*)/
         final String DEFAULT_FIELD_INVALID_SPECIAL_CHARACTERS = "default.field.invalid.special.characters"
-        
+
         Payer validatedPayer = new Payer()
-        
+
         List<String> shouldNotHaveSpecialsFieldList = [
             "name",
             "state",
@@ -200,12 +169,12 @@ class PayerService {
                 sanitizedParameterMap[parameter.key] = parameter.value
                 continue
             }
-            
+
             if (mustRemoveNonNumericsParameterList.contains(parameter.key)) {
                 sanitizedParameterMap[parameter.key] = Utils.removeNonNumeric(parameter.value as String)
                 continue
             }
-            
+
             sanitizedParameterMap[parameter.key] = (parameter.value as String).trim()
         }
 
