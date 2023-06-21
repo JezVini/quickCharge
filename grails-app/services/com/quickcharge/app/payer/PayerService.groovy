@@ -1,6 +1,7 @@
 package com.quickcharge.app.payer
 
 import com.quickcharge.app.customer.Customer
+import com.quickcharge.app.payment.Payment
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import utils.CpfCnpjUtils
@@ -72,6 +73,7 @@ class PayerService {
 
         Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
         Payer payer = Payer.query([id: parameterMap.id, customerId: customerId]).get()
+        
         payer.deleted = true
         
         return payer.save(failOnError: true)
@@ -105,8 +107,16 @@ class PayerService {
         Payer validatedPayer = new Payer()
 
         Long customerId = Long.valueOf(springSecurityService.getCurrentUser().customer.id)
-        if (!Payer.query([id: parameterMap.id, customerId: customerId]).get()) {
+
+        validatedPayer = Payer.query([id: parameterMap.id, customerId: customerId]).get()
+        
+        if (!validatedPayer) {
             validatedPayer.errors.rejectValue("id", "not.found")
+        }
+        
+        List<Payment> pendingPaymentList = Payment.query([customerId: customerId, payerId: validatedPayer.id, onlyPendingPayments: true]).list()
+        if (!pendingPaymentList.isEmpty()) {
+            validatedPayer.errors.rejectValue("id", "pending.payment")
         }
         
         return validatedPayer

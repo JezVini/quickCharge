@@ -22,8 +22,7 @@ class PaymentController extends BaseController{
                 ]).list(),
 
                 deletedOnly: params.deletedOnly,
-                includeDeleted: params.includeDeleted,
-                paymentStatus: PaymentStatus
+                includeDeleted: params.includeDeleted
             ]
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao buscar cobranças, contate o desenvolvimento"
@@ -33,7 +32,7 @@ class PaymentController extends BaseController{
     }
     
     def create() {
-        return [payerList: Payer.query([customerId: getCurrentCustomer().id]).list(), billingType: BillingType]
+        return [payerList: Payer.query([customerId: getCurrentCustomer().id]).list()]
     }
     
     def save() {
@@ -123,7 +122,7 @@ class PaymentController extends BaseController{
             Long customerId = getCurrentCustomer().id
             Long paymentId = params.long("id")
             Payment payment = Payment.getById(paymentId, customerId)
-            return [payment: payment, billingType: BillingType]
+            return [payment: payment]
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException) 
         } catch (Exception exception) {
