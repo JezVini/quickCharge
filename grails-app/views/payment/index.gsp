@@ -103,7 +103,7 @@
                                 </g:if>
 
                                 <g:if test="${(payment.status.isReceived())}">
-                                    <g:link controller="paymentReceipt" action="show" target="_blank" params="${[paymentReceiptUniqueId: payment.receiptUniqueId]}">
+                                    <g:link controller="paymentReceipt" action="show" target="_blank" params="${[paymentReceiptUniqueId: payment.getPaymentReceiptUniqueId()]}">
                                         <button>Comprovante de Pagamento</button>
                                     </g:link>
                                 </g:if>

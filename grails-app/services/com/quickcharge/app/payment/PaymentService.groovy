@@ -97,9 +97,7 @@ class PaymentService {
         payment.status = PaymentStatus.RECEIVED_IN_CASH
         payment.paymentDate = new Date()
         
-        PaymentReceipt paymentReceipt = paymentReceiptService.createReceipt(payment)
-        payment.receiptUniqueId = paymentReceipt.uniqueId
-        
+        paymentReceiptService.createReceipt(payment)
         return payment.save(failOnError: true)
     }
 

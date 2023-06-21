@@ -12,5 +12,4 @@ class PaymentReceiptService {
 
         return paymentReceipt.save(failOnError: true)
     }
-
 }

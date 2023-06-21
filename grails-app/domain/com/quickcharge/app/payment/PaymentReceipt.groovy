@@ -6,9 +6,6 @@ class PaymentReceipt extends BaseEntity {
 
     String uniqueId = UUID.randomUUID().toString()
     Payment payment
-
-    static constraints = {
-    }
     
     static namedQueries = {
         query { Map search ->

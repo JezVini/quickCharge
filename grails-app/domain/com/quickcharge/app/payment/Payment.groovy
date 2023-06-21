@@ -16,14 +16,12 @@ class Payment extends BaseEntity {
     PaymentStatus status = PaymentStatus.PENDING
     Date dueDate
     Date paymentDate
-    String receiptUniqueId
 
     static constraints = {
         billingType blank: false
         value min: 0.01D
         status blank: false
         paymentDate nullable: true
-        receiptUniqueId nullable: true
     }
 
     static namedQueries = {
@@ -69,5 +67,10 @@ class Payment extends BaseEntity {
         Payment validatedPayment = new Payment()
         validatedPayment.errors.rejectValue("id", "not.found")
         throw new ValidationException("Erro ao buscar cobrança", validatedPayment.errors)
+    }
+    
+    public String getPaymentReceiptUniqueId() {
+        PaymentReceipt paymentReceipt = PaymentReceipt.query([paymentId: this.id]).get()
+        return paymentReceipt.uniqueId
     }
 }
