@@ -9,9 +9,7 @@
         <g:message code="${flash.message}"/>
         <g:if test="${payer}">
             <atlas-form action="${createLink(controller: "payer", action: "update")}" method="post">
-                <atlas-input type="hidden" name="id" value="${id}"></atlas-input>
-
-                <atlas-input type="hidden" name="customerId" value="${customerId}"></atlas-input>
+                <atlas-input type="hidden" name="id" value="${payer.id}"></atlas-input>
 
                 <atlas-input
                     label="Nome"
