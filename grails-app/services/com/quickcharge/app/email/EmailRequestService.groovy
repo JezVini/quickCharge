@@ -21,9 +21,8 @@ class EmailRequestService {
     public void sendPendingEmails() {
         List<EmailRequest> emailRequestList = EmailRequest.query([status: EmailStatus.PENDING]).list()
         
-        while (emailRequestList) {
-            EmailRequest emailRequest = emailRequestList.pop() as EmailRequest
-
+        for (EmailRequest emailRequest : emailRequestList) {
+             
             mailService.sendMail {
                 to emailRequest.emailTo
                 subject emailRequest.subject
