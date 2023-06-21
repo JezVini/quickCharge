@@ -14,6 +14,8 @@ class EmailRequest extends BaseEntity {
     static constraints = {
         emailTo email: true
         errorMessage nullable: true
+        html blank: false
+        subject blank: false
     }
     
     static mapping = {
