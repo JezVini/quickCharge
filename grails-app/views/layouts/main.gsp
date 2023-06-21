@@ -19,6 +19,7 @@
         <asset:stylesheet src="atlas-colors/colors.css"/>
         <asset:stylesheet src="main/main.css.css"/>
         <asset:javascript src="pages/currentPage.js"/>
+        <asset:javascript src="sidebar/SidebarController.js"/>
 
         <g:layoutHead/>
     </head>
