@@ -7,7 +7,7 @@ class EmailRequest extends BaseEntity {
 
     String emailTo
     String subject
-    String text
+    String html
     EmailStatus status = EmailStatus.PENDING
     String errorMessage
     
@@ -17,7 +17,7 @@ class EmailRequest extends BaseEntity {
     }
     
     static mapping = {
-        text length: 5000
+        html length: 5000
     }
 
     static namedQueries = {

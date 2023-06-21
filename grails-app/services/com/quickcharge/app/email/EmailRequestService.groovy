@@ -14,7 +14,7 @@ class EmailRequestService {
         
         emailRequest.emailTo = email.to
         emailRequest.subject = email.subject
-        emailRequest.text = email.text
+        emailRequest.html = email.html
         
         emailRequest.save(failOnErro: true)
     }
@@ -27,7 +27,7 @@ class EmailRequestService {
                 mailService.sendMail {
                     to emailRequest.emailTo
                     subject emailRequest.subject
-                    text emailRequest.text
+                    html emailRequest.html
                 }
 
                 emailRequest.status = EmailStatus.SENT
