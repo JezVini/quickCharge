@@ -1,8 +1,8 @@
 package com.quickcharge.app.payer
 
 import com.quickcharge.app.customer.Customer
+import grails.validation.ValidationException
 import utils.baseperson.BasePerson
-import utils.baseperson.PersonType
 
 class Payer extends BasePerson {
     Customer customer
@@ -25,5 +25,14 @@ class Payer extends BasePerson {
                 eq("id", Long.valueOf(search.id))
             }
         }
+    }
+
+    static Payer getById(Long id, Long customerId) {
+        Payer payment = Payer.query([id: id, customerId: customerId]).get()
+        if (payment) return payment
+
+        Payer validatedPayer = new Payer()
+        validatedPayer.errors.rejectValue("id", "not.found")
+        throw new ValidationException("Erro ao buscar pagador", validatedPayer.errors)
     }
 }

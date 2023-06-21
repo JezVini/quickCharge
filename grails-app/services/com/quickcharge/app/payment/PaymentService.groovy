@@ -7,6 +7,8 @@ import grails.validation.ValidationException
 import org.apache.commons.lang3.EnumUtils
 import utils.payment.BillingType
 import utils.payment.PaymentStatus
+import org.apache.commons.lang3.time.DateUtils
+
 import java.text.SimpleDateFormat
 
 @Transactional
@@ -84,7 +86,7 @@ class PaymentService {
     }
     
     public Payment receiveInCash(Map parameterMap, Customer customer) {
-        Payment payment = Payment.getById(id: parameterMap.id, customerId: customer.id)
+        Payment payment = Payment.getById(parameterMap.id, customer.id)
         if (!payment.status.canUpdate()) {
             payment.errors.rejectValue("status", "already.received")
             throw new ValidationException("Erro ao confirmar pagamento em dinheiro da cobrança", payment.errors)
@@ -94,5 +96,25 @@ class PaymentService {
         payment.paymentDate = new Date()
         
         return payment.save(failOnError: true)
+    }
+
+    public void processPaymentOverdue() {
+        List<Long> overduePendingPaymentsIdList = Payment.query(["column": "id", "dueDate[lt]": new Date(), "onlyPendingPayments": true]).list()
+
+        if (overduePendingPaymentsIdList.isEmpty()) return
+
+        for (Long paymentId : overduePendingPaymentsIdList) {
+            Payment.withNewTransaction { status ->
+                try {
+                    Payment payment = Payment.get(paymentId)
+                    payment.status = PaymentStatus.OVERDUE
+                    payment.save(failOnError: true)
+                }
+                catch (Exception exception) {
+                    log.info("updatePendingPaymentStatus >> Erro ao atualizar status da cobrança de id: [${paymentId}] [Mensagem de erro]: ${exception.message}")
+                    status.setRollbackOnly()
+                }
+            }
+        }
     }
 }
