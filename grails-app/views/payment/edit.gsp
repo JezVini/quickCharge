@@ -6,37 +6,46 @@
 
     <body>
         <%@ page import="utils.payment.BillingType" %>
-        
+
         <main>
             <g:message code="${flash.message}"/>
             <g:if test="${payment}">
-                <form action="${createLink(controller: "payment", action: "update")}" method="post">
-                    <input type="hidden" name="id" value="${payment.id}">
+                <atlas-form action="${createLink(controller: "payment", action: "update")}" method="post">
+                    <atlas-layout gap="4">
+                        <atlas-input type="hidden" name="id" value="${payment.id}"></atlas-input>
 
-                    <label for="payerId">Cliente</label>
-                    <input type="text" name="payerId" id="payerId" value="${payment.payer.name}" disabled="">
-                    <br>
+                        <atlas-input
+                            label="Cliente"
+                            value="${payment.payer.name}"
+                            required
+                            disabled></atlas-input>
 
-                    <label for="billingType">Forma de pagamento</label>
-                    <g:select name="billingType" id="billingType"
-                              from="${BillingType.values()}"
-                              valueMessagePrefix="ENUM.BillingType"
-                              value="${payment.billingType}"
-                              disabled=""/>
-                    <br>
+                        <atlas-money
+                            label="Valor da cobrança"
+                            value="${payment.value}"
+                            name="value"
+                            min-value="5"
+                            min-value-error-message="O valor mínimo é 5 reais"
+                            required></atlas-money>
 
-                    <label for="value">Valor da cobrança</label>
-                    <input type="number" min="0.01" step="any" name="value" id="value" value="${payment.value}"
-                           placeholder="Digite o valor da cobrança">
-                    <br>
 
-                    <label for="dueDate">Data de vencimento</label>
-                    <input type="date" name="dueDate" id="dueDate"
-                           value="${g.formatDate(format: "dd/MM/yyyy", date: payment.dueDate)}">
-                    <br>
+                        <atlas-input
+                            label="Forma de pagamento"
+                            value="${message(code: 'ENUM.BillingType.' + payment.billingType.toString())}"
+                            required
+                            disabled></atlas-input>
 
-                    <button type="submit">Salvar</button>
-                </form>
+                        <atlas-datepicker label="Data de vencimento"
+                                          value="${g.formatDate(format: "dd/MM/yyyy", date: payment.dueDate)}}"
+                                          name="dueDate"
+                                          icon="calendar"
+                                          prevent-past-date
+                                          required-error-message="Necessário preencher"
+                                          required></atlas-datepicker>
+
+                        <atlas-button submit description="Salvar Cobrança"></atlas-button>
+                    </atlas-layout>
+                </atlas-form>
             </g:if>
         </main>
     </body>

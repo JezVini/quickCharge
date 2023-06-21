@@ -38,10 +38,11 @@
                 </atlas-select>
 
                 <atlas-datepicker label="Data de vencimento"
+                                  name="dueDate"
                                   icon="calendar"
                                   required-error-message="Necessário preencher"
-                                  required
-                                  name="dueDate"></atlas-datepicker>
+                                  prevent-past-date
+                                  required></atlas-datepicker>
 
                 <atlas-button submit description="Criar Cobrança"></atlas-button>
             </atlas-layout>
