@@ -14,7 +14,7 @@ class EmailRequestService {
         for (EmailRequest emailRequest : emailRequestList) {
             try {
                 mailService.sendMail {
-                    to emailRequest.emailTod
+                    to emailRequest.emailTo
                     subject emailRequest.subject
                     html emailRequest.html
                 }
