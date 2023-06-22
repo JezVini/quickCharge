@@ -1,3 +1,4 @@
+<%@ page import="utils.Utils" %>
 <!DOCTYPE html>
 <html lang="pt-BR">
     <head>
@@ -11,7 +12,13 @@
 
         <style>
 
-        body {
+        * {
+            box-sizing: border-box;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .body {
             font-family: 'Open Sans', Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
             background-color: #f0f0f0;
             margin: 0px;
@@ -29,12 +36,11 @@
 
         .container header {
             display: flex;
-            height: 80px;
             background-color: black;
             color: white;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 25px;
         }
 
         .container .logo {
@@ -44,39 +50,37 @@
         }
 
         .container .main {
-            padding: 20px;
+            padding: 30px;
             min-width: 700px;
-            width: 98%;
             max-width: 900px;
             margin: auto;
         }
 
-        .container h1 {
+        .container h1.subject {
             text-align: center;
         }
 
         div.payment {
+            margin: 30px 0px;
             border-radius: 5px;
             background-color: white;
-            border: 1px solid #ddd;
+            border: 5px solid #ddd;
         }
 
         div.payment div.payment_header {
-            height: 80px;
-            padding: 20px;
-            border-radius: 5px 5px 0px 0px;
+            padding: 10px 20px;
             background-color: #ddd;
-            display: flex;
-        }
-
-        div.payment div.payment_header img {
-            height: 80px;
-            padding-right: 20px;
         }
 
         div.payment div.payment_main {
             padding: 20px;
+            overflow-x: auto;
         }
+
+        div.payment div.payment_main h4 {
+            margin-top: 10px;
+        }
+
 
         table.data_table {
             width: 100%;
@@ -93,13 +97,20 @@
         }
 
         div.payment div.payment_footer {
-            height: 40px;
-            padding: 0px 20px;
-            border-radius: 0px 0px 5px 5px;
+            padding: 10px 20px;
             background-color: #ddd;
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+
+
+        div.payment_footer h3 {
+            white-space: nowrap;
+        }
+
+        div.payment_footer .space {
+            width: 100%;
         }
 
         a {
@@ -112,16 +123,12 @@
         }
 
         .main a.show_data_button {
-            margin: 30px 0px 15px 0px;
             border: none;
-            padding: 5px;
-            width: 100%;
+            padding: 8px;
             display: block;
             text-align: center;
             color: white;
             font-weight: 600;
-            height: 10vh;
-            max-height: 40px;
             font-size: 1.6rem;
             border-radius: 5px;
             background-color: black;
@@ -139,10 +146,9 @@
 
         footer {
             display: flex;
-            height: 40px;
             background-color: black;
             color: white;
-            padding: 20px;
+            padding: 25px;
         }
 
         footer h3 {
@@ -169,7 +175,7 @@
 
     </head>
 
-    <body>
+    <div class="body">
         <div class="container">
 
             <header>
@@ -179,11 +185,13 @@
 
             <div class="main">
 
-                <h1>${subject}</h1>
+                <h1 class="subject">${subject}</h1>
 
                 <div class="payment">
 
                     <div class="payment_header">
+                        <h2>Cobrador</h2>
+
                         <h1>${customer.name}</h1>
                     </div>
 
@@ -202,8 +210,8 @@
                                 <tr>
                                     <td>${payment.payer.name}</td>
                                     <td>${payment.payer.email}</td>
-                                    <td>${payment.payer.cpfCnpj}</td>
-                                    <td>${payment.payer.phone}</td>
+                                    <td>${Utils.formatCpfCnpj(payment.payer.cpfCnpj as String)}</td>
+                                    <td>${Utils.formatPhone(payment.payer.phone as String)}</td>
                                 </tr>
                             </table>
 
@@ -233,15 +241,19 @@
                     <div class="payment_footer">
                         <h3>Valor da cobrança:</h3>
 
-                        <h3><strong>R$: ${payment.value}</strong></h3>
+                        <div class="space"></div>
+
+                        <h3><strong>R$: ${String.format("%,.2f", payment.value)}</strong></h3>
                     </div>
                 </div>
 
-                <a class="show_data_button" href="http://localhost:8080/payer/edit/${payment.payer.id}">
-                    Mostrar mais dados
-                </a>
+                <g:if test="${!payment.deleted}">
+                    <a class="show_data_button" href="http://localhost:8080/payment/edit/${payment.id}">
+                        Mostrar mais dados
+                    </a>
+                </g:if>
+                
             </div>
-
 
             <footer>
                 <h3>
@@ -251,5 +263,5 @@
                 </h3>
             </footer>
         </div>
-    </body>
+    </div>
 </html>
