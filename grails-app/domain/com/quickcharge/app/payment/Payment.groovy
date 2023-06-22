@@ -72,4 +72,9 @@ class Payment extends BaseEntity {
         validatedPayment.errors.rejectValue("id", "not.found")
         throw new ValidationException("Erro ao buscar cobrança", validatedPayment.errors)
     }
+    
+    public String getPaymentReceiptUniqueId() {
+        PaymentReceipt paymentReceipt = PaymentReceipt.query([paymentId: this.id]).get()
+        return paymentReceipt.uniqueId
+    }
 }
