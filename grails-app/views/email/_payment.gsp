@@ -179,7 +179,7 @@
                     <div class="payment_header">
                         <h2>Cobrador</h2>
 
-                        <h1>${customer.name}</h1>
+                        <h1>${payment.customer.name}</h1>
                     </div>
 
                     <div class="payment_main">

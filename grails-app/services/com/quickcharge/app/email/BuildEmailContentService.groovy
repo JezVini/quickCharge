@@ -1,6 +1,6 @@
 package com.quickcharge.app.email
 
-import com.quickcharge.app.customer.Customer
+
 import com.quickcharge.app.payment.Payment
 import grails.gorm.transactions.Transactional
 import grails.gsp.PageRenderer
@@ -12,7 +12,7 @@ class BuildEmailContentService {
 
     PageRenderer groovyPageRenderer
     
-    private EmailRequest createEmailRequest(Payment payment, Customer customer, PaymentEmailAction action) {
+    private EmailRequest createEmailRequest(Payment payment, PaymentEmailAction action) {
         EmailRequest emailRequest = new EmailRequest()
 
         final String viewPath = "/email/_payment"
@@ -22,24 +22,24 @@ class BuildEmailContentService {
             subject += " com sucesso!"
         }
         
-        Map args = [customer: customer, payment: payment, subject: subject]
+        Map args = [payment: payment, subject: subject]
 
-        emailRequest.emailTo = customer.email
+        emailRequest.emailTo = payment.customer.email
         emailRequest.subject = subject
         emailRequest.html = groovyPageRenderer.render(view: viewPath, model: args)
         
         return emailRequest
     }
 
-    public void createEmail(Payment payment, Customer customer, PaymentEmailAction action) {
+    public void createEmail(Payment payment, PaymentEmailAction action) {
         try {
-            EmailRequest emailRequest = createEmailRequest(payment, customer, action)
+            EmailRequest emailRequest = createEmailRequest(payment, action)
             emailRequest.save(failOnError: true)
         } catch (ValidationException validationException) {
-            Map args = [paymentId: payment.id, customerId: customer.id, action: action.getDescription()]
+            Map args = [paymentId: payment.id, action: action.getDescription()]
             log.error("BuildEmailContentService.createEmail >> Erro na validação dos campos do email ${args} [Mensagem de erro]: ${validationException.message}")
         } catch (Exception exception) {
-            Map args = [paymentId: payment.id, customerId: customer.id, action: action.getDescription()]
+            Map args = [paymentId: payment.id, action: action.getDescription()]
             log.error("BuildEmailContentService.createEmail >> Erro ao criar email ${args} [Mensagem de erro]: ${exception.message}")
         }
     }

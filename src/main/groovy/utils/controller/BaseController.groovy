@@ -34,6 +34,6 @@ class BaseController {
     }
     
     void createEmail(Payment payment, PaymentEmailAction action) {
-        buildEmailContentService.createEmail(payment, getCurrentCustomer(), action)
+        buildEmailContentService.createEmail(payment, action)
     }
 }
