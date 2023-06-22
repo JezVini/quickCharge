@@ -1,7 +1,6 @@
 package utils
 
-import javax.swing.text.MaskFormatter
-import java.util.regex.Pattern 
+import java.util.regex.Pattern
 
 class Utils {
     
@@ -24,6 +23,10 @@ class Utils {
     public static Boolean isStatePatternMatch(String state) { 
         final Pattern STATE_PATTERN = ~/[A-Z]{2}/
         return state.matches(STATE_PATTERN)
+    }
+    
+    public static BigDecimal toBigDecimalFormatted(String value) {
+        return new BigDecimal(value.replaceAll('\\.', "").replaceAll(',', "."))
     }
     
     public static String formatPhone(String phone) {

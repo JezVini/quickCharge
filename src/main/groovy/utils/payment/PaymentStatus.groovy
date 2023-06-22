@@ -13,4 +13,8 @@ public enum PaymentStatus {
     public Boolean canUpdate() {
         return PaymentStatus.getUpdatableList().contains(this)
     }
+
+    public Boolean isReceived() {
+        return [PaymentStatus.RECEIVED, PaymentStatus.RECEIVED_IN_CASH].contains(this)
+    }
 }

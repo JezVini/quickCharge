@@ -9,16 +9,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <asset:link rel="icon" href="logo/quickCharge.ico" type="image/x-ico"/>
 
-        <link rel="stylesheet" href="https://atlas.asaas.com/v7.5.0/atlas.css"
-              integrity="sha384-TNq7rPEaeJzo2yVc9iwEks5VwcqkV651ULn51l5YiJxYQGLxfHFFgsk3nWSBiD0A"
+        <link rel="stylesheet" href="https://atlas.asaas.com/v9.2.0/atlas.css"
+              integrity="sha384-YmA7EnYqhHBpt32Gq7QBxbKy8jWbw5qIYu8f++Wl+PpqKTRmK+Pw+VKItsPpmLJI"
               crossorigin="anonymous">
-        <script defer src="https://atlas.asaas.com/v7.5.0/atlas.js"
-                integrity="sha384-ZrJyf8Bowh8ESuZeAX1awzuL0VeximAlaKYvOIfcGLqavQDguQXgMxKJ5hRRUL53"
+        <script defer src="https://atlas.asaas.com/v9.2.0/atlas.js"
+                integrity="sha384-9ousY7CNvMeUL2TT4DpJcImS2zvyMrsHUywHo++f3XItWZHc+c/6u7pyFqIEp/Jx"
                 crossorigin="anonymous"></script>
 
         <asset:stylesheet src="atlas-colors/colors.css"/>
         <asset:stylesheet src="main/main.css.css"/>
         <asset:javascript src="pages/currentPage.js"/>
+        <asset:javascript src="sidebar/SidebarController.js"/>
 
         <g:layoutHead/>
     </head>
