@@ -104,7 +104,7 @@ class PaymentService {
         return payment.save(failOnError: true)
     }
 
-    public Payment update(Map parameterMap, Long customerId) {
+    public Payment update(Map parameterMap, Customer customer) {
         Payment validatedPayment = validateUpdate(parameterMap.dueDate as String)
 
         if (validatedPayment.hasErrors()) {
@@ -112,7 +112,7 @@ class PaymentService {
         }
 
         Long paymentId = parameterMap.long("id")
-        Payment payment = Payment.getById(paymentId, customerId)
+        Payment payment = Payment.getById(paymentId, customer.id)
 
         Double value = Utils.toBigDecimalFormatted(parameterMap.value as String).toDouble()
         Date dueDate = new SimpleDateFormat("dd/MM/yyyy").parse(parameterMap.dueDate as String)

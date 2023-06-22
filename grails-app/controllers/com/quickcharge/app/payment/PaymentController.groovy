@@ -129,10 +129,7 @@ class PaymentController extends BaseController {
 
     def edit() {
         try {
-            Long customerId = getCurrentCustomer().id
-            Long paymentId = params.long("id")
-            Payment payment = Payment.getById(paymentId, customerId)
-            return [payment: payment]
+            return [payment: Payment.getById(params.long("id"), getCurrentCustomer().id)]
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException) 
         } catch (Exception exception) {
@@ -144,13 +141,9 @@ class PaymentController extends BaseController {
 
     def update() {
         try {
-            Long customerId = getCurrentCustomer().id
-            Payment payment = paymentService.update(params, customerId)
-        
+            paymentService.update(params, getCurrentCustomer())
             flash.message = "Cobrança alterada com sucesso"
             flash.type = MessageType.SUCCESS
-
-            createEmail(payment, PaymentEmailAction.UPDATED)
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
