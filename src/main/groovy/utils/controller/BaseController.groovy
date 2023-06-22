@@ -6,6 +6,7 @@ import com.quickcharge.app.payment.Payment
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.validation.ValidationException
 import org.springframework.validation.ObjectError
+import utils.email.payment.PaymentEmailAction
 import utils.message.MessageType 
 
 class BaseController {
@@ -32,23 +33,7 @@ class BaseController {
         flash.type = MessageType.WARNING
     }
     
-    void sendPaymentCreatedEmail(Payment payment) {
-        buildEmailContentService.savePaymentCreatedEmail(payment, getCurrentCustomer())
-    }
-    
-    void sendPaymentDeletedEmail(Payment payment) {
-        buildEmailContentService.savePaymentDeletedEmail(payment, getCurrentCustomer())
-    }
-    
-    void sendPaymentRestoredEmail(Payment payment) {
-        buildEmailContentService.savePaymentRestoredEmail(payment, getCurrentCustomer())
-    }
-    
-    void sendPaymentReceivedEmail(Payment payment) {
-        buildEmailContentService.savePaymentReceivedEmail(payment, getCurrentCustomer())
-    }
-    
-    void sendPaymentUpdatedEmail(Payment payment) {
-        buildEmailContentService.savePaymentUpdatedEmail(payment, getCurrentCustomer())
+    void createEmail(Payment payment, PaymentEmailAction action) {
+        buildEmailContentService.createEmail(payment, getCurrentCustomer(), action)
     }
 }
