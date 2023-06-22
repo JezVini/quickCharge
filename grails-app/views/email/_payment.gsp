@@ -236,7 +236,7 @@
 
                 <g:if test="${!payment.deleted}">
                     <a class="show_data_button" href="http://localhost:8080/payment/edit/${payment.id}">
-                        Mostrar mais dados
+                        Visualizar cobrança
                     </a>
                 </g:if>
                 
