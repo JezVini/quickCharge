@@ -5,6 +5,8 @@
     </head>
 
     <body>
+        <%@ page import="utils.payment.BillingType" %>
+
         <g:message code="${flash.message}"/>
         <form action="${createLink(controller: "payment", action: "save")}" method="post">
 
@@ -14,7 +16,7 @@
             <br>
 
             <label for="billingType">Forma de pagamento</label>
-            <g:select name="billingType" id="billingType" from="${billingType}" valueMessagePrefix="ENUM.BillingType"
+            <g:select name="billingType" id="billingType" from="${BillingType.values()}" valueMessagePrefix="ENUM.BillingType"
                       noSelection="['': 'Selecione a forma de pagamento']" value="${params.billingType}"/>
             <br>
 
