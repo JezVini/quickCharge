@@ -1,6 +1,5 @@
 package com.quickcharge.app.email
 
-
 import com.quickcharge.app.payment.Payment
 import grails.gorm.transactions.Transactional
 import grails.gsp.PageRenderer
