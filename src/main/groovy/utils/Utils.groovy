@@ -1,6 +1,7 @@
 package utils
 
-import java.util.regex.Pattern
+import javax.swing.text.MaskFormatter
+import java.util.regex.Pattern 
 
 class Utils {
     
@@ -23,5 +24,19 @@ class Utils {
     public static Boolean isStatePatternMatch(String state) { 
         final Pattern STATE_PATTERN = ~/[A-Z]{2}/
         return state.matches(STATE_PATTERN)
+    }
+    
+    public static String formatPhone(String phone) {
+        String mask = phone.length() == 10 ? "(##) ####-####" : "(##) #####-####"
+        MaskFormatter maskFormatter = new MaskFormatter(mask)
+        maskFormatter.setValueContainsLiteralCharacters(false)
+        return maskFormatter.valueToString(phone)
+    }
+    
+    public static String formatCpfCnpj(String cpfCnpj) {
+        String mask = cpfCnpj.length() == 11 ? "###.###.###-##" : "##.###.###/####-##"
+        MaskFormatter maskFormatter = new MaskFormatter(mask)
+        maskFormatter.setValueContainsLiteralCharacters(false)
+        return maskFormatter.valueToString(cpfCnpj)
     }
 }
