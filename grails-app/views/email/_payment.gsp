@@ -35,17 +35,7 @@
         }
 
         .container header {
-            display: flex;
             background-color: black;
-            color: white;
-            align-items: center;
-            justify-content: center;
-            padding: 25px;
-        }
-
-        .container .logo {
-            margin: auto;
-            display: block;
             height: 80px;
         }
 
@@ -178,10 +168,7 @@
     <div class="body">
         <div class="container">
 
-            <header>
-                <img class="logo" src="https://asaas.com/images/home3/header-logo.svg"
-                     alt="Logo QuickCharge completa em branco">
-            </header>
+            <header></header>
 
             <div class="main">
 
