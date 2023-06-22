@@ -38,7 +38,8 @@ class PaymentService {
         payment.value = value
         payment.dueDate = dueDate
         
-        payment.save(failOnError: true)        
+        payment.save(failOnError: true)
+        buildEmailContentService.createEmail(payment, PaymentEmailAction.CREATED)
     }
     
     public Payment validateSave(Map parameterMap) {
@@ -66,19 +67,20 @@ class PaymentService {
         return validatedPayment
     }
     
-    public Payment delete(Map parameterMap, Customer customer) {
+    public void delete(Map parameterMap, Customer customer) {
         Payment payment = Payment.getById(parameterMap.id, customer.id)
         if (!payment.status.canUpdate()) {
             payment.errors.rejectValue("status", "already.received")
             throw new ValidationException("Erro ao remover cobrança", payment.errors)
         }
-        
+
         payment.deleted = true
 
-        return payment.save(failOnError: true)
+        payment.save(failOnError: true)
+        buildEmailContentService.createEmail(payment, PaymentEmailAction.DELETED)
     }
 
-    public Payment restore(Map parameterMap, Customer customer) {
+    public void restore(Map parameterMap, Customer customer) {
         Payment payment = Payment.query([id: parameterMap.id, customerId: customer.id, deletedOnly: true]).get()
         if (!payment) {
             payment.errors.rejectValue("status", "can.not.delete")
@@ -87,10 +89,11 @@ class PaymentService {
 
         payment.deleted = false
 
-        return payment.save(failOnError: true)
+        payment.save(failOnError: true)
+        buildEmailContentService.createEmail(payment, PaymentEmailAction.RESTORED)
     }
     
-    public Payment receiveInCash(Map parameterMap, Customer customer) {
+    public void receiveInCash(Map parameterMap, Customer customer) {
         Payment payment = Payment.getById(parameterMap.id, customer.id)
         if (!payment.status.canUpdate()) {
             payment.errors.rejectValue("status", "already.received")
@@ -101,10 +104,11 @@ class PaymentService {
         payment.paymentDate = new Date()
         
         paymentReceiptService.createReceipt(payment)
-        return payment.save(failOnError: true)
+        payment.save(failOnError: true)
+        buildEmailContentService.createEmail(payment, PaymentEmailAction.RECEIVED)
     }
 
-    public Payment update(Map parameterMap, Customer customer) {
+    public void update(Map parameterMap, Customer customer) {
         Payment validatedPayment = validateUpdate(parameterMap.dueDate as String)
 
         if (validatedPayment.hasErrors()) {
@@ -120,7 +124,8 @@ class PaymentService {
         payment.value = value
         payment.dueDate = dueDate
 
-        return payment.save(failOnError: true)
+        payment.save(failOnError: true)
+        buildEmailContentService.createEmail(payment, PaymentEmailAction.UPDATED)
     }
 
     public Payment validateUpdate(String dueDate) {
@@ -145,8 +150,8 @@ class PaymentService {
                 try {
                     Payment payment = Payment.get(paymentId)
                     payment.status = PaymentStatus.OVERDUE
-                    payment.save(failOnError: true)
                     
+                    payment.save(failOnError: true)
                     buildEmailContentService.createEmail(payment, PaymentEmailAction.OVERDUE)
                 } catch (Exception exception) {
                     log.info("updatePendingPaymentStatus >> Erro ao atualizar status da cobrança de id: [${paymentId}] [Mensagem de erro]: ${exception.message}")

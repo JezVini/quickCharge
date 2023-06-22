@@ -3,8 +3,7 @@ package com.quickcharge.app.payment
 import com.quickcharge.app.payer.Payer
 import grails.validation.ValidationException
 import utils.controller.BaseController
-import utils.email.payment.PaymentEmailAction
-import utils.message.MessageType
+import utils.message.MessageType 
 
 class PaymentController extends BaseController {
     
@@ -35,12 +34,9 @@ class PaymentController extends BaseController {
 
     def save() {
         try {
-            Payment payment = paymentService.save(params, getCurrentCustomer())
-            
+            paymentService.save(params, getCurrentCustomer())
             flash.message = "Cobrança criada com sucesso"
             flash.type = MessageType.SUCCESS
-            
-            createEmail(payment, PaymentEmailAction.CREATED)
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
@@ -54,12 +50,9 @@ class PaymentController extends BaseController {
 
     def delete() {
         try {
-            Payment payment = paymentService.delete(params, getCurrentCustomer())
-            
+            paymentService.delete(params, getCurrentCustomer())
             flash.message = "Cobrança removida com sucesso"
             flash.type = MessageType.SUCCESS
-
-            createEmail(payment, PaymentEmailAction.DELETED)
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
@@ -79,12 +72,9 @@ class PaymentController extends BaseController {
 
     def restore() {
         try {
-            Payment payment = paymentService.restore(params, getCurrentCustomer())
-        
+            paymentService.restore(params, getCurrentCustomer())
             flash.message = "Cobrança restaurada com sucesso"
             flash.type = MessageType.SUCCESS
-
-            createEmail(payment, PaymentEmailAction.RESTORED)
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
@@ -104,12 +94,9 @@ class PaymentController extends BaseController {
 
     def receiveInCash() {
         try {
-            Payment payment = paymentService.receiveInCash(params, getCurrentCustomer())
-            
+            paymentService.receiveInCash(params, getCurrentCustomer())
             flash.message = "Recebimento em dinheiro confirmado com sucesso"
             flash.type = MessageType.SUCCESS
-
-            createEmail(payment, PaymentEmailAction.RECEIVED)
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
