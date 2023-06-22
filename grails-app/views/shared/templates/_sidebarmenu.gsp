@@ -3,7 +3,17 @@
     product-logo="${asset.assetPath(src: '/logo/quickChargeNormal.svg')}"
     product-logo-small="${asset.assetPath(src: '/logo/quickChargeSmall.svg')}"
     home-path="/"
-    collapsed>
+    collapsed
+    class="js-atlas-sidebar">
+
+    <atlas-button
+        block
+        size="lg"
+        slot="header"
+        description="Criar Cobrança"
+        href="${createLink(controller: "payment", action: "create")}"
+        class="js-create-payment-button"></atlas-button>
+
     <atlas-sidebar-menu slot="body">
         <g:each var="menu" in="${menuList}">
             <atlas-sidebar-menu-item
@@ -24,6 +34,7 @@
                         </atlas-sidebar-menu-item>
                     </g:each>
                 </g:if>
+                
             </atlas-sidebar-menu-item>
         </g:each>
     </atlas-sidebar-menu>

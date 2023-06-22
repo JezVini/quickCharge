@@ -11,29 +11,51 @@ class SideBarTagLib {
     
     private List<Map> buildMenu() {
         List<Map> menuItemsList = []
-
-        menuItemsList.add([
-            icon: "hand-shake",
-            text: "Criar Cobrança",
-            href: createLink(controller: "payment", action: "create"),
-            value: "paymentCreate",
-            active: (controllerName == "payment") && (actionName == "create")
-        ])
-
+        
         menuItemsList.add([
             icon: "money",
             text: "Minhas Cobranças",
-            href: createLink(controller: "payment", action: "index"),
             value: "paymentIndex",
-            active: (controllerName == "payment") && (actionName == "index")
+            active: (controllerName == "payment") && ((actionName == "index") || (actionName == "create")),
+            dropdownItemsList: [
+                [
+                    icon: "money",
+                    text: "Visualizar Cobranças",
+                    href: createLink(controller: "payment", action: "index"),
+                    value: "paymentIndex",
+                    active: (controllerName == "payment") && (actionName == "index")
+                ],
+                [
+                    icon: "hand-shake",
+                    text: "Criar Cobrança",
+                    href: createLink(controller: "payment", action: "create"),
+                    value: "paymentCreate",
+                    active: (controllerName == "payment") && (actionName == "create")
+                ]
+            ]
         ])
 
         menuItemsList.add([
             icon: "users",
             text: "Meus Clientes",
-            href: createLink(controller: "payer", action: "index"),
             value: "payer",
-            active: (controllerName == "payer") && (actionName == "index")
+            active: (controllerName == "payer") && ((actionName == "index") || (actionName == "create")),
+            dropdownItemsList: [
+                [
+                    icon: "users",
+                    text: "Visualizar Clientes",
+                    href: createLink(controller: "payer", action: "index"),
+                    value: "payerIndex",
+                    active: (controllerName == "payer") && (actionName == "index")
+                ],
+                [
+                    icon: "user-plus",
+                    text: "Cadastrar Novo Cliente",
+                    href: createLink(controller: "payer", action: "create"),
+                    value: "payerCreate",
+                    active: (controllerName == "payer") && (actionName == "create")
+                ]
+            ]
         ])
 
         menuItemsList.add([
