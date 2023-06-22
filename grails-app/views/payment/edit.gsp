@@ -28,7 +28,6 @@
                             min-value-error-message="O valor mínimo é 5 reais"
                             required></atlas-money>
 
-
                         <atlas-input
                             label="Forma de pagamento"
                             value="${message(code: 'ENUM.BillingType.' + payment.billingType.toString())}"
