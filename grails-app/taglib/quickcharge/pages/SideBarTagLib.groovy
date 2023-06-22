@@ -79,7 +79,8 @@ class SideBarTagLib {
                 ]
             ]
         ])
-        
+
+        flash.sidebar = menuItemsList
         return menuItemsList
     }
 }
