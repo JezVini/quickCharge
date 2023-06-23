@@ -16,14 +16,14 @@ class SideBarTagLib {
             icon: "money",
             text: "Minhas Cobranças",
             value: "paymentIndex",
-            active: (controllerName == "payment") && ((actionName == "index") || (actionName == "create")),
+            active: (controllerName == "payment") && ((actionName == "index") || (actionName == "create") || (actionName == "edit")),
             dropdownItemsList: [
                 [
                     icon: "money",
                     text: "Visualizar Cobranças",
                     href: createLink(controller: "payment", action: "index"),
                     value: "paymentIndex",
-                    active: (controllerName == "payment") && (actionName == "index")
+                    active: (controllerName == "payment") && ((actionName == "index") || (actionName == "edit"))
                 ],
                 [
                     icon: "hand-shake",
@@ -39,14 +39,14 @@ class SideBarTagLib {
             icon: "users",
             text: "Meus Clientes",
             value: "payer",
-            active: (controllerName == "payer") && ((actionName == "index") || (actionName == "create")),
+            active: (controllerName == "payer") && ((actionName == "index") || (actionName == "create") || (actionName == "edit")),
             dropdownItemsList: [
                 [
                     icon: "users",
                     text: "Visualizar Clientes",
                     href: createLink(controller: "payer", action: "index"),
                     value: "payerIndex",
-                    active: (controllerName == "payer") && (actionName == "index")
+                    active: (controllerName == "payer") && ((actionName == "index") || (actionName == "edit"))
                 ],
                 [
                     icon: "user-plus",
