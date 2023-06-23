@@ -18,55 +18,55 @@ class PaymentService {
 
     PaymentReceiptService paymentReceiptService
     BuildEmailContentService buildEmailContentService
-    
+
     def save(Map parameterMap, Customer customer) {
         Payment validatedPayment = validateSave(parameterMap)
-        
+
         if (validatedPayment.hasErrors()) {
             throw new ValidationException("Erro ao salvar cobrança", validatedPayment.errors)
         }
-        
+
         Payment payment = new Payment()
         Payer payer = Payer.query([id: parameterMap.payerId, customerId: customer.id]).get()
         BillingType billingType = BillingType[parameterMap.billingType as String] as BillingType
         Double value = Utils.toBigDecimalFormatted(parameterMap.value as String).toDouble()
-        Date dueDate = new SimpleDateFormat("dd/MM/yyyy").parse(parameterMap.dueDate as String) 
-        
+        Date dueDate = new SimpleDateFormat("dd/MM/yyyy").parse(parameterMap.dueDate as String)
+
         payment.payer = payer
         payment.customer = customer
         payment.billingType = billingType
         payment.value = value
         payment.dueDate = dueDate
-        
+
         payment.save(failOnError: true)
         buildEmailContentService.createEmail(payment, PaymentEmailAction.CREATED)
     }
-    
+
     public Payment validateSave(Map parameterMap) {
         Payment validatedPayment = new Payment()
 
-        if(!parameterMap.payerId) {
+        if (!parameterMap.payerId) {
             validatedPayment.errors.rejectValue("payer", "not.selected")
         }
-        
-        if(!EnumUtils.isValidEnum(BillingType.class, parameterMap.billingType as String)) {
+
+        if (!EnumUtils.isValidEnum(BillingType.class, parameterMap.billingType as String)) {
             validatedPayment.errors.rejectValue("billingType", "not.selected")
         }
-        
-        if(!parameterMap.dueDate) {
+
+        if (!parameterMap.dueDate) {
             validatedPayment.errors.rejectValue("dueDate", "not.selected",)
             return validatedPayment
         }
 
         SimpleDateFormat simpleDate = new SimpleDateFormat("dd/MM/yyyy")
         Date dueDate = simpleDate.parse(parameterMap.dueDate)
-        if(dueDate.before(simpleDate.parse(simpleDate.format(new Date())))) {
+        if (dueDate.before(simpleDate.parse(simpleDate.format(new Date())))) {
             validatedPayment.errors.rejectValue("dueDate", "past.date")
         }
-        
+
         return validatedPayment
     }
-    
+
     public void delete(Map parameterMap, Customer customer) {
         Payment payment = Payment.getById(parameterMap.id, customer.id)
         if (!payment.status.canUpdate()) {
@@ -92,7 +92,7 @@ class PaymentService {
         payment.save(failOnError: true)
         buildEmailContentService.createEmail(payment, PaymentEmailAction.RESTORED)
     }
-    
+
     public void receiveInCash(Map parameterMap, Customer customer) {
         Payment payment = Payment.getById(parameterMap.id, customer.id)
         if (!payment.status.canUpdate()) {
@@ -102,7 +102,7 @@ class PaymentService {
 
         payment.status = PaymentStatus.RECEIVED_IN_CASH
         payment.paymentDate = new Date()
-        
+
         paymentReceiptService.createReceipt(payment)
         payment.save(failOnError: true)
         buildEmailContentService.createEmail(payment, PaymentEmailAction.RECEIVED)
@@ -123,6 +123,8 @@ class PaymentService {
 
         payment.value = value
         payment.dueDate = dueDate
+        
+        if (payment.status == PaymentStatus.OVERDUE) payment.status = PaymentStatus.PENDING
 
         payment.save(failOnError: true)
         buildEmailContentService.createEmail(payment, PaymentEmailAction.UPDATED)
@@ -133,7 +135,7 @@ class PaymentService {
 
         SimpleDateFormat simpleDate = new SimpleDateFormat("dd/MM/yyyy")
         Date dueDateValidate = simpleDate.parse(dueDate)
-        if(dueDateValidate.before(simpleDate.parse(simpleDate.format(new Date())))) {
+        if (dueDateValidate.before(simpleDate.parse(simpleDate.format(new Date())))) {
             validatedPayment.errors.rejectValue("dueDate", "past.date")
         }
 
@@ -145,12 +147,12 @@ class PaymentService {
 
         if (overduePendingPaymentsIdList.isEmpty()) return
 
-        for (Long paymentId : overduePendingPaymentsIdList) {   
+        for (Long paymentId : overduePendingPaymentsIdList) {
             Payment.withNewTransaction { status ->
                 try {
                     Payment payment = Payment.get(paymentId)
                     payment.status = PaymentStatus.OVERDUE
-                    
+
                     payment.save(failOnError: true)
                     buildEmailContentService.createEmail(payment, PaymentEmailAction.OVERDUE)
                 } catch (Exception exception) {
