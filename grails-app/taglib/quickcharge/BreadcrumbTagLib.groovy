@@ -4,12 +4,12 @@ class BreadcrumbTagLib {
     static namespace = "breadcrumb"
 
     def render = { attrs ->
-        List<Map> breadcrumbList = getCurrentPageName()
+        List<Map> breadcrumbList = generateBreadcrumbList()
 
         out << g.render(template: "/shared/templates/breadcrumb", model: [breadcrumbList: breadcrumbList])
     }
 
-    private List<Map> getCurrentPageName() {
+    private List<Map> generateBreadcrumbList() {
         List<Map> breadcrumbList = []
 
         for (def menuItem : flash.sidebar) {
