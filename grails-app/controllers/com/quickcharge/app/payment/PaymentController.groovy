@@ -1,6 +1,7 @@
 package com.quickcharge.app.payment
 
 import com.quickcharge.app.payer.Payer
+import grails.gorm.PagedResultList
 import grails.validation.ValidationException
 import utils.controller.BaseController
 import utils.message.MessageType 
@@ -11,15 +12,18 @@ class PaymentController extends BaseController {
 
     def index() {
         try {
-            return [
-                paymentList   : Payment.query([
-                    customerId    : getCurrentCustomer().id,
-                    deletedOnly   : params.deletedOnly,
-                    includeDeleted: params.includeDeleted
-                ]).list(),
-
-                deletedOnly   : params.deletedOnly,
+            Map parsedParams = [
+                offset: getOffSet(),
+                max: getMax(),
+                deletedOnly: params.deletedOnly,
                 includeDeleted: params.includeDeleted
+            ]
+
+            PagedResultList pagedResultList = paymentService.paginatedPayment(parsedParams, getCurrentCustomer())
+
+            return parsedParams + [
+                paymentList: pagedResultList,
+                total: pagedResultList.getTotalCount()
             ]
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao buscar cobranças, contate o desenvolvimento"
@@ -27,23 +31,24 @@ class PaymentController extends BaseController {
             log.info("PaymentController.index >> Erro ao consultar cobranças com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         }
     }
-
+    
     def create() {
         return [payerList: Payer.query([customerId: getCurrentCustomer().id]).list()]
     }
 
     def save() {
         try {
-            paymentService.save(params, getCurrentCustomer())
+            Payment payment = paymentService.save(params, getCurrentCustomer())
             flash.message = "Cobrança criada com sucesso"
             flash.type = MessageType.SUCCESS
+            redirect([action: "edit", params: [id: payment.id]])
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
+            redirect([action: "create", params: params])
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao criar cobrança, contate o desenvolvimento"
             flash.type = MessageType.ERROR
             log.info("PaymentController.save >> Erro ao salvar cobrança com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
-        } finally {
             redirect([action: "create", params: params])
         }
     }
@@ -63,8 +68,10 @@ class PaymentController extends BaseController {
             redirect([
                 action: "index",
                 params: [
-                    deletedOnly   : params.deletedOnly,
-                    includeDeleted: params.includeDeleted
+                    deletedOnly: params.deletedOnly,
+                    includeDeleted: params.includeDeleted,
+                    offset: params.offset,
+                    max: params.max
                 ]
             ])
         }
@@ -85,8 +92,10 @@ class PaymentController extends BaseController {
             redirect([
                 action: "index",
                 params: [
-                    deletedOnly   : params.deletedOnly,
-                    includeDeleted: params.includeDeleted
+                    deletedOnly: params.deletedOnly,
+                    includeDeleted: params.includeDeleted,
+                    offset: params.offset,
+                    max: params.max
                 ]
             ])
         }
@@ -107,8 +116,10 @@ class PaymentController extends BaseController {
             redirect([
                 action: "index",
                 params: [
-                    deletedOnly   : params.deletedOnly,
-                    includeDeleted: params.includeDeleted
+                    deletedOnly: params.deletedOnly,
+                    includeDeleted: params.includeDeleted,
+                    offset: params.offset,
+                    max: params.max
                 ]
             ])
         }
@@ -138,7 +149,10 @@ class PaymentController extends BaseController {
             flash.type = MessageType.ERROR
             log.info("PaymentController.update >> Erro ao alterar cobrança com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
-            redirect([action: "edit", params: params])
+            redirect([
+                action: "edit",
+                params: [id: params.id]
+            ])
         }
     }
 }
