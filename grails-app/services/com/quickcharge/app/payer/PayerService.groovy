@@ -2,6 +2,7 @@ package com.quickcharge.app.payer
 
 import com.quickcharge.app.customer.Customer
 import com.quickcharge.app.payment.Payment
+import grails.gorm.PagedResultList
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import utils.CpfCnpjUtils
@@ -75,7 +76,7 @@ class PayerService {
         }
 
         payer.deleted = true
-        
+
         return payer.save(failOnError: true)
     }
 
@@ -95,7 +96,7 @@ class PayerService {
         final String DEFAULT_FIELD_INVALID_PATTERN = "default.field.invalid.pattern"
 
         Payer validatedPayer = new Payer()
-        
+
         if (!CpfCnpjUtils.isCpfCnpjPatternMatch(parameterMap.cpfCnpj as String)) {
             validatedPayer.errors.rejectValue("cpfCnpj", "", DEFAULT_FIELD_INVALID_PATTERN)
         }
@@ -140,15 +141,15 @@ class PayerService {
     }
 
     private Payer validateSave(Map parameterMap) {
-        
+
         Payer patterMatchingPayer = validatePatternMatching(parameterMap)
         if (patterMatchingPayer.hasErrors()) return patterMatchingPayer
 
         Payer invalidSpecialsPayer = validateInvalidSpecials(parameterMap)
         if (invalidSpecialsPayer.hasErrors()) return invalidSpecialsPayer
-        
+
         Payer validatedPayer = new Payer()
-        
+
         if (!CpfCnpjUtils.validate(parameterMap.cpfCnpj as String)) {
             validatedPayer.errors.rejectValue("cpfCnpj", "invalid")
         }
@@ -156,11 +157,11 @@ class PayerService {
         if (!State.validate(parameterMap.state)) {
             validatedPayer.errors.rejectValue("state", "invalid")
         }
-        
+
         return validatedPayer
     }
-    
-     private Map sanitizeParameterMap(Map parameterMap) {
+
+    private Map sanitizeParameterMap(Map parameterMap) {
         List<String> mustRemoveNonNumericsParameterList = ["cpfCnpj", "phone", "postalCode"]
 
         Map sanitizedParameterMap = [:]
@@ -179,5 +180,20 @@ class PayerService {
         }
 
         return sanitizedParameterMap
+    }
+
+    public PagedResultList<Payer> paginatedPayer(Map parameterMap, Customer customer) {
+        PagedResultList<Payer> pagedResultList = Payer.query([
+            customerId    : customer.id,
+            deletedOnly   : parameterMap.deletedOnly,
+            includeDeleted: parameterMap.includeDeleted
+        ]).list([
+            max   : parameterMap.max,
+            offset: parameterMap.offset,
+            sort  : "id",
+            order : "desc"
+        ])
+
+        return pagedResultList
     }
 }
