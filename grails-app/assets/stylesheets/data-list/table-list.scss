@@ -1,0 +1,123 @@
+.list-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table.list {
+    width: 100%;
+    border-spacing: 0;
+    border-radius: 10px 10px 0 0;
+    border: 1px solid #ccc;
+
+    tr {
+        transition: .2s ease-in-out;
+
+        &:hover {
+            background-color: #eee;
+        }
+    }
+
+    thead tr{
+        th {
+            background-color: #ccc;
+            padding: 15px 8px;
+
+            &:first-child {
+                border-top-left-radius: 8px;
+            }
+
+            &:last-child {
+                border-top-right-radius: 8px;
+            }
+        }
+    }
+
+    tbody tr{
+        td {
+            border-bottom: 1px solid #ccc;
+            border-top: 1px solid transparent;
+            border-left: 1px dashed #eee;
+            padding: 8px 10px;
+            white-space: nowrap;
+            overflow-x: hidden;
+
+            a {
+                text-decoration: none;
+                color: inherit;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+
+            &.value {
+                text-align: center;
+            }
+
+            &.actions {
+                display: flex;
+                justify-content: space-evenly;
+                height: 100%;
+
+                .action {
+                    margin-left: 10px;
+                }
+
+                .action:first-child {
+                    margin-left: 0;
+                }
+            }
+        }
+
+
+        &.deleted td{
+            background-color: #ff6e6e38;
+        }
+    }
+}
+
+.table-footer {
+    border-radius: 0 0 8px 8px;
+    background-color: #ccc;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination-container {
+    background-color: #ccc;
+    border-radius: 0px 0px 8px 8px;
+    display: grid;
+    grid-template-columns: .5fr auto .5fr;
+    padding: 10px 20px;
+
+    .select-range {
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        gap: 10px;
+
+        .select-container {
+            width: 75px;
+        }
+    }
+
+    .pagination-controllers {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+
+
+        .pagination-buttons-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+
+            .button-background {
+                background-color: white;
+                border-radius: 0.25rem;
+            }
+        }
+    }
+
+}
