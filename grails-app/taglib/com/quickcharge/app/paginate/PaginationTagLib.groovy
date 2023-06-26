@@ -39,12 +39,12 @@ class PaginationTagLib {
 
     def payerHeader = { Map attrs ->
         Map model = [actionMap: getPayerHeaderMap(attrs)]
-        out << g.render(template: "/pagination/headerActions", model: model)
+        out << g.render(template: "/shared/templates/pagination/headerActions", model: model)
     }
-    
+
     def paymentHeader = { Map attrs ->
         Map model = [actionMap: getPaymentHeaderMap(attrs)]
-        out << g.render(template: "/pagination/headerActions", model: model)
+        out << g.render(template: "/shared/templates/pagination/headerActions", model: model)
     }
 
     def footer = { Map attrs ->
@@ -55,36 +55,36 @@ class PaginationTagLib {
             parameterMap: attrs.parameterMap,
         ]
 
-        out << g.render(template: "/pagination/footer", model: model)
+        out << g.render(template: "/shared/templates/pagination/footer", model: model)
     }
 
     def paymentActions = { Map attrs ->
         Map model = [actionMap: getPaymentActionsMap(attrs)]
-        out << g.render(template: "/pagination/tableDataActions", model: model)
+        out << g.render(template: "/shared/templates/pagination/tableDataActions", model: model)
     }
 
     def payerActions = { Map attrs ->
         Map model = [actionMap: getPayerActionsMap(attrs)]
-        out << g.render(template: "/pagination/tableDataActions", model: model)
+        out << g.render(template: "/shared/templates/pagination/tableDataActions", model: model)
     }
 
     private Map getHeaderActionsMap(Map attrs) {
         Map actionMap = [
             active : [
-                type   : "outlined",
-                slot   : "actions",
-                href   : createLink(action: 'index', params: attrs.parameterMap + [deletedOnly: false, includeDeleted: false])
+                type: "outlined",
+                slot: "actions",
+                href: createLink(action: 'index', params: attrs.parameterMap + [deletedOnly: false, includeDeleted: false])
             ],
             deleted: [
-                type   : "outlined",
-                slot   : "actions",
-                href   : createLink(action: 'index', params: attrs.parameterMap + [deletedOnly: true, includeDeleted: false])
+                type: "outlined",
+                slot: "actions",
+                href: createLink(action: 'index', params: attrs.parameterMap + [deletedOnly: true, includeDeleted: false])
             ],
             all    : [
-                type   : "outlined",
-                slot   : "actions",
-                theme  : "primary",
-                href   : createLink(action: 'index', params: attrs.parameterMap + [deletedOnly: false, includeDeleted: true])
+                type : "outlined",
+                slot : "actions",
+                theme: "primary",
+                href : createLink(action: 'index', params: attrs.parameterMap + [deletedOnly: false, includeDeleted: true])
             ]
         ]
 
@@ -98,37 +98,37 @@ class PaginationTagLib {
 
         return actionMap
     }
-    
+
     private Map getPaymentHeaderMap(Map attrs) {
         Map actionMap = getHeaderActionsMap(attrs)
 
         actionMap.active.description = "Ativas"
         actionMap.active.tooltip = "Exibir apenas cobranças ativas"
-        
+
         actionMap.deleted.description = "Removidas"
         actionMap.deleted.tooltip = "Exibir apenas cobranças removidas"
-        
+
         actionMap.all.description = "Todas"
         actionMap.all.tooltip = "Exibir todas cobranças"
-        
+
         return actionMap
     }
-    
+
     private Map getPayerHeaderMap(Map attrs) {
         Map actionMap = getHeaderActionsMap(attrs)
 
         actionMap.active.description = "Ativos"
         actionMap.active.tooltip = "Exibir apenas clientes ativos"
-        
+
         actionMap.deleted.description = "Removidos"
         actionMap.deleted.tooltip = "Exibir apenas clientes removidos"
-        
+
         actionMap.all.description = "Todos"
         actionMap.all.tooltip = "Exibir todos clientes"
-        
+
         return actionMap
     }
-    
+
     private Map getPaymentActionsMap(Map attrs) {
         attrs.parameterMap.id = attrs.payment.id
 
