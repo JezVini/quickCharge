@@ -1,12 +1,14 @@
 package com.quickcharge.app.payment
 
 import com.quickcharge.app.customer.Customer
+import com.quickcharge.app.email.BuildEmailContentService
 import com.quickcharge.app.payer.Payer
 import grails.gorm.PagedResultList
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import org.apache.commons.lang3.EnumUtils
 import utils.Utils
+import utils.email.payment.PaymentEmailAction
 import utils.payment.BillingType
 import utils.payment.PaymentStatus
 
@@ -16,14 +18,15 @@ import java.text.SimpleDateFormat
 class PaymentService {
 
     PaymentReceiptService paymentReceiptService
+    BuildEmailContentService buildEmailContentService
 
     def save(Map parameterMap, Customer customer) {
         Payment validatedPayment = validateSave(parameterMap)
-
+        
         if (validatedPayment.hasErrors()) {
             throw new ValidationException("Erro ao salvar cobrança", validatedPayment.errors)
         }
-
+        
         Payment payment = new Payment()
         Payer payer = Payer.query([id: parameterMap.payerId, customerId: customer.id]).get()
         BillingType billingType = BillingType[parameterMap.billingType as String] as BillingType
@@ -37,8 +40,9 @@ class PaymentService {
         payment.dueDate = dueDate
 
         payment.save(failOnError: true)
+        buildEmailContentService.createEmail(payment, PaymentEmailAction.CREATED)
     }
-
+    
     public Payment validateSave(Map parameterMap) {
         Payment validatedPayment = new Payment()
 
@@ -64,7 +68,7 @@ class PaymentService {
         return validatedPayment
     }
 
-    public Payment delete(Map parameterMap, Customer customer) {
+    public void delete(Map parameterMap, Customer customer) {
         Payment payment = Payment.getById(parameterMap.id, customer.id)
         if (!payment.status.canUpdate()) {
             payment.errors.rejectValue("status", "already.received")
@@ -73,10 +77,11 @@ class PaymentService {
 
         payment.deleted = true
 
-        return payment.save(failOnError: true)
+        payment.save(failOnError: true)
+        buildEmailContentService.createEmail(payment, PaymentEmailAction.DELETED)
     }
 
-    public Payment restore(Map parameterMap, Customer customer) {
+    public void restore(Map parameterMap, Customer customer) {
         Payment payment = Payment.query([id: parameterMap.id, customerId: customer.id, deletedOnly: true]).get()
         if (!payment) {
             payment.errors.rejectValue("status", "can.not.delete")
@@ -85,10 +90,11 @@ class PaymentService {
 
         payment.deleted = false
 
-        return payment.save(failOnError: true)
+        payment.save(failOnError: true)
+        buildEmailContentService.createEmail(payment, PaymentEmailAction.RESTORED)
     }
 
-    public Payment receiveInCash(Map parameterMap, Customer customer) {
+    public void receiveInCash(Map parameterMap, Customer customer) {
         Payment payment = Payment.getById(parameterMap.id, customer.id)
         if (!payment.status.canUpdate()) {
             payment.errors.rejectValue("status", "already.received")
@@ -99,10 +105,11 @@ class PaymentService {
         payment.paymentDate = new Date()
 
         paymentReceiptService.createReceipt(payment)
-        return payment.save(failOnError: true)
+        payment.save(failOnError: true)
+        buildEmailContentService.createEmail(payment, PaymentEmailAction.RECEIVED)
     }
 
-    public Payment update(Map parameterMap, Long customerId) {
+    public void update(Map parameterMap, Customer customer) {
         Payment validatedPayment = validateUpdate(parameterMap.dueDate as String)
 
         if (validatedPayment.hasErrors()) {
@@ -110,15 +117,18 @@ class PaymentService {
         }
 
         Long paymentId = parameterMap.long("id")
-        Payment payment = Payment.getById(paymentId, customerId)
+        Payment payment = Payment.getById(paymentId, customer.id)
 
         Double value = Utils.toBigDecimalFormatted(parameterMap.value as String).toDouble()
         Date dueDate = new SimpleDateFormat("dd/MM/yyyy").parse(parameterMap.dueDate as String)
 
         payment.value = value
         payment.dueDate = dueDate
+        
+        if (payment.status == PaymentStatus.OVERDUE) payment.status = PaymentStatus.PENDING
 
-        return payment.save(failOnError: true)
+        payment.save(failOnError: true)
+        buildEmailContentService.createEmail(payment, PaymentEmailAction.UPDATED)
     }
 
     public Payment validateUpdate(String dueDate) {
@@ -143,9 +153,10 @@ class PaymentService {
                 try {
                     Payment payment = Payment.get(paymentId)
                     payment.status = PaymentStatus.OVERDUE
+
                     payment.save(failOnError: true)
-                }
-                catch (Exception exception) {
+                    buildEmailContentService.createEmail(payment, PaymentEmailAction.OVERDUE)
+                } catch (Exception exception) {
                     log.info("updatePendingPaymentStatus >> Erro ao atualizar status da cobrança de id: [${paymentId}] [Mensagem de erro]: ${exception.message}")
                     status.setRollbackOnly()
                 }

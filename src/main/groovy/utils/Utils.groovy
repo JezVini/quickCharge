@@ -1,5 +1,6 @@
 package utils
 
+import javax.swing.text.MaskFormatter
 import java.util.regex.Pattern
 
 class Utils {
@@ -27,5 +28,19 @@ class Utils {
     
     public static BigDecimal toBigDecimalFormatted(String value) {
         return new BigDecimal(value.replaceAll('\\.', "").replaceAll(',', "."))
+    }
+    
+    public static String formatPhone(String phone) {
+        String mask = phone.length() == 10 ? "(##) ####-####" : "(##) #####-####"
+        MaskFormatter maskFormatter = new MaskFormatter(mask)
+        maskFormatter.setValueContainsLiteralCharacters(false)
+        return maskFormatter.valueToString(phone)
+    }
+    
+    public static String formatCpfCnpj(String cpfCnpj) {
+        String mask = cpfCnpj.length() == 11 ? "###.###.###-##" : "##.###.###/####-##"
+        MaskFormatter maskFormatter = new MaskFormatter(mask)
+        maskFormatter.setValueContainsLiteralCharacters(false)
+        return maskFormatter.valueToString(cpfCnpj)
     }
 }

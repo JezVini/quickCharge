@@ -6,8 +6,8 @@ import grails.validation.ValidationException
 import org.springframework.validation.ObjectError
 import utils.message.MessageType 
 
-abstract class BaseController {
-    
+class BaseController {
+
     SpringSecurityService springSecurityService
     
     protected Customer getCurrentCustomer() {
