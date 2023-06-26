@@ -28,4 +28,14 @@ abstract class BaseController {
         flash.message = subMessage
         flash.type = MessageType.WARNING
     }
+
+    protected Integer getOffSet() {
+        if (params.offset) return Integer.parseInt(params.offset as String)
+        return 0
+    }
+
+    protected Integer getMax() {
+        if (params.max) return Integer.parseInt(params.max as String)
+        return 10
+    }
 }
