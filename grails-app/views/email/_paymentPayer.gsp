@@ -201,7 +201,26 @@
                                     <td>${Utils.formatPhone(payment.payer.phone as String)}</td>
                                 </tr>
                             </table>
+                        </div>
 
+                        <div class="payer_info_container">
+                            <h4>Dados do cobrador | Beneficiário</h4>
+
+                            <table class="data_table">
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>E-mail</th>
+                                    <th>CPF/CNPJ</th>
+                                    <th>Telefone</th>
+                                </tr>
+
+                                <tr>
+                                    <td>${payment.customer.name}</td>
+                                    <td>${payment.customer.email}</td>
+                                    <td>${Utils.formatCpfCnpj(payment.customer.cpfCnpj as String)}</td>
+                                    <td>${Utils.formatPhone(payment.customer.phone as String)}</td>
+                                </tr>
+                            </table>
                         </div>
 
                         <div class="payment_info_container">
@@ -234,12 +253,13 @@
                     </div>
                 </div>
 
-                <g:if test="${!payment.deleted}">
-                    <a class="show_data_button" href="http://localhost:8080/payment/edit/${payment.id}">
-                        Visualizar cobrança
+                <g:if test="${payment.status.isReceived()}">
+                    <a style="margin-top: 1em;"
+                       class="show_data_button" href="http://localhost:8080/paymentReceipt/show?paymentReceiptUniqueId=${payment.getPaymentReceiptUniqueId()}">
+                        Comprovante de pagamento
                     </a>
                 </g:if>
-                
+
             </div>
 
             <footer>

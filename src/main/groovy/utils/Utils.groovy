@@ -43,4 +43,9 @@ class Utils {
         maskFormatter.setValueContainsLiteralCharacters(false)
         return maskFormatter.valueToString(cpfCnpj)
     }
+    
+    public static String getWordInString(String text, Integer wordPosition) {
+        String[] words = text.split("\\s+")
+        return words[wordPosition]
+    }
 }
