@@ -374,7 +374,7 @@ class PaginationTagLib {
             buttonList.add(pageData)
         }
 
-        if (totalPagesCount > 5) {
+        if (totalPagesCount > numberOfPageOptions) {
             buttonList = [getPaginationStart(attrs)] + buttonList + [getPaginationEnd(attrs, totalPagesCount - 1)]
         }
 
