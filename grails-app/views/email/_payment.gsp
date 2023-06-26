@@ -238,6 +238,13 @@
                     <a class="show_data_button" href="http://localhost:8080/payment/edit/${payment.id}">
                         Visualizar cobrança
                     </a>
+                    
+                    <g:if test="${payment.status.isReceived()}">
+                        <a style="margin-top: 1em;"
+                            class="show_data_button" href="http://localhost:8080/paymentReceipt/show?paymentReceiptUniqueId=${payment.getPaymentReceiptUniqueId()}">
+                            Comprovante de pagamento
+                        </a>
+                    </g:if>
                 </g:if>
                 
             </div>
