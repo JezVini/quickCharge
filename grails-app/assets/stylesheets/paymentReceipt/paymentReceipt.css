@@ -1,0 +1,90 @@
+body {
+    font-family: 'Open Sans', Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.mainContainer {
+    box-shadow: rgba(149, 157, 165, 0.2) 0 0 4px;
+    background-color: #f0f0f0;
+    font-size: 0.9em;
+    max-width: 95%;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: max-content;
+    padding: 1em;
+}
+
+.headerInfo {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.customerHeader {
+    max-width: 45%;
+    font-size: small;
+    padding: 0.5em;
+}
+
+.customerHeaderInfo {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    margin: 0;
+}
+
+h1 {
+    font-size: 1.6em;
+}
+
+main {
+    background-color: white;
+    padding: 1em;
+    font-size: 0.9em;
+}
+
+h2 {
+    margin-top: 0;
+}
+
+.infoBlock {
+    padding: 1em 1em 0 1em;
+}
+
+.separator {
+    border-bottom: solid rgba(0, 0, 0, 0.5) 1px;
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    font-size: small;
+    background-color: black;
+    color: white;
+    padding: 0.5em;
+}
+
+footer p {
+    text-align: center;
+    margin: 0;
+}
+
+footer a {
+    text-decoration: none;
+    color: white;
+}
+
+footer a:hover {
+    color: #f0f0f0;
+    text-decoration: underline;
+}

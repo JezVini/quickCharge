@@ -1,68 +1,89 @@
 <html>
     <head>
         <title>Comprovante de Pagamento</title>
+        <asset:link rel="icon" href="logo/quickCharge.ico" type="image/x-ico"/>
+        <asset:stylesheet src="paymentReceipt/paymentReceipt.css"/>
     </head>
 
     <body>
         <g:if test="${receipt}">
-            <header>
-                <div>
-                    <p>Nome do beneficiário: ${receipt.payment.payer.name}</p>
+            <div class="mainContainer">
+                <header>
+                    <div class="headerInfo">
+                        <h1>Comprovante de pagamento</h1>
 
-                    <p>Telefone do beneficiário: ${receipt.payment.payer.phone}</p>
-                </div>
+                        <p>
+                            Gerado dia ${g.formatDate(format: "dd/MM/yyyy", date: receipt.dateCreated)},
+                            às ${g.formatDate(format: "HH:mm", date: receipt.dateCreated)} horas
+                        </p>
+                    </div>
 
-                <div>
-                    <h1>Comprovante de pagamento</h1>
-
-                    <p>
-                        Gerado dia ${g.formatDate(format: "dd/MM/yyyy", date: receipt.dateCreated)},
-                        às ${g.formatDate(format: "HH:mm", date: receipt.dateCreated)} horas
-                    </p>
-                </div>
-            </header>
-
-            <main>
-                <div>
-                    <h2>Dados do recibo</h2>
-
-                    <div>
-                        <p>Forma de pagamento: <g:message code="ENUM.BillingType.${receipt.payment.billingType}"/></p>
+                    <div class="headerInfo customerHeader">
                         
-                        <p>Valor pago: R$ ${String.format("%.2f", receipt.payment.value)} reais</p>
+                        <p class="customerHeaderInfo">${receipt.payment.customer.name}</p>
 
-                        <p>Data de vencimento: ${g.formatDate(format: "dd/MM/yyyy", date: receipt.payment.dueDate)}</p>
+                        <p class="customerHeaderInfo">${utils.Utils.formatPhone(receipt.payment.customer.phone)}</p>
 
-                        <p>Data de pagamento: ${g.formatDate(format: "dd/MM/yyyy", date: receipt.payment.paymentDate)}</p>
+                        <p class="customerHeaderInfo">${receipt.payment.customer.email}</p>
                     </div>
-                </div>
 
-                <div>
-                    <h2>Dados do pagador</h2>
+                </header>
 
-                    <div>
-                        <p>Nome: ${receipt.payment.payer.name}</p>
+                <main>
+                    <div class="infoBlock separator">
+                        <h2>Dados do pagamento</h2>
 
-                        <p>CPF/CNPJ: ${receipt.payment.payer.cpfCnpj}</p>
+                        <div>
+                            <p><strong>Forma de pagamento:</strong>
+                                <g:message code="ENUM.BillingType.${receipt.payment.billingType}"/>
+                            </p>
+
+                            <p><strong>Valor pago:</strong>
+                                R$ ${String.format("%.2f", receipt.payment.value)} reais
+                            </p>
+
+                            <p><strong>Data de vencimento:</strong>
+                                ${g.formatDate(format: "dd/MM/yyyy", date: receipt.payment.dueDate)}
+                            </p>
+
+                            <p><strong>Data de pagamento:</strong>
+                                ${g.formatDate(format: "dd/MM/yyyy", date: receipt.payment.paymentDate)}
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                <div>
-                    <h2>Dados do beneficiário</h2>
+                    <div class="infoBlock separator">
+                        <h2>Dados do pagador</h2>
 
-                    <div>
-                        <p>Nome: ${receipt.payment.customer.name}</p>
+                        <div>
+                            <p><strong>Nome:</strong> ${receipt.payment.payer.name}</p>
 
-                        <p>CPF/CNPJ: ${receipt.payment.customer.cpfCnpj}</p>
+                            <p><strong>CPF/CNPJ:</strong> ${receipt.payment.payer.cpfCnpj}</p>
+                        </div>
                     </div>
-                </div>
-            </main>
 
-            <footer>
-                <p>Este documento e cobrança não possuem valor fiscal e são de responsabilidade única e exclusiva de ${receipt.payment.customer.name}</p>
+                    <div class="infoBlock">
+                        <h2>Dados do beneficiário</h2>
 
-                <p>Cobrança realizada via QuickCharge</p>
-            </footer>
+                        <div>
+                            <p><strong>Nome:</strong> ${receipt.payment.customer.name}</p>
+
+                            <p><strong>CPF/CNPJ:</strong> ${receipt.payment.customer.cpfCnpj}</p>
+                        </div>
+                    </div>
+                </main>
+
+                <footer>
+                    <p>
+                        Este documento e cobrança não possuem valor fiscal e são de responsabilidade única e exclusiva
+                        de ${receipt.payment.customer.name}
+                    </p>
+
+                    <strong>
+                        Cobrança realizada via <a href="https://github.com/JezVini/quickCharge">QuickCharge ❤</a>
+                    </strong>
+                </footer>
+            </div>
         </g:if>
         <g:else>
             <tr><td>Nenhuma cobrança encontrada</td></tr>
