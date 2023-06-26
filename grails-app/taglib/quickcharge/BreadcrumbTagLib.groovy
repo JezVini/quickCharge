@@ -12,13 +12,13 @@ class BreadcrumbTagLib {
     private List<Map> generateBreadcrumbList() {
         List<Map> breadcrumbList = []
 
-        for (def menuItem : flash.sidebar) {
+        for (Map menuItem : flash.sidebar) {
             if (menuItem.active) {
                 breadcrumbList.add([
                     name: menuItem.text
                 ])
                 
-                for (def item : menuItem.dropdownItemsList) {
+                for (Map item : menuItem.dropdownItemsList) {
                     if (item.active)
                         breadcrumbList.add([
                             name: item.text,
