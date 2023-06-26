@@ -1,3 +1,4 @@
+<%@ page import="utils.Utils" %>
 <atlas-panel header="Exibindo clientes">
     <pagination:payerHeader
         parameterMap="${parameterMap}"/>
@@ -20,8 +21,8 @@
                         <tr class="${payer.deleted ? 'deleted' : ''}">
                             <td>${payer.name}</td>
                             <td>${payer.email}</td>
-                            <td class="value">${payer.cpfCnpj}</td>
-                            <td class="value">${payer.phone}</td>
+                            <td class="value">${Utils.formatCpfCnpj(payer.cpfCnpj)}</td>
+                            <td class="value">${Utils.formatPhone(payer.phone)}</td>
 
                             <pagination:payerActions
                                 payer="${payer}"
