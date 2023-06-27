@@ -7,7 +7,6 @@
     <body>
         <%@ page import="utils.payment.BillingType" %>
 
-        <g:message code="${flash.message}"/>
         <atlas-form action="${createLink(controller: "payment", action: "save")}" method="post">
             <atlas-layout gap="4">
                 <atlas-select label="Cliente"

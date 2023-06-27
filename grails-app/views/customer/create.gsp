@@ -11,9 +11,6 @@
     </head>
 
     <body>
-
-        <g:message code="${flash.message}"/>
-
         <atlas-form action="${createLink(controller: "customer", action: "save")}" method="post">
             <atlas-input
                 label="Nome"
