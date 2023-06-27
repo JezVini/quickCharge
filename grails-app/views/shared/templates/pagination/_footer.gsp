@@ -31,7 +31,7 @@
         <span>registros</span>
     </div>
 
-    <div class="pagination-controllers" style="display: flex">
+    <div class="pagination-controllers">
         <div class="pagination-buttons-container">
             <g:each in="${buttonList}" var="button">
                 <span class="button-background">
