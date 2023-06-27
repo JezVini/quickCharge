@@ -133,6 +133,10 @@
         .main a span {
             color: black;
         }
+        
+        .paymentReceipt {
+            margin-top: 1em;
+        }
 
         footer {
             display: flex;
@@ -240,8 +244,12 @@
                     </a>
                     
                     <g:if test="${payment.status.isReceived()}">
-                        <a style="margin-top: 1em;"
-                            class="show_data_button" href="http://localhost:8080/paymentReceipt/show?paymentReceiptUniqueId=${payment.getPaymentReceiptUniqueId()}">
+                        <a class="show_data_button paymentReceipt"
+                           href="${createLink(
+                               controller: 'paymentReceipt',
+                               action: 'show',
+                               params: [paymentReceiptUniqueId: payment.getPaymentReceiptUniqueId()],
+                               base: 'http://localhost:8080/')}">
                             Comprovante de pagamento
                         </a>
                     </g:if>
