@@ -31,7 +31,7 @@ class PaymentController extends BaseController {
             log.info("PaymentController.index >> Erro ao consultar cobranças com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         }
     }
-    
+
     def create() {
         return [payerList: Payer.query([customerId: getCurrentCustomer().id]).list()]
     }
@@ -48,7 +48,7 @@ class PaymentController extends BaseController {
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao criar cobrança, contate o desenvolvimento"
             flash.type = MessageType.ERROR
-            log.info("PaymentController.save >> Erro ao salvar cobrança com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            log.error("PaymentController.save >> Erro ao salvar cobrança com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
             redirect([action: "create", params: params])
         }
     }
@@ -149,10 +149,7 @@ class PaymentController extends BaseController {
             flash.type = MessageType.ERROR
             log.info("PaymentController.update >> Erro ao alterar cobrança com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
-            redirect([
-                action: "edit",
-                params: [id: params.id]
-            ])
+            redirect([action: "edit", params: [id: params.id]])
         }
     }
 }

@@ -5,8 +5,6 @@
     </head>
 
     <body>
-        <p><g:message code="${flash.message}"/></p>
-        
         <pagination:payer
             max="${max}"
             total="${total}"
