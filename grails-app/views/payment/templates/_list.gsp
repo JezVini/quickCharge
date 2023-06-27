@@ -2,28 +2,28 @@
     <pagination:paymentHeader
         parameterMap="${parameterMap}"/>
     
-    <div class="list-wrap">
-        <table class="list">
+    <div class="table-wrap">
+        <table class="table">
             <thead>
                 <tr>
-                    <th>Data de criação</th>
-                    <th>Nome do cliente</th>
-                    <th>Valor</th>
-                    <th>Forma de pagamento</th>
-                    <th>Data de vencimento</th>
-                    <th>Situação</th>
-                    <th>Ações</th>
+                    <th class="table-header">Data de criação</th>
+                    <th class="table-header">Nome do cliente</th>
+                    <th class="table-header">Valor</th>
+                    <th class="table-header">Forma de pagamento</th>
+                    <th class="table-header">Data de vencimento</th>
+                    <th class="table-header">Situação</th>
+                    <th class="table-header">Ações</th>
                 </tr>
             </thead>
 
             <tbody>
                 <g:if test="${paymentList}">
                     <g:each in="${paymentList}" var="payment">
-                        <tr class="${payment.deleted ? 'deleted' : ''}">
-                            <td class="value"><g:formatDate format="dd/MM/yyyy"
-                                                            date="${payment.dateCreated}"/></td>
+                        <tr class="table-data-row ${payment.deleted ? 'deleted' : payment.status.toLowerCase()}">
+                            <td class="table-data value"><g:formatDate format="dd/MM/yyyy"
+                                                                       date="${payment.dateCreated}"/></td>
 
-                            <td>
+                            <td class="table-data">
                                 <atlas-button type="ghost" size="sm" theme="primary"
                                               tooltip="Ver cliente"
                                               description="${payment.payer.name}"
@@ -31,11 +31,11 @@
                                 </atlas-button>
                             </td>
 
-                            <td class="value">R$ ${String.format("%,.2f", payment.value)}</td>
-                            <td><g:message code="ENUM.BillingType.${payment.billingType}"/></td>
-                            <td class="value"><g:formatDate format="dd/MM/yyyy"
-                                                            date="${payment.dueDate}"/></td>
-                            <td><g:message code="ENUM.PaymentStatus.${payment.status}"/></td>
+                            <td class="table-data value">R$ ${String.format("%,.2f", payment.value)}</td>
+                            <td class="table-data"><g:message code="ENUM.BillingType.${payment.billingType}"/></td>
+                            <td class="table-data value"><g:formatDate format="dd/MM/yyyy"
+                                                                       date="${payment.dueDate}"/></td>
+                            <td class="table-data"><g:message code="ENUM.PaymentStatus.${payment.status}"/></td>
 
                             <pagination:paymentActions
                                 payment="${payment}"

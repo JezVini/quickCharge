@@ -3,26 +3,26 @@
     <pagination:payerHeader
         parameterMap="${parameterMap}"/>
 
-    <div class="list-wrap">
-        <table class="list">
+    <div class="table-wrap">
+        <table class="table">
             <thead>
                 <tr>
-                    <th>Nome do cliente</th>
-                    <th>E-mail</th>
-                    <th>CPF/CNPJ</th>
-                    <th>Telefone</th>
-                    <th>Ações</th>
+                    <th class="table-header">Nome do cliente</th>
+                    <th class="table-header">E-mail</th>
+                    <th class="table-header">CPF/CNPJ</th>
+                    <th class="table-header">Telefone</th>
+                    <th class="table-header">Ações</th>
                 </tr>
             </thead>
 
             <tbody>
                 <g:if test="${payerList}">
                     <g:each in="${payerList}" var="payer">
-                        <tr class="${payer.deleted ? 'deleted' : ''}">
-                            <td>${payer.name}</td>
-                            <td>${payer.email}</td>
-                            <td class="value">${Utils.formatCpfCnpj(payer.cpfCnpj)}</td>
-                            <td class="value">${Utils.formatPhone(payer.phone)}</td>
+                        <tr class="table-data-row ${payer.deleted ? 'deleted' : ''}">
+                            <td class="table-data">${payer.name}</td>
+                            <td class="table-data">${payer.email}</td>
+                            <td class="table-data value">${Utils.formatCpfCnpj(payer.cpfCnpj)}</td>
+                            <td class="table-data value">${Utils.formatPhone(payer.phone)}</td>
 
                             <pagination:payerActions
                                 payer="${payer}"

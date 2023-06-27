@@ -16,10 +16,10 @@
         })
     </script>
 
-    <div class="select-range">
+    <div class="pagination-select-range">
         <span>Exibindo</span>
 
-        <div class="select-container">
+        <div class="select-wrap">
             <atlas-select class="pagination-max-value" value="${max}">
                 <atlas-option label="10" value="10"></atlas-option>
                 <atlas-option label="25" value="25"></atlas-option>
