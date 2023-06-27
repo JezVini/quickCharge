@@ -140,40 +140,39 @@ class PaginationTagLib {
                 disabled: "disabled",
                 theme   : "primary",
                 icon    : "file-text",
-                tooltip : "Cobrança não recebida",
             ],
             edit         : [
                 type    : "filled",
                 disabled: "disabled",
                 theme   : "secondary",
                 icon    : "pencil",
-                tooltip : "Cobrança recebida",
             ],
             receiveInCash: [
                 type    : "filled",
                 disabled: "disabled",
                 theme   : "success",
                 icon    : "money",
-                tooltip : "Cobrança recebida",
             ],
             restore      : [
                 type    : "filled",
                 disabled: "disabled",
                 theme   : "warning",
                 icon    : "rotate-dolar",
-                tooltip : "Cobrança recebida",
             ],
             delete       : [
                 type    : "filled",
                 disabled: "disabled",
                 theme   : "danger",
                 icon    : "trash",
-                tooltip : "Cobrança recebida",
             ],
         ]
 
         if (attrs.payment.status.isReceived()) {
-
+            actionMap.restore.tooltip = "Cobrança recebida"
+            actionMap.edit.tooltip = "Cobrança recebida"
+            actionMap.receiveInCash.tooltip = "Cobrança recebida"
+            actionMap.delete.tooltip = "Cobrança recebida"
+            
             Map params = [paymentReceiptUniqueId: attrs.payment.getPaymentReceiptUniqueId()]
             actionMap.receipt += [
                 tooltip : "Visualizar comprovante",
@@ -183,13 +182,13 @@ class PaginationTagLib {
 
             return actionMap
         }
-
-        actionMap.restore.tooltip = "Cobrança não removida"
-        actionMap.edit.tooltip = "Cobrança removida"
-        actionMap.receiveInCash.tooltip = "Cobrança removida"
-        actionMap.delete.tooltip = "Cobrança removida"
-
+        
         if (attrs.payment.deleted) {
+            actionMap.receipt.tooltip = "Cobrança removida"
+            actionMap.edit.tooltip = "Cobrança removida"
+            actionMap.receiveInCash.tooltip = "Cobrança removida"
+            actionMap.delete.tooltip = "Cobrança removida"
+        
             actionMap.restore += [
                 disabled: "",
                 tooltip : "Restaurar",
@@ -199,6 +198,9 @@ class PaginationTagLib {
             return actionMap
         }
 
+        actionMap.receipt.tooltip = "Cobrança não recebida"
+        actionMap.restore.tooltip = "Cobrança não removida"        
+        
         actionMap.edit += [
             tooltip : "Editar",
             disabled: "",
@@ -229,25 +231,25 @@ class PaginationTagLib {
                 disabled: "disabled",
                 theme   : "secondary",
                 icon    : "pencil",
-                tooltip : "Cliente removido",
             ],
             restore: [
                 type    : "filled",
                 disabled: "disabled",
                 theme   : "warning",
                 icon    : "rotate-dolar",
-                tooltip : "Cliente não removido",
             ],
             delete : [
                 type    : "filled",
                 disabled: "disabled",
                 theme   : "danger",
                 icon    : "trash",
-                tooltip : "Cliente removido",
             ],
         ]
 
         if (attrs.payer.deleted) {
+            actionMap.edit.tooltip = "Cliente removido"
+            actionMap.delete.tooltip = "Cliente removido"
+            
             actionMap.restore += [
                 tooltip : "Restaurar",
                 disabled: "",
@@ -257,6 +259,8 @@ class PaginationTagLib {
             return actionMap
         }
 
+        actionMap.restore.tooltip = "Cliente não removido"
+        
         actionMap.edit += [
             tooltip : "Editar",
             disabled: "",
