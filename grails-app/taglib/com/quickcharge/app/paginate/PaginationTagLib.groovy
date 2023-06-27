@@ -69,28 +69,30 @@ class PaginationTagLib {
     }
 
     private Map getHeaderActionsMap(Map attrs) {
+        Map parameterMap = attrs.parameterMap + [offset: 0]
+        
         Map actionMap = [
             active : [
                 type: "outlined",
                 slot: "actions",
-                href: createLink(action: 'index', params: attrs.parameterMap + [deletedOnly: false, includeDeleted: false])
+                href: createLink(action: 'index', params: parameterMap + [deletedOnly: false, includeDeleted: false])
             ],
             deleted: [
                 type: "outlined",
                 slot: "actions",
-                href: createLink(action: 'index', params: attrs.parameterMap + [deletedOnly: true, includeDeleted: false])
+                href: createLink(action: 'index', params: parameterMap + [deletedOnly: true, includeDeleted: false])
             ],
             all    : [
                 type : "outlined",
                 slot : "actions",
                 theme: "primary",
-                href : createLink(action: 'index', params: attrs.parameterMap + [deletedOnly: false, includeDeleted: true])
+                href : createLink(action: 'index', params: parameterMap + [deletedOnly: false, includeDeleted: true])
             ]
         ]
 
-        if (Boolean.valueOf(attrs.parameterMap.deletedOnly)) {
+        if (Boolean.valueOf(parameterMap.deletedOnly)) {
             actionMap.deleted.type = "filled"
-        } else if (Boolean.valueOf(attrs.parameterMap.includeDeleted)) {
+        } else if (Boolean.valueOf(parameterMap.includeDeleted)) {
             actionMap.all.type = "filled"
         } else {
             actionMap.active.type = "filled"
