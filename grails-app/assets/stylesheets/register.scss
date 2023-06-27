@@ -1,0 +1,10 @@
+.content-container {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 2rem;
+    
+    .form-container {
+        max-width: 800px;
+        width: 54vw;
+    }
+}
