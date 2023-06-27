@@ -70,7 +70,7 @@ class PaginationTagLib {
 
     private Map getHeaderActionsMap(Map attrs) {
         Map parameterMap = attrs.parameterMap + [offset: 0]
-        
+
         Map actionMap = [
             active : [
                 type: "outlined",
@@ -181,42 +181,41 @@ class PaginationTagLib {
                 href    : createLink(controller: 'paymentReceipt', action: 'show', params: params)
             ]
 
-        } else {
-
-            actionMap.restore.tooltip = "Cobrança não removida"
-            actionMap.edit.tooltip = "Cobrança removida"
-            actionMap.receiveInCash.tooltip = "Cobrança removida"
-            actionMap.delete.tooltip = "Cobrança removida"
-
-            if (attrs.payment.deleted) {
-
-                actionMap.restore += [
-                    disabled: "",
-                    tooltip : "Restaurar",
-                    href    : createLink(action: 'restore', params: attrs.parameterMap)
-                ]
-
-            } else if (attrs.payment.status.canUpdate()) {
-
-                actionMap.edit += [
-                    tooltip : "Editar",
-                    disabled: "",
-                    href    : createLink(action: 'edit', params: attrs.parameterMap)
-                ]
-
-                actionMap.receiveInCash += [
-                    tooltip : "Confirmar recebimento em dinheiro",
-                    disabled: "",
-                    href    : createLink(action: 'receiveInCash', params: attrs.parameterMap)
-                ]
-
-                actionMap.delete += [
-                    tooltip : "Remover",
-                    disabled: "",
-                    href    : createLink(action: 'delete', params: attrs.parameterMap)
-                ]
-            }
+            return actionMap
         }
+
+        actionMap.restore.tooltip = "Cobrança não removida"
+        actionMap.edit.tooltip = "Cobrança removida"
+        actionMap.receiveInCash.tooltip = "Cobrança removida"
+        actionMap.delete.tooltip = "Cobrança removida"
+
+        if (attrs.payment.deleted) {
+            actionMap.restore += [
+                disabled: "",
+                tooltip : "Restaurar",
+                href    : createLink(action: 'restore', params: attrs.parameterMap)
+            ]
+
+            return actionMap
+        }
+
+        actionMap.edit += [
+            tooltip : "Editar",
+            disabled: "",
+            href    : createLink(action: 'edit', params: attrs.parameterMap)
+        ]
+
+        actionMap.receiveInCash += [
+            tooltip : "Confirmar recebimento em dinheiro",
+            disabled: "",
+            href    : createLink(action: 'receiveInCash', params: attrs.parameterMap)
+        ]
+
+        actionMap.delete += [
+            tooltip : "Remover",
+            disabled: "",
+            href    : createLink(action: 'delete', params: attrs.parameterMap)
+        ]
 
         return actionMap
     }
@@ -249,27 +248,26 @@ class PaginationTagLib {
         ]
 
         if (attrs.payer.deleted) {
-
             actionMap.restore += [
                 tooltip : "Restaurar",
                 disabled: "",
                 href    : createLink(action: 'restore', params: attrs.parameterMap)
             ]
 
-        } else {
-
-            actionMap.edit += [
-                tooltip : "Editar",
-                disabled: "",
-                href    : createLink(action: 'edit', params: attrs.parameterMap)
-            ]
-
-            actionMap.delete += [
-                tooltip : "Remover",
-                disabled: "",
-                href    : createLink(action: 'delete', params: attrs.parameterMap)
-            ]
+            return actionMap
         }
+
+        actionMap.edit += [
+            tooltip : "Editar",
+            disabled: "",
+            href    : createLink(action: 'edit', params: attrs.parameterMap)
+        ]
+
+        actionMap.delete += [
+            tooltip : "Remover",
+            disabled: "",
+            href    : createLink(action: 'delete', params: attrs.parameterMap)
+        ]
 
         return actionMap
     }
@@ -290,8 +288,8 @@ class PaginationTagLib {
 
         Map params = attrs.parameterMap + [offset: 0, max: attrs.max]
         return [
-            tooltip : "Primeira página",
-            href    : createLink(controller: attrs.controller, action: attrs.action, params: params),
+            tooltip: "Primeira página",
+            href   : createLink(controller: attrs.controller, action: attrs.action, params: params),
         ] + buttonData
     }
 
@@ -311,8 +309,8 @@ class PaginationTagLib {
 
         Map params = attrs.parameterMap + [offset: lastPage * attrs.parameterMap.max, max: attrs.parameterMap.max]
         return [
-            tooltip : "Última página",
-            href    : createLink(controller: attrs.controller, action: attrs.action, params: params),
+            tooltip: "Última página",
+            href   : createLink(controller: attrs.controller, action: attrs.action, params: params),
         ] + buttonData
     }
 
