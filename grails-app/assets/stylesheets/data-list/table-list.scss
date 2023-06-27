@@ -1,103 +1,95 @@
-.list-wrap {
-    width: 100%;
-    overflow-x: auto;
+:root {
+    --table-main-gray-color: #ddd;
+    --table-main-gray-light-color: #ddddddcc;
+    --table-row-deleted-color: #ff6e6e38;
+    --table-row-received-color: rgba(100, 255, 0, 0.22);
+    --table-row-overdue-color: trasparent;
+    --white-color: white;
 }
 
-table.list {
+.table-wrap {
     width: 100%;
-    border-spacing: 0;
-    border-radius: 10px 10px 0 0;
-    border: 1px solid #ccc;
+    overflow-x: auto;
 
-    tr {
-        transition: .2s ease-in-out;
+    .table {
+        width: 100%;
+        border-spacing: 0;
+        border-radius: 8px 8px 0 0;
+        border: 1px solid var(--table-main-gray-color);
 
-        &:hover {
-            background-color: #eee;
-        }
-    }
-
-    thead tr{
-        th {
-            background-color: #ccc;
-            padding: 15px 8px;
+        .table-header {
+            background-color: var(--table-main-gray-color);
+            padding: 10px 8px;
 
             &:first-child {
-                border-top-left-radius: 8px;
+                border-top-left-radius: 7px;
             }
 
             &:last-child {
-                border-top-right-radius: 8px;
+                border-top-right-radius: 7px;
+            }
+        }
+
+        .table-data-row {
+            transition: .2s ease-in-out;
+            
+            &.deleted .table-data{
+                background-color: var(--table-row-deleted-color);
+            }
+
+            &.received .table-data, &.received_in_cash .table-data {
+                background-color: var(--table-row-received-color);
+            }
+
+            &:hover {
+                background-color: var(--table-main-gray-light-color);
+            }
+
+            .table-data {
+                border-bottom: 1px solid var(--table-main-gray-color);
+                border-top: 1px solid transparent;
+                border-left: 1px dashed var(--table-main-gray-light-color);
+                padding: 4px 10px;
+                white-space: nowrap;
+                overflow-x: hidden;
+
+                &.value {
+                    text-align: center;
+                }
+
+                &.actions {
+                    display: flex;
+                    justify-content: space-evenly;
+                    height: 100%;
+                    gap: 5px;
+                }
             }
         }
     }
 
-    tbody tr{
-        td {
-            border-bottom: 1px solid #ccc;
-            border-top: 1px solid transparent;
-            border-left: 1px dashed #eee;
-            padding: 8px 10px;
-            white-space: nowrap;
-            overflow-x: hidden;
-
-            a {
-                text-decoration: none;
-                color: inherit;
-
-                &:hover {
-                    text-decoration: underline;
-                }
-            }
-
-            &.value {
-                text-align: center;
-            }
-
-            &.actions {
-                display: flex;
-                justify-content: space-evenly;
-                height: 100%;
-
-                .action {
-                    margin-left: 10px;
-                }
-
-                .action:first-child {
-                    margin-left: 0;
-                }
-            }
-        }
-
-
-        &.deleted td{
-            background-color: #ff6e6e38;
-        }
+    .table-footer {
+        border-radius: 0 0 8px 8px;
+        background-color: var(--table-main-gray-color);
+        padding: 15px;
+        display: flex;
+        justify-content: center;
     }
-}
-
-.table-footer {
-    border-radius: 0 0 8px 8px;
-    background-color: #ccc;
-    padding: 15px;
-    display: flex;
-    justify-content: center;
 }
 
 .pagination-container {
-    background-color: #ccc;
-    border-radius: 0px 0px 8px 8px;
+    background-color: var(--table-main-gray-color);
+    border-radius: 0 0 8px 8px;
     display: grid;
     grid-template-columns: .5fr auto .5fr;
-    padding: 10px 20px;
+    padding: 8px 20px;
 
-    .select-range {
+    .pagination-select-range {
         display: flex;
         align-items: center;
         justify-content: left;
         gap: 10px;
 
-        .select-container {
+        .select-wrap {
             width: 75px;
         }
     }
@@ -107,17 +99,15 @@ table.list {
         display: flex;
         justify-content: center;
 
-
         .pagination-buttons-container {
             display: flex;
             gap: 10px;
             justify-content: center;
 
             .button-background {
-                background-color: white;
-                border-radius: 0.25rem;
+                background-color: var(--white-color);
+                border-radius: .25rem;
             }
         }
     }
-
 }
