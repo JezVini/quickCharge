@@ -5,10 +5,10 @@
         <asset:stylesheet src="paymentReceipt/paymentReceipt.css"/>
     </head>
 
-    <body>
+    <body class="bodyContent">
         <g:if test="${receipt}">
             <div class="mainContainer">
-                <header>
+                <header class="headerContent">
                     <div class="headerInfo">
                         <h1>Comprovante de pagamento</h1>
 
@@ -29,7 +29,7 @@
 
                 </header>
 
-                <main>
+                <main class="mainContent">
                     <div class="infoBlock separator">
                         <h2>Dados do pagamento</h2>
 
@@ -73,7 +73,7 @@
                     </div>
                 </main>
 
-                <footer>
+                <footer class="footerContent">
                     <p>
                         Este documento e cobrança não possuem valor fiscal e são de responsabilidade única e exclusiva
                         de ${receipt.payment.customer.name}

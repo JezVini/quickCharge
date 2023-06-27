@@ -1,4 +1,4 @@
-body {
+.bodyContent {
     font-family: 'Open Sans', Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
     display: grid;
     grid-template-rows: 1fr 1fr 1fr;
@@ -14,7 +14,7 @@ body {
     max-width: 95%;
 }
 
-header {
+.headerContent {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -41,17 +41,17 @@ header {
     margin: 0;
 }
 
-h1 {
+.headerContent h1 {
     font-size: 1.6em;
 }
 
-main {
+.mainContent {
     background-color: white;
     padding: 1em;
     font-size: 0.9em;
 }
 
-h2 {
+.mainContent h2 {
     margin-top: 0;
 }
 
@@ -63,7 +63,7 @@ h2 {
     border-bottom: solid rgba(0, 0, 0, 0.5) 1px;
 }
 
-footer {
+.footerContent {
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -74,17 +74,17 @@ footer {
     padding: 0.5em;
 }
 
-footer p {
+.footerContent p {
     text-align: center;
     margin: 0;
 }
 
-footer a {
+.footerContent a {
     text-decoration: none;
     color: white;
 }
 
-footer a:hover {
+.footerContent a:hover {
     color: #f0f0f0;
     text-decoration: underline;
 }
