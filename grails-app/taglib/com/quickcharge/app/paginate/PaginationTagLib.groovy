@@ -177,6 +177,7 @@ class PaginationTagLib {
             Map params = [paymentReceiptUniqueId: attrs.payment.getPaymentReceiptUniqueId()]
             actionMap.receipt += [
                 tooltip : "Visualizar comprovante",
+                disabled: "",
                 href    : createLink(controller: 'paymentReceipt', action: 'show', params: params)
             ]
 
@@ -190,6 +191,7 @@ class PaginationTagLib {
             if (attrs.payment.deleted) {
 
                 actionMap.restore += [
+                    disabled: "",
                     tooltip : "Restaurar",
                     href    : createLink(action: 'restore', params: attrs.parameterMap)
                 ]
@@ -198,16 +200,19 @@ class PaginationTagLib {
 
                 actionMap.edit += [
                     tooltip : "Editar",
+                    disabled: "",
                     href    : createLink(action: 'edit', params: attrs.parameterMap)
                 ]
 
                 actionMap.receiveInCash += [
                     tooltip : "Confirmar recebimento em dinheiro",
+                    disabled: "",
                     href    : createLink(action: 'receiveInCash', params: attrs.parameterMap)
                 ]
 
                 actionMap.delete += [
                     tooltip : "Remover",
+                    disabled: "",
                     href    : createLink(action: 'delete', params: attrs.parameterMap)
                 ]
             }
@@ -247,6 +252,7 @@ class PaginationTagLib {
 
             actionMap.restore += [
                 tooltip : "Restaurar",
+                disabled: "",
                 href    : createLink(action: 'restore', params: attrs.parameterMap)
             ]
 
@@ -254,11 +260,13 @@ class PaginationTagLib {
 
             actionMap.edit += [
                 tooltip : "Editar",
+                disabled: "",
                 href    : createLink(action: 'edit', params: attrs.parameterMap)
             ]
 
             actionMap.delete += [
                 tooltip : "Remover",
+                disabled: "",
                 href    : createLink(action: 'delete', params: attrs.parameterMap)
             ]
         }
