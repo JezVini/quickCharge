@@ -31,7 +31,7 @@
                                 </atlas-button>
                             </td>
 
-                            <td class="table-data value">R$ ${String.format("%,.2f", payment.value)}</td>
+                            <td class="table-data value"><g:formatMonetaryValue value='${payment.value}'/></td>
                             <td class="table-data"><g:message code="ENUM.BillingType.${payment.billingType}"/></td>
                             <td class="table-data value"><g:formatDate format="dd/MM/yyyy"
                                                                        date="${payment.dueDate}"/></td>

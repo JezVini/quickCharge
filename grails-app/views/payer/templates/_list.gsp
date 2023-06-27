@@ -21,8 +21,8 @@
                         <tr class="table-data-row ${payer.deleted ? 'deleted' : ''}">
                             <td class="table-data">${payer.name}</td>
                             <td class="table-data">${payer.email}</td>
-                            <td class="table-data value">${Utils.formatCpfCnpj(payer.cpfCnpj)}</td>
-                            <td class="table-data value">${Utils.formatPhone(payer.phone)}</td>
+                            <td class="table-data value"><g:formatCpfCnpj value='${payer.cpfCnpj}'/></td>
+                            <td class="table-data value"><g:formatPhone value='${payer.phone}'/></td>
 
                             <pagination:payerActions
                                 payer="${payer}"
