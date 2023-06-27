@@ -28,18 +28,20 @@
         <g:layoutHead/>
     </head>
 
-    <header>
-        <g:link controller="login" action="auth">
-            <asset:image src="logo/quickChargeNormalWhite.svg" class="logo"/>
-        </g:link>
-    </header>
+    <body class="body">
+        <header class="header">
+            <g:link controller="login" action="auth">
+                <asset:image src="logo/quickChargeNormalWhite.svg" class="logo"/>
+            </g:link>
+        </header>
 
-    <main>
-        <alertTagLib:renderAlert/>
-        <g:layoutBody/>
-    </main>
+        <main class="main">
+            <alertTagLib:renderAlert/>
+            <g:layoutBody/>
+        </main>
 
-    <footer>
-        <p>Feito com <span class="heart">❤️</span> por Jezreel Moraes e Vinícius Wille</p>
-    </footer>
+        <footer class="footer">
+            <p>Feito com <span class="heart">❤️</span> por Jezreel Moraes e Vinícius Wille</p>
+        </footer>
+    </body>
 </html>

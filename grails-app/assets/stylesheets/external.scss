@@ -1,4 +1,4 @@
-body {
+.body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -10,7 +10,7 @@ body {
         top: 2rem;
     }
     
-    header {
+    .header {
         background-color: black;
         padding: 2rem;
         display: flex;
@@ -21,14 +21,14 @@ body {
         }
     }
 
-    main {
+    .main {
         display: flex;
         justify-content: center;
         align-items: center;
         padding: 2rem;
     }
 
-    footer {
+    .footer {
         display: flex;
         justify-content: center;
         color: white;
