@@ -1,4 +1,3 @@
-<%@ page import="utils.Utils" %>
 <!DOCTYPE html>
 <html lang="pt-BR">
     <head>
@@ -11,156 +10,159 @@
         <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 
         <style>
-
-        * {
-            box-sizing: border-box;
-            margin: 0px;
-            padding: 0px;
-        }
-
-        .body {
-            font-family: 'Open Sans', Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0px;
-            border: none;
-            padding: 0px;
-        }
-
-        .container {
-            max-width: 1000px;
-            width: 60%;
-            min-width: 900px;
-            margin: auto;
-            background-color: white;
-        }
-
-        .container header {
-            background-color: black;
-            height: 80px;
-        }
-
-        .container .main {
-            padding: 30px;
-            min-width: 700px;
-            max-width: 900px;
-            margin: auto;
-        }
-
-        .container h1.subject {
-            text-align: center;
-        }
-
-        div.payment {
-            margin: 30px 0px;
-            border-radius: 5px;
-            background-color: white;
-            border: 5px solid #ddd;
-        }
-
-        div.payment div.payment_header {
-            padding: 10px 20px;
-            background-color: #ddd;
-        }
-
-        div.payment div.payment_main {
-            padding: 20px;
-            overflow-x: auto;
-        }
-
-        div.payment div.payment_main h4 {
-            margin-top: 10px;
-        }
-
-
-        table.data_table {
-            width: 100%;
-        }
-
-        table.data_table th {
-            background-color: #ddd;
-        }
-
-        table.data_table td {
-            text-align: center;
-            background-color: #fafafa;
-            padding: 10px;
-        }
-
-        div.payment div.payment_footer {
-            padding: 10px 20px;
-            background-color: #ddd;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-
-        div.payment_footer h3 {
-            white-space: nowrap;
-        }
-
-        div.payment_footer .space {
-            width: 100%;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .main a.show_data_button {
-            border: none;
-            padding: 8px;
-            display: block;
-            text-align: center;
-            color: white;
-            font-weight: 600;
-            font-size: 1.6rem;
-            border-radius: 5px;
-            background-color: black;
-            cursor: pointer;
-        }
-
-        .main a.show_data_button:hover {
-            text-decoration: underline;
-            background-color: #1f1f1f;
-        }
-
-        .main a span {
-            color: black;
-        }
-
-        footer {
-            display: flex;
-            background-color: black;
-            color: white;
-            padding: 25px;
-        }
-
-        footer h3 {
-            display: block;
-            margin: auto;
-            text-align: center;
-        }
-
-        footer h3 strong {
-            display: block;
-            margin: auto;
-            text-align: center;
-        }
-
-        footer h3 strong a {
-            color: white !important;
-        }
-
-        .heart {
-            color: red;
-            font-size: larger;
-        }
+            * {
+                box-sizing: border-box;
+                margin: 0px;
+                padding: 0px;
+            }
+    
+            .body {
+                font-family: 'Open Sans', Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
+                background-color: #f0f0f0;
+                margin: 0px;
+                border: none;
+                padding: 0px;
+            }
+    
+            .container {
+                max-width: 1000px;
+                width: 60%;
+                min-width: 900px;
+                margin: auto;
+                background-color: white;
+            }
+    
+            .container header {
+                background-color: black;
+                height: 80px;
+            }
+    
+            .container .main {
+                padding: 30px;
+                min-width: 700px;
+                max-width: 900px;
+                margin: auto;
+            }
+    
+            .container h1.subject {
+                text-align: center;
+            }
+    
+            div.payment {
+                margin: 30px 0px;
+                border-radius: 5px;
+                background-color: white;
+                border: 5px solid #ddd;
+            }
+    
+            div.payment div.payment_header {
+                padding: 10px 20px;
+                background-color: #ddd;
+            }
+    
+            div.payment div.payment_main {
+                padding: 20px;
+                overflow-x: auto;
+            }
+    
+            div.payment div.payment_main h4 {
+                margin-top: 10px;
+            }
+    
+    
+            table.data_table {
+                width: 100%;
+            }
+    
+            table.data_table th {
+                background-color: #ddd;
+            }
+    
+            table.data_table td {
+                text-align: center;
+                background-color: #fafafa;
+                padding: 10px;
+            }
+    
+            div.payment div.payment_footer {
+                padding: 10px 20px;
+                background-color: #ddd;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+    
+    
+            div.payment_footer h3 {
+                white-space: nowrap;
+            }
+    
+            div.payment_footer .space {
+                width: 100%;
+            }
+    
+            a {
+                text-decoration: none;
+                color: inherit;
+            }
+    
+            a:hover {
+                text-decoration: underline;
+            }
+    
+            .main a.show_data_button {
+                border: none;
+                padding: 8px;
+                display: block;
+                text-align: center;
+                color: white;
+                font-weight: 600;
+                font-size: 1.6rem;
+                border-radius: 5px;
+                background-color: black;
+                cursor: pointer;
+            }
+    
+            .main a.show_data_button:hover {
+                text-decoration: underline;
+                background-color: #1f1f1f;
+            }
+    
+            .main a span {
+                color: black;
+            }
+    
+            .paymentReceipt {
+                margin-top: 1em;
+            }
+    
+            footer {
+                display: flex;
+                background-color: black;
+                color: white;
+                padding: 25px;
+            }
+    
+            footer h3 {
+                display: block;
+                margin: auto;
+                text-align: center;
+            }
+    
+            footer h3 strong {
+                display: block;
+                margin: auto;
+                text-align: center;
+            }
+    
+            footer h3 strong a {
+                color: white !important;
+            }
+    
+            .heart {
+                color: red;
+                font-size: larger;
+            }
         </style>
 
     </head>
@@ -197,8 +199,8 @@
                                 <tr>
                                     <td>${payment.payer.name}</td>
                                     <td>${payment.payer.email}</td>
-                                    <td>${Utils.formatCpfCnpj(payment.payer.cpfCnpj as String)}</td>
-                                    <td>${Utils.formatPhone(payment.payer.phone as String)}</td>
+                                    <td><g:formatCpfCnpj value="${payment.payer.cpfCnpj}"/></td>
+                                    <td><g:formatPhone value="${payment.payer.phone}"/></td>
                                 </tr>
                             </table>
                         </div>
@@ -217,8 +219,8 @@
                                 <tr>
                                     <td>${payment.customer.name}</td>
                                     <td>${payment.customer.email}</td>
-                                    <td>${Utils.formatCpfCnpj(payment.customer.cpfCnpj as String)}</td>
-                                    <td>${Utils.formatPhone(payment.customer.phone as String)}</td>
+                                    <td><g:formatCpfCnpj value="${payment.customer.cpfCnpj}"/></td>
+                                    <td><g:formatPhone value="${payment.customer.phone}"/></td>
                                 </tr>
                             </table>
                         </div>
@@ -249,13 +251,17 @@
 
                         <div class="space"></div>
 
-                        <h3><strong>R$ ${String.format("%,.2f", payment.value)}</strong></h3>
+                        <h3><strong><g:formatMonetaryValue value="${payment.value}"/></strong></h3>
                     </div>
                 </div>
 
                 <g:if test="${payment.status.isReceived()}">
-                    <a style="margin-top: 1em;"
-                       class="show_data_button" href="http://localhost:8080/paymentReceipt/show?paymentReceiptUniqueId=${payment.getPaymentReceiptUniqueId()}">
+                    <a class="show_data_button paymentReceipt"
+                       href="${createLink(
+                           controller: 'paymentReceipt',
+                           action: 'show',
+                           params: [paymentReceiptUniqueId: payment.getPaymentReceiptUniqueId()],
+                           base: 'http://localhost:8080/')}">
                         Comprovante de pagamento
                     </a>
                 </g:if>
