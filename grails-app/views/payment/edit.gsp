@@ -8,7 +8,6 @@
         <%@ page import="utils.payment.BillingType" %>
 
         <main>
-            <g:message code="${flash.message}"/>
             <g:if test="${payment}">
                 <atlas-form action="${createLink(controller: "payment", action: "update")}" method="post">
                     <atlas-layout gap="4">

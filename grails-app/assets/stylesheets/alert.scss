@@ -1,0 +1,8 @@
+.alert {
+    position: fixed;
+    z-index: 1;
+    width: 50vw;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+}
