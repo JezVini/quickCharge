@@ -1,0 +1,38 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .alert {
+        position: fixed;
+        z-index: 1;
+        width: 50vw;
+        top: 2rem;
+    }
+    
+    header {
+        background-color: black;
+        padding: 2rem;
+        display: flex;
+        justify-content: center;
+
+        .logo {
+            max-height: 8rem;
+        }
+    }
+
+    main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+    }
+
+    footer {
+        display: flex;
+        justify-content: center;
+        color: white;
+        background-color: black;
+        padding: 2rem;
+    }
+}
