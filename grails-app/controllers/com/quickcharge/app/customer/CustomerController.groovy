@@ -24,7 +24,7 @@ class CustomerController extends BaseController{
             customerService.save(params)
             flash.message = "Conta criada com sucesso"
             flash.type = MessageType.SUCCESS
-            redirect([action: "edit"])
+            redirect([controller: "login", action: "auth"])
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
             redirect([action: "create", params: params])
