@@ -2,13 +2,6 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-
-    .alert {
-        position: fixed;
-        z-index: 1;
-        width: 50vw;
-        top: 2rem;
-    }
     
     .header {
         background-color: black;
