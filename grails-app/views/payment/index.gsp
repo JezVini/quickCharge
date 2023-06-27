@@ -18,8 +18,6 @@
             </g:else>
         </h1>
 
-        <p><g:message code="${flash.message}"/></p>
-
         <g:link action="create">
             <button>Criar cobrança</button>
         </g:link>
