@@ -91,14 +91,14 @@ class PayerController extends BaseController {
             Payer payer = payerService.save(params, getCurrentCustomer())
             flash.message = "Pagador criado com sucesso"
             flash.type = MessageType.SUCCESS
-            redirect([action: "edit", params: [id: payer.id]])
+            redirect([action: "index", params: [id: payer.id]])
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
             redirect([action: "create", params: params])
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao criar pagador, contate o desenvolvimento"
             flash.type = MessageType.ERROR
-            log.info("PayerController.save >> Erro ao salvar pagador com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            log.error("PayerController.save >> Erro ao salvar pagador com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
             redirect([action: "create", params: params])
         }
     }

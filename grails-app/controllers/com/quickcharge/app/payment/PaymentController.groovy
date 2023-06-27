@@ -37,13 +37,14 @@ class PaymentController extends BaseController {
             paymentService.save(params, getCurrentCustomer())
             flash.message = "Cobrança criada com sucesso"
             flash.type = MessageType.SUCCESS
+            redirect([action: "index", params: params])
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
+            redirect([action: "create", params: params])
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao criar cobrança, contate o desenvolvimento"
             flash.type = MessageType.ERROR
-            log.info("PaymentController.save >> Erro ao salvar cobrança com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
-        } finally {
+            log.error("PaymentController.save >> Erro ao salvar cobrança com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
             redirect([action: "create", params: params])
         }
     }

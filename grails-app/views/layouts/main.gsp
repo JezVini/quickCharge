@@ -34,6 +34,7 @@
                 </atlas-page-header>
                 <atlas-page-content slot="content" class="js-atlas-content">
                     <alertTagLib:renderAlert/>
+                    <breadcrumb:render/>
                     <g:layoutBody/>
                 </atlas-page-content>
             </atlas-page>
