@@ -1,4 +1,4 @@
-<td class="actions">
+<td class="table-data actions">
     <g:each in="${actionMap}" var="actionName, action">
         <atlas-button size="sm" class="action"
                       type="${action.type}"
