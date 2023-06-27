@@ -139,7 +139,6 @@ class PaginationTagLib {
                 theme   : "primary",
                 icon    : "file-text",
                 tooltip : "Cobrança não recebida",
-                href    : ""
             ],
             edit         : [
                 type    : "filled",
@@ -147,7 +146,6 @@ class PaginationTagLib {
                 theme   : "secondary",
                 icon    : "pencil",
                 tooltip : "Cobrança recebida",
-                href    : ""
             ],
             receiveInCash: [
                 type    : "filled",
@@ -155,7 +153,6 @@ class PaginationTagLib {
                 theme   : "success",
                 icon    : "money",
                 tooltip : "Cobrança recebida",
-                href    : ""
             ],
             restore      : [
                 type    : "filled",
@@ -163,7 +160,6 @@ class PaginationTagLib {
                 theme   : "warning",
                 icon    : "rotate-dolar",
                 tooltip : "Cobrança recebida",
-                href    : ""
             ],
             delete       : [
                 type    : "filled",
@@ -171,7 +167,6 @@ class PaginationTagLib {
                 theme   : "danger",
                 icon    : "trash",
                 tooltip : "Cobrança recebida",
-                href    : ""
             ],
         ]
 
@@ -179,7 +174,6 @@ class PaginationTagLib {
 
             Map params = [paymentReceiptUniqueId: attrs.payment.getPaymentReceiptUniqueId()]
             actionMap.receipt += [
-                disabled: "",
                 tooltip : "Visualizar comprovante",
                 href    : createLink(controller: 'paymentReceipt', action: 'show', params: params)
             ]
@@ -194,7 +188,6 @@ class PaginationTagLib {
             if (attrs.payment.deleted) {
 
                 actionMap.restore += [
-                    disabled: "",
                     tooltip : "Restaurar",
                     href    : createLink(action: 'restore', params: attrs.parameterMap)
                 ]
@@ -202,19 +195,16 @@ class PaginationTagLib {
             } else if (attrs.payment.status.canUpdate()) {
 
                 actionMap.edit += [
-                    disabled: "",
                     tooltip : "Editar",
                     href    : createLink(action: 'edit', params: attrs.parameterMap)
                 ]
 
                 actionMap.receiveInCash += [
-                    disabled: "",
                     tooltip : "Confirmar recebimento em dinheiro",
                     href    : createLink(action: 'receiveInCash', params: attrs.parameterMap)
                 ]
 
                 actionMap.delete += [
-                    disabled: "",
                     tooltip : "Remover",
                     href    : createLink(action: 'delete', params: attrs.parameterMap)
                 ]
@@ -234,7 +224,6 @@ class PaginationTagLib {
                 theme   : "secondary",
                 icon    : "pencil",
                 tooltip : "Cliente removido",
-                href    : ""
             ],
             restore: [
                 type    : "filled",
@@ -242,7 +231,6 @@ class PaginationTagLib {
                 theme   : "warning",
                 icon    : "rotate-dolar",
                 tooltip : "Cliente não removido",
-                href    : ""
             ],
             delete : [
                 type    : "filled",
@@ -250,14 +238,12 @@ class PaginationTagLib {
                 theme   : "danger",
                 icon    : "trash",
                 tooltip : "Cliente removido",
-                href    : ""
             ],
         ]
 
         if (attrs.payer.deleted) {
 
             actionMap.restore += [
-                disabled: "",
                 tooltip : "Restaurar",
                 href    : createLink(action: 'restore', params: attrs.parameterMap)
             ]
@@ -265,13 +251,11 @@ class PaginationTagLib {
         } else {
 
             actionMap.edit += [
-                disabled: "",
                 tooltip : "Editar",
                 href    : createLink(action: 'edit', params: attrs.parameterMap)
             ]
 
             actionMap.delete += [
-                disabled: "",
                 tooltip : "Remover",
                 href    : createLink(action: 'delete', params: attrs.parameterMap)
             ]
@@ -290,7 +274,6 @@ class PaginationTagLib {
         if (newOffSet < 0) {
             return [
                 tooltip : "Sem mais registros",
-                href    : "",
                 disabled: "disabled",
             ] + buttonData
         }
@@ -299,7 +282,6 @@ class PaginationTagLib {
         return [
             tooltip : "Primeira página",
             href    : createLink(controller: attrs.controller, action: attrs.action, params: params),
-            disabled: "",
         ] + buttonData
     }
 
@@ -313,7 +295,6 @@ class PaginationTagLib {
         if (newOffSet >= attrs.total) {
             return [
                 tooltip : "Sem mais registros",
-                href    : "",
                 disabled: "disabled",
             ] + buttonData
         }
@@ -322,7 +303,6 @@ class PaginationTagLib {
         return [
             tooltip : "Última página",
             href    : createLink(controller: attrs.controller, action: attrs.action, params: params),
-            disabled: "",
         ] + buttonData
     }
 
