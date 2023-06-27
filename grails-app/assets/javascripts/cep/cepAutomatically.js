@@ -9,7 +9,7 @@ function cepSearch(valor) {
         document.body.appendChild(script);
     } else {
         addressInputsEmpty();
-        alert("Formato de CEP inválido.");
+        Atlas.notifications.showAlert("Formato de CEP inválido", "warning");
     }
 }
 
@@ -21,7 +21,7 @@ function cepDataReceiver(json) {
         document.getElementById('state').value=(json.uf);
     } else {
         addressInputsEmpty();
-        alert("CEP não encontrado.");
+        Atlas.notifications.showAlert("CEP não encontrado", "warning");
     }
 }
 
