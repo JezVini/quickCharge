@@ -6,7 +6,6 @@
     </head>
 
     <body>
-        <g:message code="${flash.message}"/>
         <atlas-form action="${createLink(controller: "customer", action: "update")}" method="post">
             <atlas-input type="hidden" name="id" value="${id}"></atlas-input>
 
