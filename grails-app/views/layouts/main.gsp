@@ -18,8 +18,10 @@
 
         <asset:stylesheet src="atlas-colors/colors.css"/>
         <asset:stylesheet src="main/main.css.css"/>
+        <asset:stylesheet src="alert.css"/>
         <asset:javascript src="pages/currentPage.js"/>
         <asset:javascript src="sidebar/SidebarController.js"/>
+        <asset:javascript src="alert.js"/>
 
         <g:layoutHead/>
     </head>
@@ -31,6 +33,7 @@
                 <atlas-page-header slot="header" page-name="">
                 </atlas-page-header>
                 <atlas-page-content slot="content" class="js-atlas-content">
+                    <alertTagLib:renderAlert/>
                     <g:layoutBody/>
                 </atlas-page-content>
             </atlas-page>
