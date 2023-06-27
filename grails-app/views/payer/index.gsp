@@ -17,8 +17,6 @@
             </g:else>
         </h1>
 
-        <p><g:message code="${flash.message}"/></p>
-
         <g:link action="create">
             <button>Novo pagador</button>
         </g:link>
