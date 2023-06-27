@@ -1,8 +1,9 @@
 @function to-rgb($value) {
     @return red($value), green($value), blue($value);
 }
+
 $base-color: #000000;
-$base-secondary-color: #ffffff;
+$base-secondary-color: #3A86FF;
 
 //cores atlas
 :root {
@@ -16,11 +17,31 @@ $base-secondary-color: #ffffff;
         --atlas-primary-#{$color-number}-rgb: to-rgb($color-light);
     }
     --atlas-primary-500: $base-color;
+    --atlas-primary-500-rgb: to-rgb($base-color);
     @for $i from 1 through 4 {
         $percentage: $i * 20%;
         $color-number: ($i * 100) + 500;
         $color-dark: mix(black, $base-color, $percentage);
         --atlas-primary-#{$color-number}: $color-dark;
         --atlas-primary-#{$color-number}-rgb: to-rgb($color-dark);
+    }
+
+    --atlas-secondary: $base-secondary-color;
+    --atlas-secondary-rgb: to-rgb($base-secondary-color);
+    @for $i from 1 through 4 {
+        $percentage: (100 - ($i * 20)) * 1%;
+        $color-number: $i * 100;
+        $color-light: mix(white, $base-secondary-color, $percentage);
+        --atlas-secondary-#{$color-number}: $color-light;
+        --atlas-secondary-#{$color-number}-rgb: to-rgb($color-light);
+    }
+    --atlas-secondary-500: $base-secondary-color;
+    --atlas-secondary-500-rgb: to-rgb($base-color);
+    @for $i from 1 through 4 {
+        $percentage: $i * 20%;
+        $color-number: ($i * 100) + 500;
+        $color-dark: mix(black, $base-secondary-color, $percentage);
+        --atlas-secondary-#{$color-number}: $color-dark;
+        --atlas-secondary-#{$color-number}-rgb: to-rgb($color-dark);
     }
 }
