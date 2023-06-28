@@ -1,39 +1,15 @@
-<!doctype html>
 <html>
     <head>
-        <title><g:if env="development">Grails Runtime Exception</g:if><g:else>Error</g:else></title>
-        <meta name="layout" content="main">
-        <g:if env="development"><asset:stylesheet src="errors.css"/></g:if>
+        <title>Erro no sistema</title>
+        <meta name="layout" content="serverError">
     </head>
+
     <body>
-    <div id="content" role="main">
         <div class="container">
-            <section class="row">
-                <div class="col-12">
-                <g:if env="development">
-                    <g:if test="${Throwable.isInstance(exception)}">
-                        <g:renderException exception="${exception}" />
-                    </g:if>
-                    <g:elseif test="${request.getAttribute('javax.servlet.error.exception')}">
-                        <g:renderException exception="${request.getAttribute('javax.servlet.error.exception')}" />
-                    </g:elseif>
-                    <g:else>
-                        <ul class="errors">
-                            <li>An error has occurred</li>
-                            <li>Exception: ${exception}</li>
-                            <li>Message: ${message}</li>
-                            <li>Path: ${path}</li>
-                        </ul>
-                    </g:else>
-                </g:if>
-                <g:else>
-                    <ul class="errors">
-                        <li>An error has occurred</li>
-                    </ul>
-                </g:else>
-                </div>
-            </section>
+            <h2 class="title">Tivemos um imprevisto com sua requisição, estamos trabalhando nisso!</h2>
+            <h3 class="message"><g:message code="${flash.message}"/></h3>
+            <asset:image src="svgs/error.svg" class="error-img"/>
+            <span>Caso o problema persista, contate o desenvolvimento.</span>
         </div>
-    </div>
     </body>
 </html>
