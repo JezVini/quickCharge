@@ -22,9 +22,10 @@ class PaymentController extends BaseController {
                 includeDeleted: params.includeDeleted
             ]
         } catch (Exception exception) {
-            flash.message = "Ocorreu um erro ao buscar cobranças, contate o desenvolvimento"
+            flash.message = "Ocorreu um erro ao buscar cobranças"
             flash.type = MessageType.ERROR
-            log.info("PaymentController.index >> Erro ao consultar cobranças com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            log.error("PaymentController.index >> Erro ao consultar cobranças com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            throw new Exception()
         }
     }
 
@@ -42,10 +43,10 @@ class PaymentController extends BaseController {
             this.validateExceptionHandler(validationException)
             redirect([action: "create", params: params])
         } catch (Exception exception) {
-            flash.message = "Ocorreu um erro ao criar cobrança, contate o desenvolvimento"
+            flash.message = "Ocorreu um erro ao criar cobrança"
             flash.type = MessageType.ERROR
             log.error("PaymentController.save >> Erro ao salvar cobrança com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
-            redirect([action: "create", params: params])
+            throw new Exception()
         }
     }
 
@@ -57,9 +58,10 @@ class PaymentController extends BaseController {
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
-            flash.message = "Ocorreu um erro ao remover cobrança, contate o desenvolvimento"
+            flash.message = "Ocorreu um erro ao remover cobrança"
             flash.type = MessageType.ERROR
-            log.info("PaymentController.delete >> Erro ao remover cobrança com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            log.error("PaymentController.delete >> Erro ao remover cobrança com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            throw new Exception()
         } finally {
             redirect([
                 action: "index",
@@ -79,9 +81,10 @@ class PaymentController extends BaseController {
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
-            flash.message = "Ocorreu um erro ao restaurar cobrança, contate o desenvolvimento"
+            flash.message = "Ocorreu um erro ao restaurar cobrança"
             flash.type = MessageType.ERROR
-            log.info("PaymentController.restore >> Erro ao restaurar cobrança com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            log.error("PaymentController.restore >> Erro ao restaurar cobrança com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            throw new Exception()
         } finally {
             redirect([
                 action: "index",
@@ -101,9 +104,10 @@ class PaymentController extends BaseController {
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
-            flash.message = "Ocorreu um erro ao confirmar recebimento em dinheiro, contate o desenvolvimento"
+            flash.message = "Ocorreu um erro ao confirmar recebimento em dinheiro"
             flash.type = MessageType.ERROR
-            log.info("PaymentController.receivedInCash >> Erro ao confirmar recebimento em dinheiro com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            log.error("PaymentController.receivedInCash >> Erro ao confirmar recebimento em dinheiro com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            throw new Exception()
         } finally {
             redirect([
                 action: "index",
@@ -118,12 +122,11 @@ class PaymentController extends BaseController {
     def edit() {
         try {
             return [payment: Payment.getById(params.long("id"), getCurrentCustomer().id)]
-        } catch (ValidationException validationException) {
-            this.validateExceptionHandler(validationException) 
         } catch (Exception exception) {
-            flash.message = "Ocorreu um erro ao buscar dados da cobrança, contate o desenvolvimento"
+            flash.message = "Ocorreu um erro ao buscar dados da cobrança"
             flash.type = MessageType.ERROR
             log.error("PaymentController.edit >> Erro ao consultar cobrança com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            throw new Exception()
         }
     }
 
@@ -132,14 +135,15 @@ class PaymentController extends BaseController {
             paymentService.update(params, getCurrentCustomer())
             flash.message = "Cobrança alterada com sucesso"
             flash.type = MessageType.SUCCESS
+            redirect([action: "index"])
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
-        } catch (Exception exception) {
-            flash.message = "Ocorreu um erro ao alterar cobrança, contate o desenvolvimento"
-            flash.type = MessageType.ERROR
-            log.info("PaymentController.update >> Erro ao alterar cobrança com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
-        } finally {
             redirect([action: "edit", params: params])
+        } catch (Exception exception) {
+            flash.message = "Ocorreu um erro ao alterar cobrança"
+            flash.type = MessageType.ERROR
+            log.error("PaymentController.update >> Erro ao alterar cobrança com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            throw new Exception()
         }
     }
 }
