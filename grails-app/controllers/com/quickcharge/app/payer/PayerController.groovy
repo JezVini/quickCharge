@@ -98,7 +98,7 @@ class PayerController extends BaseController {
             Payer payer = payerService.save(params, getCurrentCustomer())
             flash.message = "Pagador criado com sucesso"
             flash.type = MessageType.SUCCESS
-            redirect([action: "index", params: [id: payer.id]])
+            redirect([action: "index"])
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
             redirect([action: "create", params: params])
