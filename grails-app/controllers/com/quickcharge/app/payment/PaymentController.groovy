@@ -38,10 +38,10 @@ class PaymentController extends BaseController {
 
     def save() {
         try {
-            Payment payment = paymentService.save(params, getCurrentCustomer())
+            paymentService.save(params, getCurrentCustomer())
             flash.message = "Cobrança criada com sucesso"
             flash.type = MessageType.SUCCESS
-            redirect([action: "edit", params: [id: payment.id]])
+            redirect([action: "index"])
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
             redirect([action: "create", params: params])
