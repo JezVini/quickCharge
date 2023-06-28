@@ -6,14 +6,13 @@
 
     <body>
         <%@ page import="utils.payment.BillingType" %>
-%{--        <g:set var="pageName" scope="request" value="${flash.activePageName}"/>--}%
-        <atlas-panel>
+        <atlas-panel header="Dados cobrança" style="display: flex">
             <atlas-form action="${createLink(controller: "payment", action: "save")}" method="post">
                 <atlas-layout gap="8">
-                    <atlas-section header="Dados cobrança">
+                    <atlas-section style="display: flex;">
                         <atlas-grid>
-                            <atlas-row>
-                                <atlas-col lg="6">
+                            <atlas-row margin-bottom="5">
+                                <atlas-col lg="2">
                                     <atlas-money
                                         label="Valor da cobrança"
                                         name="value"
@@ -22,7 +21,7 @@
                                         required></atlas-money>
                                 </atlas-col>
 
-                                <atlas-col lg="6">
+                                <atlas-col lg="3">
                                     <atlas-select label="Cliente"
                                                   name="payerId"
                                                   required>
@@ -33,10 +32,28 @@
                                         </g:each>
                                     </atlas-select>
                                 </atlas-col>
+
+                                <atlas-col lg="7">
+                                    <atlas-card
+                                        header="Nota!"
+                                        background="light"
+                                        badge-theme="primary"
+                                        badge-text="Lembrete"><atlas-text>Ao criar a cobrança, serão encaminhadas notificações ao seu e-mail e do cliente com todos os detalhes!</atlas-text>
+                                    </atlas-card>
+                                </atlas-col>
                             </atlas-row>
 
                             <atlas-row>
-                                <atlas-col lg="6">
+                                <atlas-col lg="2">
+                                    <atlas-datepicker label="Data de vencimento"
+                                                      name="dueDate"
+                                                      icon="calendar"
+                                                      required-error-message="Necessário preencher"
+                                                      prevent-past-date
+                                                      required></atlas-datepicker>
+                                </atlas-col>
+
+                                <atlas-col lg="3">
                                     <atlas-select label="Forma de pagamento"
                                                   name="billingType"
                                                   required>
@@ -47,20 +64,10 @@
                                         </g:each>
                                     </atlas-select>
                                 </atlas-col>
-
-                                <atlas-col lg="6">
-                                    <atlas-datepicker label="Data de vencimento"
-                                                      name="dueDate"
-                                                      icon="calendar"
-                                                      required-error-message="Necessário preencher"
-                                                      prevent-past-date
-                                                      required></atlas-datepicker>
-                                </atlas-col>
                             </atlas-row>
-                            
-                            <atlas-button submit description="Criar Cobrança" block></atlas-button>
                         </atlas-grid>
                     </atlas-section>
+                    <atlas-button submit description="Criar Cobrança"></atlas-button>
                 </atlas-layout>
             </atlas-form>
         </atlas-panel>
