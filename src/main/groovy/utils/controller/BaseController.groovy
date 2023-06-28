@@ -30,12 +30,12 @@ class BaseController {
     }
 
     protected Integer getOffSet() {
-        if (params.offset) return Integer.parseInt(params.offset as String)
-        return 0
+        if (!params.offset) return 0 
+        return Integer.parseInt(params.offset as String)
     }
 
     protected Integer getMax() {
-        if (params.max) return Integer.parseInt(params.max as String)
-        return 10
+        if (!params.max) return 10 
+        return Integer.parseInt(params.max as String)
     }
 }
