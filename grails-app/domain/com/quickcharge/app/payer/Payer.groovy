@@ -28,7 +28,7 @@ class Payer extends BasePerson {
     }
 
     static Payer getById(Long id, Long customerId) {
-        Payer payment = Payer.query([id: id, customerId: customerId]).get()
+        Payer payment = Payer.query([id: id, customerId: customerId, includeDeleted: true]).get()
         if (payment) return payment
 
         Payer validatedPayer = new Payer()
