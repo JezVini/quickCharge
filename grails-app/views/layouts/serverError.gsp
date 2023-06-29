@@ -25,19 +25,18 @@
         <g:layoutHead/>
     </head>
 
-    <body class="body">
-        <header class="header">
+    <body class="external-container">
+        <header class="external-header">
             <g:link controller="login" action="auth">
-                <asset:image src="logo/quickChargeNormalWhite.svg" class="logo"/>
+                <asset:image src="logo/quickChargeNormalWhite.svg" class="external-header-logo"/>
             </g:link>
         </header>
 
-        <main class="main">
+        <main class="external-main-container">
             <g:layoutBody/>
         </main>
 
-        <footer class="footer">
+        <footer class="external-footer">
             <p>Feito com <span class="heart">❤️</span> por Jezreel Moraes e Vinícius Wille</p>
         </footer>
-    </body>
 </html>
