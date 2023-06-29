@@ -21,7 +21,8 @@
                                             value="${payer.name}"
                                             size="md"
                                             placeholder="Digite o nome"
-                                            required></atlas-input>
+                                            required
+                                            ${(payer.deleted) ? "disabled" : ""}></atlas-input>
                                     </atlas-col>
                                     <atlas-col lg="3">
                                         <atlas-masked-input
@@ -31,7 +32,8 @@
                                             value="${payer.email}"
                                             size="md"
                                             placeholder="Digite o e-mail"
-                                            required></atlas-masked-input>
+                                            required
+                                            ${(payer.deleted) ? "disabled" : ""}></atlas-masked-input>
                                     </atlas-col>
                                 </atlas-row>
 
@@ -43,7 +45,8 @@
                                             name="cpfCnpj"
                                             value="<g:formatCpfCnpj value='${payer.cpfCnpj}'/>"
                                             size="md"
-                                            required></atlas-masked-input>
+                                            required
+                                            ${(payer.deleted) ? "disabled" : ""}></atlas-masked-input>
                                     </atlas-col>
                                     <atlas-col lg="2">
                                         <atlas-masked-input
@@ -52,7 +55,8 @@
                                             name="phone"
                                             value="<g:formatPhone value='${payer.phone}'/>"
                                             size="md"
-                                            required></atlas-masked-input>
+                                            required
+                                            ${(payer.deleted) ? "disabled" : ""}></atlas-masked-input>
                                     </atlas-col>
                                 </atlas-row>
                             </atlas-grid>
@@ -68,6 +72,7 @@
                                             value="<g:formatCep value='${payer.postalCode}'/>"
                                             size="md"
                                             required
+                                            ${(payer.deleted) ? "disabled" : ""}
                                             disable-search
                                             placeholder="Digite o CEP"
                                             onblur="cepSearch(this.value)"></atlas-postal-code>
@@ -84,7 +89,8 @@
                                             size="md"
                                             maxlength="2"
                                             placeholder="Digite o estado"
-                                            required></atlas-input>
+                                            required
+                                            ${(payer.deleted) ? "disabled" : ""}></atlas-input>
                                     </atlas-col>
 
                                     <atlas-col lg="2">
@@ -95,7 +101,8 @@
                                             value="${payer.city}"
                                             size="md"
                                             placeholder="Digite a cidade"
-                                            required></atlas-input>
+                                            required
+                                            ${(payer.deleted) ? "disabled" : ""}></atlas-input>
                                     </atlas-col>
 
                                     <atlas-col lg="2">
@@ -106,7 +113,8 @@
                                             value="${payer.district}"
                                             size="md"
                                             placeholder="Digite o bairro"
-                                            required></atlas-input>
+                                            required
+                                            ${(payer.deleted) ? "disabled" : ""}></atlas-input>
                                     </atlas-col>
                                 </atlas-row>
 
@@ -119,7 +127,8 @@
                                             value="${payer.address}"
                                             size="md"
                                             placeholder="Digite a rua"
-                                            required></atlas-input>
+                                            required
+                                            ${(payer.deleted) ? "disabled" : ""}></atlas-input>
                                     </atlas-col>
 
                                     <atlas-col lg="2">
@@ -129,7 +138,8 @@
                                             value="${payer.addressNumber}"
                                             size="md"
                                             placeholder="Digite o número"
-                                            required></atlas-input>
+                                            required
+                                            ${(payer.deleted) ? "disabled" : ""}></atlas-input>
                                     </atlas-col>
 
                                     <atlas-col lg="3">
@@ -138,12 +148,15 @@
                                             name="addressComplement"
                                             value="${payer.addressComplement}"
                                             size="md"
-                                            placeholder="Digite o complemento"></atlas-input>
+                                            placeholder="Digite o complemento"
+                                            ${(payer.deleted) ? "disabled" : ""}></atlas-input>
                                     </atlas-col>
                                 </atlas-row>
-                                <atlas-button submit
-                                              size="md"
-                                              description="Salvar"></atlas-button>
+                                <atlas-button
+                                    submit
+                                    size="md"
+                                    description="Salvar"
+                                    ${(payer.deleted) ? ("disabled") : ""}></atlas-button>
                             </atlas-grid>
                         </atlas-section>
                     </atlas-layout>

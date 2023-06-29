@@ -49,7 +49,7 @@ class GeneralButtonsTagLib {
             icon       : "check"
         ])
 
-        if (payment.status.canUpdate()) {
+        if (payment.status.canUpdate() && !payment.deleted) {
             paymentSaveButtonAttributes.putAll([
                 tooltip: "Clique para salvar!",
                 submit : true
