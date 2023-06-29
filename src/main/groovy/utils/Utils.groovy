@@ -1,6 +1,7 @@
 package utils
 
 import javax.swing.text.MaskFormatter
+import java.text.DecimalFormat
 import java.util.regex.Pattern
 
 class Utils {
@@ -42,5 +43,22 @@ class Utils {
         MaskFormatter maskFormatter = new MaskFormatter(mask)
         maskFormatter.setValueContainsLiteralCharacters(false)
         return maskFormatter.valueToString(cpfCnpj)
+    }
+    
+    public static String getWordInString(String text, Integer wordPosition) {
+        String[] words = text.split("\\s+")
+        return words[wordPosition]
+    }
+    
+    public static String formatNumberSeparatorWithComma(Double value) {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00")
+        return decimalFormat.format(value)
+    }
+
+    public static String formatCep(String cep) {
+        String mask = "#####-###"
+        MaskFormatter maskFormatter = new MaskFormatter(mask)
+        maskFormatter.setValueContainsLiteralCharacters(false)
+        return maskFormatter.valueToString(cep)
     }
 }
