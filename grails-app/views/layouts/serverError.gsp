@@ -1,5 +1,3 @@
-<%@ page import="utils.message.MessageType" %>
-<!doctype html>
 <html lang="pt-br" class="no-js">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -39,4 +37,5 @@
         <footer class="external-footer">
             <p>Feito com <span class="heart">❤️</span> por Jezreel Moraes e Vinícius Wille</p>
         </footer>
+    </body>
 </html>
