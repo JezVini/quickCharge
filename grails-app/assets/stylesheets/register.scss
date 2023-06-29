@@ -1,0 +1,10 @@
+.register-container {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 2rem;
+    
+    .register-form-container {
+        max-width: 800px;
+        width: 54vw;
+    }
+}
