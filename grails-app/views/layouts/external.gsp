@@ -1,3 +1,4 @@
+<%@ page import="utils.message.MessageType" %>
 <!doctype html>
 <html lang="pt-br" class="no-js">
     <head>
@@ -12,32 +13,35 @@
         <link rel="stylesheet" href="https://atlas.asaas.com/v9.2.0/atlas.css"
               integrity="sha384-YmA7EnYqhHBpt32Gq7QBxbKy8jWbw5qIYu8f++Wl+PpqKTRmK+Pw+VKItsPpmLJI"
               crossorigin="anonymous">
+
         <script defer src="https://atlas.asaas.com/v9.2.0/atlas.js"
                 integrity="sha384-9ousY7CNvMeUL2TT4DpJcImS2zvyMrsHUywHo++f3XItWZHc+c/6u7pyFqIEp/Jx"
                 crossorigin="anonymous"></script>
 
         <asset:stylesheet src="atlas-colors/colors.css"/>
         <asset:stylesheet src="main/main.css.css"/>
+        <asset:stylesheet src="external.css"/>
         <asset:stylesheet src="alert.css"/>
-        <asset:javascript src="pages/currentPage.js"/>
-        <asset:javascript src="sidebar/SidebarController.js"/>
         <asset:javascript src="alert.js"/>
+        <asset:javascript src="pages/currentPage.js"/>
 
         <g:layoutHead/>
     </head>
 
-    <body>
-        <atlas-screen>
-            <sideBar:render/>
-            <atlas-page>
-            <atlas-page-header slot="header" page-name="<breadcrumb:activePageName/>"></atlas-page-header>
-                </atlas-page-header>
-                <atlas-page-content slot="content" class="js-atlas-content">
-                    <alertTagLib:renderAlert/>
-                    <breadcrumb:render/>
-                    <g:layoutBody/>
-                </atlas-page-content>
-            </atlas-page>
-        </atlas-screen>
+    <body class="external-container">
+        <header class="external-header">
+            <g:link controller="login" action="auth">
+                <asset:image src="logo/quickChargeNormalWhite.svg" class="external-header-logo"/>
+            </g:link>
+        </header>
+
+        <main class="external-main-container">
+            <alertTagLib:renderAlert/>
+            <g:layoutBody/>
+        </main>
+
+        <footer class="external-footer">
+            <p>Feito com <span class="heart">❤️</span> por Jezreel Moraes e Vinícius Wille</p>
+        </footer>
     </body>
 </html>
