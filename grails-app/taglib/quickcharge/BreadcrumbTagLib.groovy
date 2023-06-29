@@ -4,9 +4,13 @@ class BreadcrumbTagLib {
     static namespace = "breadcrumb"
 
     def render = { attrs ->
-        List<Map> breadcrumbList = generateBreadcrumbList()
+        out << g.render(template: "/shared/templates/breadcrumb", model: [breadcrumbList: flash.breadcrumbList])
+    }
 
-        out << g.render(template: "/shared/templates/breadcrumb", model: [breadcrumbList: breadcrumbList])
+    def activePageName = { attrs ->
+        List<Map> breadcrumbList = generateBreadcrumbList()
+        flash.breadcrumbList = breadcrumbList
+        out << (!breadcrumbList.isEmpty() ? breadcrumbList.get(breadcrumbList.size() - 1).name : "").toString()
     }
 
     private List<Map> generateBreadcrumbList() {
