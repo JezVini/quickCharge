@@ -9,8 +9,8 @@ class UtilsTagLib {
     }
 
     def formatMonetaryValue = { attrs ->
-        String valueWithComma = Utils.formatNumberSeparatorWithComma(attrs.value as Double)
-        out << 'R$ ' + valueWithComma
+        String valueWithComma = Utils.formatNumberToMonetary(attrs.value as Double)
+        out << 'R$: ' + valueWithComma
     }
 
     def formatCpfCnpj = { attrs ->
