@@ -23,7 +23,6 @@ class PaymentController extends BaseController {
         } catch (Exception exception) {
             error("Ocorreu um erro ao buscar cobranças")
             log.error("PaymentController.index >> Erro ao consultar cobranças com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
-            throw new Exception()
         }
     }
 
@@ -42,7 +41,6 @@ class PaymentController extends BaseController {
         } catch (Exception exception) {
             error("Ocorreu um erro ao criar cobrança")
             log.error("PaymentController.save >> Erro ao salvar cobrança com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
-            throw new Exception()
         }
     }
 
@@ -55,7 +53,6 @@ class PaymentController extends BaseController {
         } catch (Exception exception) {
             error("Ocorreu um erro ao remover cobrança")
             log.error("PaymentController.delete >> Erro ao remover cobrança com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
-            throw new Exception()
         } finally {
             redirect([
                 action: "index",
@@ -76,7 +73,6 @@ class PaymentController extends BaseController {
         } catch (Exception exception) {
             error("Ocorreu um erro ao restaurar cobrança")
             log.error("PaymentController.restore >> Erro ao restaurar cobrança com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
-            throw new Exception()
         } finally {
             redirect([
                 action: "index",
@@ -97,7 +93,6 @@ class PaymentController extends BaseController {
         } catch (Exception exception) {
             error("Ocorreu um erro ao confirmar recebimento em dinheiro")
             log.error("PaymentController.receivedInCash >> Erro ao confirmar recebimento em dinheiro com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
-            throw new Exception()
         } finally {
             redirect([
                 action: "index",
@@ -115,7 +110,6 @@ class PaymentController extends BaseController {
         } catch (Exception exception) {
             error("Ocorreu um erro ao buscar dados da cobrança")
             log.error("PaymentController.edit >> Erro ao consultar cobrança com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
-            throw new Exception()
         }
     }
 
@@ -130,7 +124,6 @@ class PaymentController extends BaseController {
         } catch (Exception exception) {
             error("Ocorreu um erro ao alterar cobrança")
             log.error("PaymentController.update >> Erro ao alterar cobrança com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
-            throw new Exception()
         }
     }
 }

@@ -17,7 +17,6 @@ class PayerController extends BaseController {
         } catch (Exception exception) {
             error("Ocorreu um erro ao buscar dados do cliente")
             log.error("PayerController.edit >> Erro ao consultar pagador com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
-            throw new Exception()
         }
     }
 
@@ -36,7 +35,6 @@ class PayerController extends BaseController {
         } catch (Exception exception) {
             error("Ocorreu um erro ao buscar clientes")
             log.error("PayerController.index >> Erro ao consultar pagadores com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
-            throw new Exception()
         }
     }
     
@@ -49,7 +47,6 @@ class PayerController extends BaseController {
         } catch (Exception exception) {
             error("Ocorreu um erro ao remover cliente")
             log.error("PayerController.delete >> Erro ao remover pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
-            throw new Exception()
         } finally {
             redirect([
                 action: "index",
@@ -70,7 +67,6 @@ class PayerController extends BaseController {
         } catch (Exception exception) {
             error("Ocorreu um erro ao restaurar cliente")
             log.error("PayerController.restore >> Erro ao restaurar pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
-            throw new Exception()
         } finally {
             redirect([
                 action: "index",
@@ -93,7 +89,6 @@ class PayerController extends BaseController {
         } catch (Exception exception) {
             error("Ocorreu um erro ao criar cliente")
             log.error("PayerController.save >> Erro ao salvar pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
-            throw new Exception()
         }
     }
     
@@ -106,7 +101,6 @@ class PayerController extends BaseController {
         } catch (Exception exception) {
             error("Ocorreu um erro ao alterar cliente")
             log.error("PayerController.update >> Erro ao alterar pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
-            throw new Exception()
         } finally {
             redirect([
                 action: "edit",

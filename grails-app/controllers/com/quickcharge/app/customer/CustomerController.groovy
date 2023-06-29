@@ -29,7 +29,6 @@ class CustomerController extends BaseController {
         } catch (Exception exception) {
             error("Ocorreu um erro ao criar conta")
             log.error("CustomerController.save >> Erro ao salvar conta com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
-            throw new Exception()
         }
     }
 
@@ -44,7 +43,6 @@ class CustomerController extends BaseController {
         } catch (Exception exception) {
             error("Ocorreu um erro ao alterar cadastro")
             log.error("CustomerController.save >> Erro ao alterar cadastro com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
-            throw new Exception()
         }
     }
 }
