@@ -55,28 +55,52 @@
                                             </atlas-row>
 
                                             <atlas-row margin-bottom="5">
-                                                <atlas-col lg="4">
-                                                    <atlas-money
-                                                        id="paymentValue"
-                                                        label="Valor da cobrança"
-                                                        value="<g:formatNumberSeparatorWithComma
-                                                            value='${payment.value}'/>"
-                                                        name="value"
-                                                        min-value="5"
-                                                        min-value-error-message="O valor mínimo é 5 reais"
-                                                        required></atlas-money>
+                                                <atlas-col lg="6">
+                                                    <g:if test="${payment.status.canUpdate()}">
+                                                        <atlas-money
+                                                            label="Valor da cobrança"
+                                                            value="<g:formatNumberSeparatorWithComma
+                                                                value='${payment.value}'/>"
+                                                            name="value"
+                                                            min-value="5"
+                                                            min-value-error-message="O valor mínimo é 5 reais"
+                                                            required></atlas-money>
+                                                    </g:if>
+                                                    <g:else>
+                                                        <atlas-money
+                                                            label="Valor da cobrança"
+                                                            value="<g:formatNumberSeparatorWithComma
+                                                                value='${payment.value}'/>"
+                                                            name="value"
+                                                            min-value="5"
+                                                            min-value-error-message="O valor mínimo é 5 reais"
+                                                            required
+                                                            disabled></atlas-money>
+                                                    </g:else>
                                                 </atlas-col>
 
-                                                <atlas-col lg="4">
-                                                    <atlas-datepicker
-                                                        id="paymentDueDate"
-                                                        label="Data de vencimento"
-                                                        value="${g.formatDate(format: "dd/MM/yyyy", date: payment.dueDate)}}"
-                                                        name="dueDate"
-                                                        icon="calendar"
-                                                        prevent-past-date
-                                                        required-error-message="Necessário preencher"
-                                                        required></atlas-datepicker>
+                                                <atlas-col lg="6">
+                                                    <g:if test="${payment.status.canUpdate()}">
+                                                        <atlas-datepicker
+                                                            label="Data de vencimento"
+                                                            value="${g.formatDate(format: "dd/MM/yyyy", date: payment.dueDate)}}"
+                                                            name="dueDate"
+                                                            icon="calendar"
+                                                            prevent-past-date
+                                                            required-error-message="Necessário preencher"
+                                                            required></atlas-datepicker>
+                                                    </g:if>
+                                                    <g:else>
+                                                        <atlas-datepicker
+                                                            label="Data de vencimento"
+                                                            value="${g.formatDate(format: "dd/MM/yyyy", date: payment.dueDate)}}"
+                                                            name="dueDate"
+                                                            icon="calendar"
+                                                            prevent-past-date
+                                                            required-error-message="Necessário preencher"
+                                                            required
+                                                            disabled></atlas-datepicker>
+                                                    </g:else>
                                                 </atlas-col>
                                             </atlas-row>
                                         </atlas-col>
@@ -107,16 +131,5 @@
                 </atlas-panel>
             </g:if>
         </main>
-        
-        <script>
-            if ("${payment.status.isReceived()}") {
-                var paymentDueDateInput = document.getElementById("paymentDueDate");
-                var paymentValueInput = document.getElementById("paymentValue");
-
-                paymentDueDateInput.setAttribute("disabled", "true");
-                paymentValueInput.setAttribute("disabled", "true");
-            }
-
-        </script>
     </body>
 </html>

@@ -13,7 +13,7 @@
                     <atlas-section header="Dados pessoais">
                         <atlas-grid>
                             <atlas-row>
-                                <atlas-col lg="6">
+                                <atlas-col lg="3">
                                     <atlas-input
                                         label="Nome"
                                         name="name"
@@ -22,25 +22,23 @@
                                         placeholder="Digite o nome"
                                         required></atlas-input>
                                 </atlas-col>
-
-                                <atlas-col lg="6">
-                                    <atlas-masked-input
-                                        mask-alias="phone"
-                                        label="Telefone ou celular"
-                                        name="phone"
-                                        value="<g:formatPhone value='${customer.phone}'/>"
-                                        size="md"
-                                        required></atlas-masked-input>
-                                </atlas-col>
-                            </atlas-row>
-
-                            <atlas-row>
-                                <atlas-col lg="6">
+                                
+                                <atlas-col lg="2">
                                     <atlas-masked-input
                                         mask-alias="cpf-cnpj"
                                         label="CPF ou CNPJ"
                                         name="cpfCnpj"
                                         value="<g:formatCpfCnpj value='${customer.cpfCnpj}'/>"
+                                        size="md"
+                                        required></atlas-masked-input>
+                                </atlas-col>
+                                
+                                <atlas-col lg="2">
+                                    <atlas-masked-input
+                                        mask-alias="phone"
+                                        label="Telefone ou celular"
+                                        name="phone"
+                                        value="<g:formatPhone value='${customer.phone}'/>"
                                         size="md"
                                         required></atlas-masked-input>
                                 </atlas-col>
@@ -51,7 +49,7 @@
                     <atlas-section header="Dados de endereço">
                         <atlas-grid>
                             <atlas-row>
-                                <atlas-col lg="4">
+                                <atlas-col lg="2">
                                     <atlas-postal-code
                                         label="CEP"
                                         name="postalCode"
@@ -62,8 +60,10 @@
                                         placeholder="Digite o CEP"
                                         onblur="cepSearch(this.value)"></atlas-postal-code>
                                 </atlas-col>
+                            </atlas-row>
 
-                                <atlas-col lg="4">
+                            <atlas-row>
+                                <atlas-col lg="2">
                                     <atlas-input
                                         label="Estado"
                                         name="state"
@@ -75,7 +75,7 @@
                                         required></atlas-input>
                                 </atlas-col>
 
-                                <atlas-col lg="4">
+                                <atlas-col lg="2">
                                     <atlas-input
                                         label="Cidade"
                                         name="city"
@@ -85,10 +85,8 @@
                                         placeholder="Digite a cidade"
                                         required></atlas-input>
                                 </atlas-col>
-                            </atlas-row>
 
-                            <atlas-row>
-                                <atlas-col lg="4">
+                                <atlas-col lg="2">
                                     <atlas-input
                                         label="Bairro"
                                         name="district"
@@ -98,8 +96,10 @@
                                         placeholder="Digite o bairro"
                                         required></atlas-input>
                                 </atlas-col>
+                            </atlas-row>
 
-                                <atlas-col lg="4">
+                            <atlas-row>
+                                <atlas-col lg="2">
                                     <atlas-input
                                         label="Rua"
                                         name="address"
@@ -110,7 +110,7 @@
                                         required></atlas-input>
                                 </atlas-col>
 
-                                <atlas-col lg="4">
+                                <atlas-col lg="2">
                                     <atlas-input
                                         label="Número"
                                         name="addressNumber"
@@ -119,21 +119,23 @@
                                         placeholder="Digite o número"
                                         required></atlas-input>
                                 </atlas-col>
-                            </atlas-row>
-                            <atlas-input
-                                label="Complemento"
-                                name="addressComplement"
-                                value="${customer.addressComplement}"
-                                size="md"
-                                placeholder="Digite o complemento"></atlas-input>
 
+                                <atlas-col lg="3">
+                                    <atlas-input
+                                        label="Complemento"
+                                        name="addressComplement"
+                                        value="${customer.addressComplement}"
+                                        size="md"
+                                        placeholder="Digite o complemento"></atlas-input>
+                                </atlas-col>
+                            </atlas-row>
                             <atlas-button submit
                                           size="md"
-                                          description="Salvar"
-                                          block></atlas-button>
+                                          description="Salvar"></atlas-button>
                         </atlas-grid>
                     </atlas-section>
                 </atlas-layout>
+            </atlas-form>
             </atlas-form>
         </atlas-panel>
     </body>
