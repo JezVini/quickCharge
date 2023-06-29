@@ -17,6 +17,7 @@ class PayerController extends BaseController {
         } catch (Exception exception) {
             error("Ocorreu um erro ao buscar dados do cliente")
             log.error("PayerController.edit >> Erro ao consultar pagador com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            redirect(uri: request.getHeader('referer'))
         }
     }
 
@@ -35,6 +36,7 @@ class PayerController extends BaseController {
         } catch (Exception exception) {
             error("Ocorreu um erro ao buscar clientes")
             log.error("PayerController.index >> Erro ao consultar pagadores com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            redirect(uri: request.getHeader('referer'))
         }
     }
     
@@ -89,6 +91,7 @@ class PayerController extends BaseController {
         } catch (Exception exception) {
             error("Ocorreu um erro ao criar cliente")
             log.error("PayerController.save >> Erro ao salvar pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            redirect([action: "create", params: params])
         }
     }
     
