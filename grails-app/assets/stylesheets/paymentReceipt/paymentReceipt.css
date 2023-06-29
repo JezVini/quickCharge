@@ -41,7 +41,7 @@
     margin: 0;
 }
 
-.headerContent h1 {
+.headerContent .headerTitle {
     font-size: 1.6em;
 }
 
@@ -51,7 +51,7 @@
     font-size: 0.9em;
 }
 
-.mainContent h2 {
+.mainContent .mainSubtitle {
     margin-top: 0;
 }
 
@@ -74,17 +74,17 @@
     padding: 0.5em;
 }
 
-.footerContent p {
+.footerContent .footerDescription {
     text-align: center;
     margin: 0;
 }
 
-.footerContent a {
+.footerContent .footerLink {
     text-decoration: none;
     color: white;
 }
 
-.footerContent a:hover {
+.footerContent .footerLink:hover {
     color: #f0f0f0;
     text-decoration: underline;
 }

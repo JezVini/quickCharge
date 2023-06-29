@@ -10,7 +10,7 @@
             <div class="mainContainer">
                 <header class="headerContent">
                     <div class="headerInfo">
-                        <h1>Comprovante de pagamento</h1>
+                        <h1 class="headerTitle">Comprovante de pagamento</h1>
 
                         <p>
                             Gerado dia ${g.formatDate(format: "dd/MM/yyyy", date: receipt.dateCreated)},
@@ -31,7 +31,7 @@
 
                 <main class="mainContent">
                     <div class="infoBlock separator">
-                        <h2>Dados do pagamento</h2>
+                        <h2 class="mainSubtitle">Dados do pagamento</h2>
 
                         <div>
                             <p><strong>Forma de pagamento:</strong>
@@ -39,7 +39,7 @@
                             </p>
 
                             <p><strong>Valor pago:</strong>
-                                R$ ${String.format("%.2f", receipt.payment.value)} reais
+                                <g:formatMonetaryValue value="${receipt.payment.value}"/>
                             </p>
 
                             <p><strong>Data de vencimento:</strong>
@@ -53,34 +53,34 @@
                     </div>
 
                     <div class="infoBlock separator">
-                        <h2>Dados do pagador</h2>
+                        <h2 class="mainSubtitle">Dados do pagador</h2>
 
                         <div>
                             <p><strong>Nome:</strong> ${receipt.payment.payer.name}</p>
 
-                            <p><strong>CPF/CNPJ:</strong> ${receipt.payment.payer.cpfCnpj}</p>
+                            <p><strong>CPF/CNPJ:</strong> <g:formatCpfCnpj value="${receipt.payment.payer.cpfCnpj}"/></p>
                         </div>
                     </div>
 
                     <div class="infoBlock">
-                        <h2>Dados do beneficiário</h2>
+                        <h2 class="mainSubtitle">Dados do beneficiário</h2>
 
                         <div>
                             <p><strong>Nome:</strong> ${receipt.payment.customer.name}</p>
 
-                            <p><strong>CPF/CNPJ:</strong> ${receipt.payment.customer.cpfCnpj}</p>
+                            <p><strong>CPF/CNPJ:</strong> <g:formatCpfCnpj value="${receipt.payment.customer.cpfCnpj}"/></p>
                         </div>
                     </div>
                 </main>
 
                 <footer class="footerContent">
-                    <p>
+                    <p class="footerDescription">
                         Este documento e cobrança não possuem valor fiscal e são de responsabilidade única e exclusiva
                         de ${receipt.payment.customer.name}
                     </p>
 
                     <strong>
-                        Cobrança realizada via <a href="https://github.com/JezVini/quickCharge">QuickCharge ❤</a>
+                        Cobrança realizada via <a class="footerLink" href="https://github.com/JezVini/quickCharge">QuickCharge ❤</a>
                     </strong>
                 </footer>
             </div>
