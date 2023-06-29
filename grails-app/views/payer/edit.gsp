@@ -31,7 +31,7 @@
                     mask-alias="cpf-cnpj"
                     label="CPF ou CNPJ"
                     name="cpfCnpj"
-                    value="${payer.cpfCnpj}"
+                    value="<g:formatCpfCnpj value='${payer.cpfCnpj}'/>"
                     size="md"
                     required></atlas-masked-input>
 
@@ -39,14 +39,14 @@
                     mask-alias="phone"
                     label="Telefone ou celular"
                     name="phone"
-                    value="${payer.phone}"
+                    value="<g:formatPhone value='${payer.phone}'/>"
                     size="md"
                     required></atlas-masked-input>
 
                 <atlas-postal-code
                     label="CEP"
                     name="postalCode"
-                    value="${payer.postalCode}"
+                    value="<g:formatCep value='${payer.postalCode}'/>"
                     size="md"
                     required
                     disable-search

@@ -12,7 +12,7 @@
                 <atlas-form action="${createLink(controller: "payment", action: "update")}" method="post">
                     <atlas-layout gap="4">
                         <atlas-input type="hidden" name="id" value="${payment.id}"></atlas-input>
-
+                        
                         <atlas-input
                             label="Cliente"
                             value="${payment.payer.name}"
@@ -21,7 +21,7 @@
 
                         <atlas-money
                             label="Valor da cobrança"
-                            value="${payment.value}"
+                            value="<g:formatNumberSeparatorWithComma value='${payment.value}'/>"
                             name="value"
                             min-value="5"
                             min-value-error-message="O valor mínimo é 5 reais"
