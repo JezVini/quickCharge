@@ -21,8 +21,14 @@
                         <tr class="pagination-table-data-row ${payer.deleted ? 'deleted' : ''}">
                             <td class="pagination-table-column-data">${payer.name}</td>
                             <td class="pagination-table-column-data">${payer.email}</td>
-                            <td class="pagination-table-column-data pagination-data-value"><g:formatCpfCnpj value='${payer.cpfCnpj}'/></td>
-                            <td class="pagination-table-column-data pagination-data-value"><g:formatPhone value='${payer.phone}'/></td>
+
+                            <td class="pagination-table-column-data pagination-data-value">
+                                <g:formatCpfCnpj value='${payer.cpfCnpj}'/>
+                            </td>
+
+                            <td class="pagination-table-column-data pagination-data-value">
+                                <g:formatPhone value='${payer.phone}'/>
+                            </td>
 
                             <pagination:payerActions
                                 payer="${payer}"
