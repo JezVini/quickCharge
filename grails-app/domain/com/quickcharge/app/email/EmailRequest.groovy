@@ -20,6 +20,7 @@ class EmailRequest extends BaseEntity {
 
     static mapping = {
         html sqlType: 'longText'
+        errorMessage sqlType: 'longText'
     }
 
     static namedQueries = {

@@ -57,6 +57,7 @@
                                             <atlas-row margin-bottom="5">
                                                 <atlas-col lg="4">
                                                     <atlas-money
+                                                        id="paymentValue"
                                                         label="Valor da cobrança"
                                                         value="<g:formatNumberSeparatorWithComma
                                                             value='${payment.value}'/>"
@@ -67,13 +68,15 @@
                                                 </atlas-col>
 
                                                 <atlas-col lg="4">
-                                                    <atlas-datepicker label="Data de vencimento"
-                                                                      value="${g.formatDate(format: "dd/MM/yyyy", date: payment.dueDate)}}"
-                                                                      name="dueDate"
-                                                                      icon="calendar"
-                                                                      prevent-past-date
-                                                                      required-error-message="Necessário preencher"
-                                                                      required></atlas-datepicker>
+                                                    <atlas-datepicker
+                                                        id="paymentDueDate"
+                                                        label="Data de vencimento"
+                                                        value="${g.formatDate(format: "dd/MM/yyyy", date: payment.dueDate)}}"
+                                                        name="dueDate"
+                                                        icon="calendar"
+                                                        prevent-past-date
+                                                        required-error-message="Necessário preencher"
+                                                        required></atlas-datepicker>
                                                 </atlas-col>
                                             </atlas-row>
                                         </atlas-col>
@@ -92,12 +95,11 @@
                                         <atlas-col lg="1">
                                             <generalButtons:paymentSave payment="${payment}"/>
                                         </atlas-col>
-                                        
+
                                         <atlas-col lg="1">
                                             <generalButtons:paymentReceipt payment="${payment}"/>
                                         </atlas-col>
                                     </atlas-row>
-                                    
                                 </atlas-grid>
                             </atlas-section>
                         </atlas-layout>
@@ -105,5 +107,16 @@
                 </atlas-panel>
             </g:if>
         </main>
+        
+        <script>
+            if ("${payment.status.isReceived()}") {
+                var paymentDueDateInput = document.getElementById("paymentDueDate");
+                var paymentValueInput = document.getElementById("paymentValue");
+
+                paymentDueDateInput.setAttribute("disabled", "true");
+                paymentValueInput.setAttribute("disabled", "true");
+            }
+
+        </script>
     </body>
 </html>

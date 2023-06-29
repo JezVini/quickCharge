@@ -53,7 +53,7 @@
                 <th>Situação</th>
                 <th>Ações</th>
             </tr>
-            <g:if test="${paymentList}">
+            <g:if test="${!paymentList.isEmpty()}">
                 <g:each in="${paymentList}" var="payment">
 
                     <%
