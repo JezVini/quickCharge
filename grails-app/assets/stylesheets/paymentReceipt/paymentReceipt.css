@@ -1,0 +1,90 @@
+.bodyContent {
+    font-family: 'Open Sans', Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.mainContainer {
+    box-shadow: rgba(149, 157, 165, 0.2) 0 0 4px;
+    background-color: #f0f0f0;
+    font-size: 0.9em;
+    max-width: 95%;
+}
+
+.headerContent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: max-content;
+    padding: 1em;
+}
+
+.headerInfo {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.customerHeader {
+    max-width: 45%;
+    font-size: small;
+    padding: 0.5em;
+}
+
+.customerHeaderInfo {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    margin: 0;
+}
+
+.headerContent .headerTitle {
+    font-size: 1.6em;
+}
+
+.mainContent {
+    background-color: white;
+    padding: 1em;
+    font-size: 0.9em;
+}
+
+.mainContent .mainSubtitle {
+    margin-top: 0;
+}
+
+.infoBlock {
+    padding: 1em 1em 0 1em;
+}
+
+.separator {
+    border-bottom: solid rgba(0, 0, 0, 0.5) 1px;
+}
+
+.footerContent {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    font-size: small;
+    background-color: black;
+    color: white;
+    padding: 0.5em;
+}
+
+.footerContent .footerDescription {
+    text-align: center;
+    margin: 0;
+}
+
+.footerContent .footerLink {
+    text-decoration: none;
+    color: white;
+}
+
+.footerContent .footerLink:hover {
+    color: #f0f0f0;
+    text-decoration: underline;
+}

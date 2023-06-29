@@ -10,7 +10,7 @@
 
     <body>
 
-        <div class="content-container">
+        <div class="register-container">
             <atlas-button
                 type="filled"
                 size="md"
@@ -20,7 +20,7 @@
                 href="${createLink(controller: "login", action: "auth")}">
             </atlas-button>
 
-            <div class="form-container">
+            <div class="register-form-container">
                 <atlas-panel header="Criar conta">
                     <atlas-form action="${createLink(controller: "customer", action: "save")}" method="post">
                         <atlas-layout gap="4">

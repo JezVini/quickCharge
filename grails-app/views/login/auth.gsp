@@ -44,7 +44,7 @@
                                 submit>
                             </atlas-button>
 
-                            <atlas-text class="or-text" muted>ou então</atlas-text>
+                            <atlas-text class="login-or-text" muted>ou então</atlas-text>
 
                             <atlas-button
                                 block=""
@@ -57,7 +57,7 @@
                         </atlas-layout>
                     </atlas-layout>
 
-                    <div class="spacement"></div>
+                    <div class="login-footer-spacing"></div>
                 </atlas-form>
             </atlas-panel>
         </div>
