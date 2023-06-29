@@ -1,4 +1,4 @@
-<div class="pagination-container">
+<div class="pagination-controllers-container">
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -16,7 +16,7 @@
         })
     </script>
 
-    <div class="pagination-select-range">
+    <div class="pagination-range-select-controller">
         <span>Exibindo</span>
 
         <div class="select-wrap">
@@ -31,10 +31,10 @@
         <span>registros</span>
     </div>
 
-    <div class="pagination-controllers">
-        <div class="pagination-buttons-container">
+    <div class="pagination-page-controllers">
+        <div class="pagination-page-buttons-container">
             <g:each in="${buttonList}" var="button">
-                <span class="button-background">
+                <span class="pagination-page-button-background">
                     <atlas-button type="${button.type}" size="md" theme="primary"
                                   description="${button.number}"
                                   class="${button.class}"

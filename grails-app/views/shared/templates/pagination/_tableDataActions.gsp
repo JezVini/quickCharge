@@ -1,4 +1,4 @@
-<td class="table-data actions">
+<td class="pagination-table-column-data pagination-data-actions">
     <g:each in="${actionMap}" var="actionName, action">
         <atlas-button size="sm" class="action"
                       type="${action.type}"
