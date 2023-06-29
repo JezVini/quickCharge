@@ -141,11 +141,12 @@ class PaginationTagLib {
                 theme   : "primary",
                 icon    : "file-text",
             ],
-            edit         : [
-                type    : "filled",
-                disabled: "disabled",
-                theme   : "secondary",
-                icon    : "pencil",
+            showEdit     : [
+                type   : "filled",
+                theme  : "secondary",
+                tooltip: "Visualizar cobrança",
+                href   : createLink(action: 'edit', params: [id: attrs.parameterMap.id]),
+                icon   : "eye",
             ],
             receiveInCash: [
                 type    : "filled",
@@ -169,10 +170,9 @@ class PaginationTagLib {
 
         if (attrs.payment.status.isReceived()) {
             actionMap.restore.tooltip = "Cobrança recebida"
-            actionMap.edit.tooltip = "Cobrança recebida"
             actionMap.receiveInCash.tooltip = "Cobrança recebida"
             actionMap.delete.tooltip = "Cobrança recebida"
-            
+
             Map params = [paymentReceiptUniqueId: attrs.payment.getPaymentReceiptUniqueId()]
             actionMap.receipt += [
                 tooltip : "Visualizar comprovante",
@@ -182,13 +182,12 @@ class PaginationTagLib {
 
             return actionMap
         }
-        
+
         if (attrs.payment.deleted) {
             actionMap.receipt.tooltip = "Cobrança removida"
-            actionMap.edit.tooltip = "Cobrança removida"
             actionMap.receiveInCash.tooltip = "Cobrança removida"
             actionMap.delete.tooltip = "Cobrança removida"
-        
+
             actionMap.restore += [
                 disabled: "",
                 tooltip : "Restaurar",
@@ -199,12 +198,11 @@ class PaginationTagLib {
         }
 
         actionMap.receipt.tooltip = "Cobrança não recebida"
-        actionMap.restore.tooltip = "Cobrança não removida"        
-        
-        actionMap.edit += [
-            tooltip : "Editar",
-            disabled: "",
-            href    : createLink(action: 'edit', params: attrs.parameterMap)
+        actionMap.restore.tooltip = "Cobrança não removida"
+
+        actionMap.showEdit += [
+            tooltip: "Editar",
+            icon   : "pencil",
         ]
 
         actionMap.receiveInCash += [
@@ -247,9 +245,9 @@ class PaginationTagLib {
         ]
 
         if (attrs.payer.deleted) {
-            actionMap.edit.tooltip = "Cliente removido"
+            actionMap.showEdit.tooltip = "Cliente removido"
             actionMap.delete.tooltip = "Cliente removido"
-            
+
             actionMap.restore += [
                 tooltip : "Restaurar",
                 disabled: "",
@@ -260,8 +258,8 @@ class PaginationTagLib {
         }
 
         actionMap.restore.tooltip = "Cliente não removido"
-        
-        actionMap.edit += [
+
+        actionMap.showEdit += [
             tooltip : "Editar",
             disabled: "",
             href    : createLink(action: 'edit', params: attrs.parameterMap)
