@@ -224,19 +224,20 @@ class PaginationTagLib {
         attrs.parameterMap.id = attrs.payer.id
 
         Map actionMap = [
-            edit   : [
-                type    : "filled",
-                disabled: "disabled",
-                theme   : "secondary",
-                icon    : "pencil",
+            showEdit: [
+                type   : "filled",
+                theme  : "secondary",
+                tooltip: "Visualizar cliente",
+                icon   : "eye",
+                href   : createLink(action: 'edit', params: [id: attrs.parameterMap.id]),
             ],
-            restore: [
+            restore : [
                 type    : "filled",
                 disabled: "disabled",
                 theme   : "warning",
                 icon    : "rotate-dolar",
             ],
-            delete : [
+            delete  : [
                 type    : "filled",
                 disabled: "disabled",
                 theme   : "danger",
@@ -245,7 +246,6 @@ class PaginationTagLib {
         ]
 
         if (attrs.payer.deleted) {
-            actionMap.showEdit.tooltip = "Cliente removido"
             actionMap.delete.tooltip = "Cliente removido"
 
             actionMap.restore += [
@@ -260,9 +260,8 @@ class PaginationTagLib {
         actionMap.restore.tooltip = "Cliente não removido"
 
         actionMap.showEdit += [
-            tooltip : "Editar",
-            disabled: "",
-            href    : createLink(action: 'edit', params: attrs.parameterMap)
+            tooltip: "Editar",
+            icon   : "pencil"
         ]
 
         actionMap.delete += [
