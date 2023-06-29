@@ -230,16 +230,21 @@
 
                         <div class="space"></div>
 
-                        <h3><strong>R$: ${String.format("%,.2f", payment.value)}</strong></h3>
+                        <h3><strong>R$ ${String.format("%,.2f", payment.value)}</strong></h3>
                     </div>
                 </div>
 
                 <g:if test="${!payment.deleted}">
-                    <a class="show_data_button" href="http://localhost:8080/payment/edit/${payment.id}">
+                    <a class="show_data_button"
+                       href="${createLink(
+                           controller: 'payment',
+                           action: 'edit',
+                           id: payment.id,
+                           base: 'http://localhost:8080/')}">
                         Visualizar cobrança
                     </a>
                 </g:if>
-                
+
             </div>
 
             <footer>

@@ -45,6 +45,11 @@ class Utils {
         return maskFormatter.valueToString(cpfCnpj)
     }
     
+    public static String getWordInString(String text, Integer wordPosition) {
+        String[] words = text.split("\\s+")
+        return words[wordPosition]
+    }
+    
     public static String formatNumberSeparatorWithComma(Double value) {
         DecimalFormat decimalFormat = new DecimalFormat("0.00")
         return decimalFormat.format(value)
