@@ -4,28 +4,42 @@ import com.quickcharge.app.customer.Customer
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.validation.ValidationException
 import org.springframework.validation.ObjectError
-import utils.message.MessageType 
+import utils.message.MessageType
 
 class BaseController {
 
     SpringSecurityService springSecurityService
-    
+
     protected Customer getCurrentCustomer() {
         return springSecurityService.getCurrentUser().customer
     }
-    
+
     protected void validateExceptionHandler(ValidationException validationException) {
         ObjectError error = validationException.errors.allErrors.first()
-        String subMessage
-        
+        String errorMessage
+
         if (error.defaultMessage) {
             String argument = error.field ? message(code: "field.${error.field}") : ""
-            subMessage = message(code: error.defaultMessage ?: error.codes[0], args: [argument])
+            errorMessage = message(code: error.defaultMessage ?: error.codes[0], args: [argument])
         } else {
-            subMessage = error.codes.first()
+            errorMessage = error.codes.first()
         }
-        
-        flash.message = subMessage
+
+        warning(errorMessage)
+    }
+
+    public void success(String message) {
+        flash.message = message
+        flash.type = MessageType.SUCCESS
+    }
+
+    public void warning(String message) {
+        flash.message = message
         flash.type = MessageType.WARNING
+    }
+
+    public void error(String message) {
+        flash.message = message
+        flash.type = MessageType.ERROR
     }
 }
