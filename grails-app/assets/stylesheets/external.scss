@@ -1,27 +1,27 @@
-.body {
+.external-container {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     
-    .header {
+    .external-header {
         background-color: black;
         padding: 2rem;
         display: flex;
         justify-content: center;
 
-        .logo {
+        .external-header-logo {
             max-height: 8rem;
         }
     }
 
-    .main {
+    .external-main-container {
         display: flex;
         justify-content: center;
         align-items: center;
         padding: 2rem;
     }
 
-    .footer {
+    .external-footer {
         display: flex;
         justify-content: center;
         color: white;

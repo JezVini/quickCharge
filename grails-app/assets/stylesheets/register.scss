@@ -1,9 +1,9 @@
-.content-container {
+.register-container {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     gap: 2rem;
     
-    .form-container {
+    .register-form-container {
         max-width: 800px;
         width: 54vw;
     }
