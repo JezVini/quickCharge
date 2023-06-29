@@ -2,8 +2,7 @@ package com.quickcharge.app.customer
 
 import grails.plugin.springsecurity.annotation.Secured
 import grails.validation.ValidationException
-import utils.controller.BaseController
-import utils.message.MessageType
+import utils.controller.BaseController 
 
 class CustomerController extends BaseController {
 
@@ -22,15 +21,13 @@ class CustomerController extends BaseController {
     def save() {
         try {
             customerService.save(params)
-            flash.message = "Conta criada com sucesso"
-            flash.type = MessageType.SUCCESS
+            success("Conta criada com sucesso")
             redirect([controller: "login", action: "auth"])
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
             redirect([action: "create", params: params])
         } catch (Exception exception) {
-            flash.message = "Ocorreu um erro ao criar conta"
-            flash.type = MessageType.ERROR
+            error("Ocorreu um erro ao criar conta")
             log.error("CustomerController.save >> Erro ao salvar conta com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
             throw new Exception()
         }
@@ -39,15 +36,13 @@ class CustomerController extends BaseController {
     def update() {
         try {
             customerService.update(params, getCurrentCustomer())
-            flash.message = "Cadastro alterado com sucesso"
-            flash.type = MessageType.SUCCESS
+            success("Cadastro alterado com sucesso")
             redirect([controller: "login", action: "auth"])
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
             redirect([action: "edit"])
         } catch (Exception exception) {
-            flash.message = "Ocorreu um erro ao alterar cadastro"
-            flash.type = MessageType.ERROR
+            error("Ocorreu um erro ao alterar cadastro")
             log.error("CustomerController.save >> Erro ao alterar cadastro com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
             throw new Exception()
         }
