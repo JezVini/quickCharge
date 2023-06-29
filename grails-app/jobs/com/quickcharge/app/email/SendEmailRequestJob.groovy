@@ -5,7 +5,7 @@ class SendEmailRequestJob {
     EmailRequestService emailRequestService
     
     static triggers = {
-      simple repeatInterval: 5000l
+      simple repeatInterval: 10000l
     }
 
     def execute() {

@@ -31,7 +31,7 @@
         <atlas-screen>
             <sideBar:render/>
             <atlas-page>
-                <atlas-page-header slot="header" page-name="">
+            <atlas-page-header slot="header" page-name="<breadcrumb:activePageName/>"></atlas-page-header>
                 </atlas-page-header>
                 <atlas-page-content slot="content" class="js-atlas-content">
                     <alertTagLib:renderAlert/>
