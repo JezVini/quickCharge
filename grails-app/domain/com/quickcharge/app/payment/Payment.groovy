@@ -65,7 +65,7 @@ class Payment extends BaseEntity {
     }
 
     static Payment getById(id, customerId) {
-        Payment payment = Payment.query([id: id, customerId: customerId]).get()
+        Payment payment = Payment.query([id: id, customerId: customerId, includeDeleted: true]).get()
         if (payment) return payment
 
         Payment validatedPayment = new Payment()
