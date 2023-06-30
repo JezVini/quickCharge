@@ -178,4 +178,27 @@ class PaymentService {
 
         return pagedResultList
     }
+
+    public Map getPaymentCounterMap(Customer customer) {
+        List<Payment> receivedPaymentList = Payment.query([customerId: customer.id, status: PaymentStatus.getReceivedList()]).list()
+        List<Payment> pendingPaymentList = Payment.query([customerId: customer.id, status: [PaymentStatus.PENDING]]).list()
+        List<Payment> overduePaymentList = Payment.query([customerId: customer.id, status: [PaymentStatus.OVERDUE]]).list()
+        
+        Double receivedValue = 0, toReceiveValue = 0
+        for (Payment payment : receivedPaymentList) {
+            receivedValue += payment.value
+        }
+        
+        for (Payment payment : pendingPaymentList + overduePaymentList) {
+            toReceiveValue += payment.value
+        }
+        
+        return [
+            received: receivedPaymentList.size(),
+            pending: pendingPaymentList.size(),
+            overdue: overduePaymentList.size(),
+            receivedValue: receivedValue,
+            toReceiveValue: toReceiveValue
+        ]
+    }
 }

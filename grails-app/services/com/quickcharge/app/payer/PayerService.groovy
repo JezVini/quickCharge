@@ -196,4 +196,15 @@ class PayerService {
 
         return pagedResultList
     }
+
+    public Map getPayerCounterMap(Customer customer) {
+        Integer active = Payer.query([customerId: customer.id]).list().size()
+        Integer deleted = Payer.query([customerId: customer.id, deletedOnly: true]).list().size()
+        
+        return [
+            active: active,
+            deleted: deleted,
+            total: active + deleted
+        ]
+    }
 }
