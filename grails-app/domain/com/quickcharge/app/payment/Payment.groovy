@@ -59,7 +59,7 @@ class Payment extends BaseEntity {
             }
             
             if (search.containsKey("status")) {
-                inList("status", PaymentStatus.getUpdatableList())
+                inList("status", search.status)
             }
         }
     }
