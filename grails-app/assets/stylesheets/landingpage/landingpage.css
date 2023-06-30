@@ -1,4 +1,8 @@
 .navbar {
+    z-index: 9999;
+    top: 0;
+    position: fixed;
+    width: 100%;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -17,6 +21,7 @@
 }
 
 .navbar-link {
+    float: left;
     display: block;
     color: white;
     text-align: center;

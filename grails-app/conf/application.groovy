@@ -32,3 +32,5 @@ grails.plugin.springsecurity.logout.postOnly = false
 grails.config.locations = [
     "file:///quickcharge/application.groovy",
 ]
+
+grails.plugin.springsecurity.successHandler.defaultTargetUrl = "/dashboard/index"

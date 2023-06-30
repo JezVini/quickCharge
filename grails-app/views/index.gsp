@@ -29,8 +29,10 @@
         <header>
             <nav class="navbar">
                 <div class="left-navbar">
-                    <img class="quickcharge-logo" src="${asset.assetPath(src: '/logo/quickChargeNormalWhite.svg')}"
-                         alt="Logo QuickCharge">
+                    <a href="/">
+                        <img class="quickcharge-logo" src="${asset.assetPath(src: '/logo/quickChargeNormalWhite.svg')}"
+                             alt="Logo QuickCharge">
+                    </a>
 
                     <div>
                         <ul class="navbar-option">
@@ -40,17 +42,20 @@
                         </ul>
                     </div>
                 </div>
-
-                <g:if>
+                <sec:ifNotLoggedIn>
                     <div class="account-links">
                         <g:link class="account-link" controller="login" action="auth">Acessar minha conta</g:link>
                         <g:link class="account-link create" controller="customer"
                                 action="create">Criar minha conta</g:link>
                     </div>
-                </g:if>
-                <g:else>
-                    <g:link class="account-link" controller="login" action="auth">Acessar o sistema</g:link>
-                </g:else>
+                </sec:ifNotLoggedIn>
+
+                <sec:ifLoggedIn>
+                    <div class="account-links">
+                        <g:link class="account-link create" controller="dashboard" action="index">Acessar</g:link>
+                    </div>
+                </sec:ifLoggedIn>
+
             </nav>
 
             <div class="background-image"></div>
