@@ -1,5 +1,6 @@
 package com.quickcharge.app.payer
 
+import grails.gorm.PagedResultList
 import grails.validation.ValidationException
 import utils.controller.BaseController
 import utils.message.MessageType
@@ -21,24 +22,26 @@ class PayerController extends BaseController {
             log.info("PayerController.edit >> Erro ao consultar pagador com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         }
     }
-
-    def index () {
+    
+    def index() {
         try {
-            return [
-                payerList: Payer.query([
-                    customerId: getCurrentCustomer().id,
-                    deletedOnly: params.deletedOnly,
-                    includeDeleted: params.includeDeleted
-                ]).list(),
-                
+            Map parsedParams = [
+                offset: getOffSet(),
+                max: getMax(),
                 deletedOnly: params.deletedOnly,
                 includeDeleted: params.includeDeleted
             ]
-            
+
+            PagedResultList pagedResultList = payerService.paginatedPayer(parsedParams, getCurrentCustomer())
+
+            return parsedParams + [
+                payerList: pagedResultList,
+                total: pagedResultList.getTotalCount()
+            ]
         } catch (Exception exception) {
             flash.message = "Ocorreu um erro ao buscar pagadores, contate o desenvolvimento"
             flash.type = MessageType.ERROR
-            log.info("PayerController.index >> Erro ao consultar pagadores com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            log.error("PayerController.index >> Erro ao consultar pagadores com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         }
     }
     
@@ -58,7 +61,9 @@ class PayerController extends BaseController {
                 action: "index",
                 params: [
                     deletedOnly: params.deletedOnly,
-                    includeDeleted: params.includeDeleted
+                    includeDeleted: params.includeDeleted,
+                    offset: params.offset,
+                    max: params.max
                 ]
             ])
         }
@@ -80,7 +85,9 @@ class PayerController extends BaseController {
                 action: "index",
                 params: [
                     deletedOnly: params.deletedOnly,
-                    includeDeleted: params.includeDeleted
+                    includeDeleted: params.includeDeleted,
+                    offset: params.offset,
+                    max: params.max
                 ]
             ])
         }
@@ -91,7 +98,7 @@ class PayerController extends BaseController {
             Payer payer = payerService.save(params, getCurrentCustomer())
             flash.message = "Pagador criado com sucesso"
             flash.type = MessageType.SUCCESS
-            redirect([action: "index", params: [id: payer.id]])
+            redirect([action: "index"])
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
             redirect([action: "create", params: params])

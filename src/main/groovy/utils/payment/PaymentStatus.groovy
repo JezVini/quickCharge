@@ -17,4 +17,8 @@ public enum PaymentStatus {
     public Boolean isReceived() {
         return [PaymentStatus.RECEIVED, PaymentStatus.RECEIVED_IN_CASH].contains(this)
     }
+    
+    public String toLowerCase() {
+        return this.name().toLowerCase()
+    }
 }
