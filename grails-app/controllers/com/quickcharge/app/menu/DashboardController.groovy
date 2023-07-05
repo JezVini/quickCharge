@@ -1,5 +1,6 @@
 package com.quickcharge.app.menu
 
+import com.quickcharge.app.customer.Customer
 import com.quickcharge.app.payer.PayerService
 import com.quickcharge.app.payment.PaymentService
 import utils.controller.BaseController
@@ -10,10 +11,11 @@ class DashboardController extends BaseController{
     PayerService payerService
     
     def index() {
+        Customer customer = getCurrentCustomer()
         return [
-            customer: getCurrentCustomer(),
-            paymentGeneralData: paymentService.getPaymentCounterMap(getCurrentCustomer()),
-            payerGeneralData: payerService.getPayerCounterMap(getCurrentCustomer())
+            customer: customer,
+            paymentGeneralData: paymentService.getPaymentCounterMap(customer),
+            payerGeneralData: payerService.getPayerCounterMap(customer)
         ]
     }
 }
