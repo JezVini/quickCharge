@@ -9,12 +9,20 @@ public enum PaymentStatus {
     public static List<PaymentStatus> getUpdatableList() {
         return [PaymentStatus.PENDING, PaymentStatus.OVERDUE]
     }
+ 
+    public static List<PaymentStatus> getReceivedList() {
+        return [PaymentStatus.RECEIVED, PaymentStatus.RECEIVED_IN_CASH]
+    }
     
     public Boolean canUpdate() {
         return PaymentStatus.getUpdatableList().contains(this)
     }
 
     public Boolean isReceived() {
-        return [PaymentStatus.RECEIVED, PaymentStatus.RECEIVED_IN_CASH].contains(this)
+        return PaymentStatus.getReceivedList().contains(this)
+    }
+    
+    public String toLowerCase() {
+        return this.name().toLowerCase()
     }
 }

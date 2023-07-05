@@ -58,6 +58,10 @@ class Payment extends BaseEntity {
                 eq("payer.id", Long.valueOf(search.payerId))
             }
             
+            if (search.containsKey("status")) {
+                inList("status", search.status)
+            }
+            
             if (search.containsKey("statusList")) {
                 inList("status", search.statusList)
             }
@@ -65,7 +69,7 @@ class Payment extends BaseEntity {
     }
 
     static Payment getById(id, customerId) {
-        Payment payment = Payment.query([id: id, customerId: customerId]).get()
+        Payment payment = Payment.query([id: id, customerId: customerId, includeDeleted: true]).get()
         if (payment) return payment
 
         Payment validatedPayment = new Payment()

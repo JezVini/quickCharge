@@ -1,24 +1,28 @@
 package com.quickcharge.app.payment
 
 import com.quickcharge.app.payer.Payer
+import grails.gorm.PagedResultList
 import grails.validation.ValidationException
-import utils.controller.BaseController 
+import utils.controller.BaseController
 
 class PaymentController extends BaseController {
-    
+
     PaymentService paymentService
 
     def index() {
         try {
-            return [
-                paymentList   : Payment.query([
-                    customerId    : getCurrentCustomer().id,
-                    deletedOnly   : params.deletedOnly,
-                    includeDeleted: params.includeDeleted
-                ]).list(),
-
+            Map parsedParams = [
+                offset        : getOffSet(),
+                max           : getMax(),
                 deletedOnly   : params.deletedOnly,
                 includeDeleted: params.includeDeleted
+            ]
+
+            PagedResultList pagedResultList = paymentService.paginatedPayment(parsedParams, getCurrentCustomer())
+
+            return parsedParams + [
+                paymentList: pagedResultList,
+                total      : pagedResultList.getTotalCount()
             ]
         } catch (Exception exception) {
             error("Ocorreu um erro ao buscar cobranças")
@@ -35,7 +39,7 @@ class PaymentController extends BaseController {
         try {
             paymentService.save(params, getCurrentCustomer())
             success("Cobrança criada com sucesso")
-            redirect([action: "index", params: params])
+            redirect([action: "index"])
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
             redirect([action: "create", params: params])
@@ -60,7 +64,9 @@ class PaymentController extends BaseController {
                 action: "index",
                 params: [
                     deletedOnly   : params.deletedOnly,
-                    includeDeleted: params.includeDeleted
+                    includeDeleted: params.includeDeleted,
+                    offset        : params.offset,
+                    max           : params.max
                 ]
             ])
         }
@@ -80,7 +86,9 @@ class PaymentController extends BaseController {
                 action: "index",
                 params: [
                     deletedOnly   : params.deletedOnly,
-                    includeDeleted: params.includeDeleted
+                    includeDeleted: params.includeDeleted,
+                    offset        : params.offset,
+                    max           : params.max
                 ]
             ])
         }
@@ -100,7 +108,9 @@ class PaymentController extends BaseController {
                 action: "index",
                 params: [
                     deletedOnly   : params.deletedOnly,
-                    includeDeleted: params.includeDeleted
+                    includeDeleted: params.includeDeleted,
+                    offset        : params.offset,
+                    max           : params.max
                 ]
             ])
         }
@@ -123,11 +133,11 @@ class PaymentController extends BaseController {
             redirect([action: "index"])
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
-            redirect([action: "edit", params: params])
+            redirect([action: "edit", params: [id: params.id]])
         } catch (Exception exception) {
             error("Ocorreu um erro ao alterar cobrança")
             log.error("PaymentController.update >> Erro ao alterar cobrança com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
-            redirect([action: "edit", params: params])
+            redirect([action: "edit", params: [id: params.id]])
         }
     }
 }

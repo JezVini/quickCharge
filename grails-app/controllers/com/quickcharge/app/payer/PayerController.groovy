@@ -1,5 +1,6 @@
 package com.quickcharge.app.payer
 
+import grails.gorm.PagedResultList
 import grails.validation.ValidationException
 import utils.controller.BaseController 
 
@@ -20,18 +21,21 @@ class PayerController extends BaseController {
             redirect(uri: request.getHeader('referer'))
         }
     }
-
-    def index () {
+    
+    def index() {
         try {
-            return [
-                payerList: Payer.query([
-                    customerId: getCurrentCustomer().id,
-                    deletedOnly: params.deletedOnly,
-                    includeDeleted: params.includeDeleted
-                ]).list(),
-                
+            Map parsedParams = [
+                offset: getOffSet(),
+                max: getMax(),
                 deletedOnly: params.deletedOnly,
                 includeDeleted: params.includeDeleted
+            ]
+
+            PagedResultList pagedResultList = payerService.paginatedPayer(parsedParams, getCurrentCustomer())
+
+            return parsedParams + [
+                payerList: pagedResultList,
+                total: pagedResultList.getTotalCount()
             ]
         } catch (Exception exception) {
             error("Ocorreu um erro ao buscar clientes")
@@ -54,7 +58,9 @@ class PayerController extends BaseController {
                 action: "index",
                 params: [
                     deletedOnly: params.deletedOnly,
-                    includeDeleted: params.includeDeleted
+                    includeDeleted: params.includeDeleted,
+                    offset: params.offset,
+                    max: params.max
                 ]
             ])
         }
@@ -74,7 +80,9 @@ class PayerController extends BaseController {
                 action: "index",
                 params: [
                     deletedOnly: params.deletedOnly,
-                    includeDeleted: params.includeDeleted
+                    includeDeleted: params.includeDeleted,
+                    offset: params.offset,
+                    max: params.max
                 ]
             ])
         }
@@ -84,7 +92,7 @@ class PayerController extends BaseController {
         try {
             Payer payer = payerService.save(params, getCurrentCustomer())
             success("Cliente criado com sucesso")
-            redirect([action: "index", params: [id: payer.id]])
+            redirect([action: "index"])
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
             redirect([action: "create", params: params])

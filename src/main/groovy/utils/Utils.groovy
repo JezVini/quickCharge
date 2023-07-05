@@ -55,6 +55,10 @@ class Utils {
         return decimalFormat.format(value)
     }
 
+    public static String formatNumberToMonetary(Double value) {
+        return String.format("%,.2f", value)
+    }
+    
     public static String formatCep(String cep) {
         String mask = "#####-###"
         MaskFormatter maskFormatter = new MaskFormatter(mask)

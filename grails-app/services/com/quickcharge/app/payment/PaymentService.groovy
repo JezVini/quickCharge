@@ -3,6 +3,7 @@ package com.quickcharge.app.payment
 import com.quickcharge.app.customer.Customer
 import com.quickcharge.app.email.BuildEmailContentService
 import com.quickcharge.app.payer.Payer
+import grails.gorm.PagedResultList
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import org.apache.commons.lang3.EnumUtils
@@ -21,11 +22,11 @@ class PaymentService {
 
     def save(Map parameterMap, Customer customer) {
         Payment validatedPayment = validateSave(parameterMap)
-
+        
         if (validatedPayment.hasErrors()) {
             throw new ValidationException("Erro ao salvar cobrança", validatedPayment.errors)
         }
-
+        
         Payment payment = new Payment()
         Payer payer = Payer.query([id: parameterMap.payerId, customerId: customer.id]).get()
         BillingType billingType = BillingType[parameterMap.billingType as String] as BillingType
@@ -41,7 +42,7 @@ class PaymentService {
         payment.save(failOnError: true)
         buildEmailContentService.createEmail(payment, PaymentEmailAction.CREATED)
     }
-
+    
     public Payment validateSave(Map parameterMap) {
         Payment validatedPayment = new Payment()
 
@@ -161,5 +162,20 @@ class PaymentService {
                 }
             }
         }
+    }
+
+    public PagedResultList<Payment> paginatedPayment(Map parameterMap, Customer customer) {
+        PagedResultList<Payment> pagedResultList = Payment.query([
+            customerId    : customer.id,
+            deletedOnly   : parameterMap.deletedOnly,
+            includeDeleted: parameterMap.includeDeleted
+        ]).list([
+            max   : parameterMap.max,
+            offset: parameterMap.offset,
+            sort  : "id",
+            order : "desc"
+        ])
+
+        return pagedResultList
     }
 }
