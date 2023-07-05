@@ -21,8 +21,6 @@
         <asset:stylesheet src="atlas-colors/colors.css"/>
         <asset:stylesheet src="main/main.css.css"/>
         <asset:stylesheet src="external.css"/>
-        <asset:stylesheet src="alert.css"/>
-        <asset:javascript src="alert.js"/>
         <asset:javascript src="pages/currentPage.js"/>
 
         <g:layoutHead/>

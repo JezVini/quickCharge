@@ -66,7 +66,7 @@ class PayerService {
         Map paymentQuery = [
             payerId   : parameterMap.id,
             customerId: customer.id,
-            status    : PaymentStatus.getUpdatableList()
+            statusList    : PaymentStatus.getUpdatableList()
         ]
 
         Payer payer = Payer.getById(parameterMap.long("id"), customer.id)

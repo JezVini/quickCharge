@@ -61,6 +61,10 @@ class Payment extends BaseEntity {
             if (search.containsKey("status")) {
                 inList("status", search.status)
             }
+            
+            if (search.containsKey("statusList")) {
+                inList("status", search.statusList)
+            }
         }
     }
 
