@@ -1,5 +1,7 @@
-<atlas-alert
-    class="alert"
-    message="${message}"
-    type="${type}">
-</atlas-alert>
+<g:if test="message">
+    <g:javascript>
+        document.addEventListener("DOMContentLoaded", function () {
+            Atlas.notifications.showAlert("${message}", "${type}");
+        });
+    </g:javascript>
+</g:if>
