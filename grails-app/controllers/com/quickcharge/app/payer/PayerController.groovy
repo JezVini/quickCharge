@@ -2,8 +2,7 @@ package com.quickcharge.app.payer
 
 import grails.gorm.PagedResultList
 import grails.validation.ValidationException
-import utils.controller.BaseController
-import utils.message.MessageType
+import utils.controller.BaseController 
 
 class PayerController extends BaseController {
 
@@ -17,9 +16,9 @@ class PayerController extends BaseController {
         try {
             return [payer: Payer.getById(params.long("id"), getCurrentCustomer().id)]
         } catch (Exception exception) {
-            flash.message = "Ocorreu um erro ao buscar dados do pagador, contate o desenvolvimento"
-            flash.type = MessageType.ERROR
-            log.info("PayerController.edit >> Erro ao consultar pagador com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            error("Ocorreu um erro ao buscar dados do cliente")
+            log.error("PayerController.edit >> Erro ao consultar pagador com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            redirect(uri: request.getHeader('referer'))
         }
     }
     
@@ -39,23 +38,21 @@ class PayerController extends BaseController {
                 total: pagedResultList.getTotalCount()
             ]
         } catch (Exception exception) {
-            flash.message = "Ocorreu um erro ao buscar pagadores, contate o desenvolvimento"
-            flash.type = MessageType.ERROR
+            error("Ocorreu um erro ao buscar clientes")
             log.error("PayerController.index >> Erro ao consultar pagadores com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            redirect(uri: request.getHeader('referer'))
         }
     }
     
     def delete() {
         try {
             payerService.delete(params, getCurrentCustomer())
-            flash.message = "Pagador removido com sucesso"
-            flash.type = MessageType.SUCCESS
+            success("Cliente removido com sucesso")
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
-            flash.message = "Ocorreu um erro ao remover pagador, contate o desenvolvimento"
-            flash.type = MessageType.ERROR
-            log.info("PayerController.delete >> Erro ao remover pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            error("Ocorreu um erro ao remover cliente")
+            log.error("PayerController.delete >> Erro ao remover pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
             redirect([
                 action: "index",
@@ -72,14 +69,12 @@ class PayerController extends BaseController {
     def restore() {
         try {
             payerService.restore(params, getCurrentCustomer())
-            flash.message = "Pagador restaurado com sucesso"
-            flash.type = MessageType.SUCCESS
+            success("Cliente restaurado com sucesso")
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
-            flash.message = "Ocorreu um erro ao restaurar pagador, contate o desenvolvimento"
-            flash.type = MessageType.ERROR
-            log.info("PayerController.restore >> Erro ao restaurar pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            error("Ocorreu um erro ao restaurar cliente")
+            log.error("PayerController.restore >> Erro ao restaurar pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
             redirect([
                 action: "index",
@@ -96,16 +91,14 @@ class PayerController extends BaseController {
     def save() {
         try {
             Payer payer = payerService.save(params, getCurrentCustomer())
-            flash.message = "Pagador criado com sucesso"
-            flash.type = MessageType.SUCCESS
+            success("Cliente criado com sucesso")
             redirect([action: "index"])
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
             redirect([action: "create", params: params])
         } catch (Exception exception) {
-            flash.message = "Ocorreu um erro ao criar pagador, contate o desenvolvimento"
-            flash.type = MessageType.ERROR
-            log.error("PayerController.save >> Erro ao salvar pagador com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            error("Ocorreu um erro ao criar cliente")
+            log.error("PayerController.save >> Erro ao salvar pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
             redirect([action: "create", params: params])
         }
     }
@@ -113,14 +106,12 @@ class PayerController extends BaseController {
     def update() {
         try {
             payerService.update(params, getCurrentCustomer())
-            flash.message = "Pagador alterado com sucesso"
-            flash.type = MessageType.SUCCESS
+            success("Cliente alterado com sucesso")
         } catch (ValidationException validationException) {
             this.validateExceptionHandler(validationException)
         } catch (Exception exception) {
-            flash.message = "Ocorreu um erro ao alterar pagador, contate o desenvolvimento"
-            flash.type = MessageType.ERROR
-            log.info("PayerController.update >> Erro ao alterar pagador com os parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
+            error("Ocorreu um erro ao alterar cliente")
+            log.error("PayerController.update >> Erro ao alterar pagador com parâmetros: [${params}] [Mensagem de erro]: ${exception.message}")
         } finally {
             redirect([
                 action: "edit",
