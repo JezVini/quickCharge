@@ -58,8 +58,8 @@ class Payment extends BaseEntity {
                 eq("payer.id", Long.valueOf(search.payerId))
             }
             
-            if (search.containsKey("status")) {
-                inList("status", search.status)
+            if (search.containsKey("statusList")) {
+                inList("status", search.statusList)
             }
         }
     }
