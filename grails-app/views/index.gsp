@@ -123,14 +123,14 @@
                 </atlas-card>
             </atlas-panel>
 
-            <atlas-panel header="Entre em contato conosco!" id="contacts" class="contactus">
+            <atlas-panel header="Entre em contato conosco!" id="contacts" class="contacts">
                 <atlas-layout class="contactus" inline gap="9">
-                    <a class="contactus-card" href="https://github.com/Jezreel-Moraes-Asaas" target="_blank">
+                    <a class="contacts-card" href="https://github.com/Jezreel-Moraes-Asaas" target="_blank">
                         <asset:image src="github/github-mark.svg" class="github-logo"/>
                         Jezreel Moraes
                     </a>
 
-                    <a class="contactus-card" href="https://github.com/willevini" target="_blank">
+                    <a class="contacts-card" href="https://github.com/willevini" target="_blank">
                         <asset:image src="github/github-mark.svg" class="github-logo"/>
                         Vinícius Wille Alves
                     </a>
