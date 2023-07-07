@@ -17,27 +17,27 @@
                                     <div class="menu-payment-data-table-wrap">
                                         <table class="menu-data-table">
                                             <tr>
-                                                <th>Recebidas</th>
-                                                <th>Pendentes</th>
-                                                <th>Vencidas</th>
+                                                <th class="dashboard-table-data-header">Recebidas</th>
+                                                <th class="dashboard-table-data-header">Pendentes</th>
+                                                <th class="dashboard-table-data-header">Vencidas</th>
                                             </tr>
                                             <tr>
-                                                <td>${paymentGeneralData.received}</td>
-                                                <td>${paymentGeneralData.pending}</td>
-                                                <td>${paymentGeneralData.overdue}</td>
+                                                <td class="dashboard-table-data">${paymentGeneralData.received}</td>
+                                                <td class="dashboard-table-data">${paymentGeneralData.pending}</td>
+                                                <td class="dashboard-table-data">${paymentGeneralData.overdue}</td>
                                             </tr>
                                         </table>
                                     </div>
                                     <div class="menu-payment-data-table-wrap">
                                         <table class="menu-data-table">
                                             <tr>
-                                                <th>Valor já recebido</th>
-                                                <th>Valor a receber</th>
+                                                <th class="dashboard-table-data-header">Valor já recebido</th>
+                                                <th class="dashboard-table-data-header">Valor a receber</th>
                                             </tr>
                                             <tr>    
-                                                <td><g:formatMonetaryValue
+                                                <td class="dashboard-table-data"><g:formatMonetaryValue
                                                     value="${paymentGeneralData.receivedValue}"/></td>
-                                                <td><g:formatMonetaryValue
+                                                <td class="dashboard-table-data"><g:formatMonetaryValue
                                                     value="${paymentGeneralData.toReceiveValue}"/></td>
                                             </tr>
                                         </table>
@@ -57,14 +57,14 @@
                                 <div class="menu-payment-data-table-wrap">
                                     <table class="menu-data-table">
                                         <tr>
-                                            <th>Ativos</th>
-                                            <th>Desativados</th>
-                                            <th>Cadastrados</th>
+                                            <th class="dashboard-table-data-header">Ativos</th>
+                                            <th class="dashboard-table-data-header">Desativados</th>
+                                            <th class="dashboard-table-data-header">Cadastrados</th>
                                         </tr>
                                         <tr>
-                                            <td>${payerGeneralData.active}</td>
-                                            <td>${payerGeneralData.deleted}</td>
-                                            <td>${payerGeneralData.total}</td>
+                                            <td class="dashboard-table-data">${payerGeneralData.active}</td>
+                                            <td class="dashboard-table-data">${payerGeneralData.deleted}</td>
+                                            <td class="dashboard-table-data">${payerGeneralData.total}</td>
                                         </tr>
                                     </table>
                                 </div>

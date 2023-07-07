@@ -7,6 +7,7 @@ import grails.gorm.PagedResultList
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import org.apache.commons.lang3.EnumUtils
+import org.grails.datastore.gorm.query.NamedCriteriaProxy
 import utils.Utils
 import utils.email.payment.PaymentEmailAction
 import utils.payment.BillingType
@@ -22,11 +23,11 @@ class PaymentService {
 
     def save(Map parameterMap, Customer customer) {
         Payment validatedPayment = validateSave(parameterMap)
-        
+
         if (validatedPayment.hasErrors()) {
             throw new ValidationException("Erro ao salvar cobrança", validatedPayment.errors)
         }
-        
+
         Payment payment = new Payment()
         Payer payer = Payer.query([id: parameterMap.payerId, customerId: customer.id]).get()
         BillingType billingType = BillingType[parameterMap.billingType as String] as BillingType
@@ -42,7 +43,7 @@ class PaymentService {
         payment.save(failOnError: true)
         buildEmailContentService.createEmail(payment, PaymentEmailAction.CREATED)
     }
-    
+
     public Payment validateSave(Map parameterMap) {
         Payment validatedPayment = new Payment()
 
@@ -124,7 +125,7 @@ class PaymentService {
 
         payment.value = value
         payment.dueDate = dueDate
-        
+
         if (payment.status == PaymentStatus.OVERDUE) payment.status = PaymentStatus.PENDING
 
         payment.save(failOnError: true)
@@ -180,25 +181,20 @@ class PaymentService {
     }
 
     public Map getPaymentCounterMap(Customer customer) {
-        List<Payment> receivedPaymentList = Payment.query([customerId: customer.id, status: PaymentStatus.getReceivedList()]).list()
-        List<Payment> pendingPaymentList = Payment.query([customerId: customer.id, status: [PaymentStatus.PENDING]]).list()
-        List<Payment> overduePaymentList = Payment.query([customerId: customer.id, status: [PaymentStatus.OVERDUE]]).list()
         
-        Double receivedValue = 0, toReceiveValue = 0
-        for (Payment payment : receivedPaymentList) {
-            receivedValue += payment.value
-        }
-        
-        for (Payment payment : pendingPaymentList + overduePaymentList) {
-            toReceiveValue += payment.value
-        }
-        
+        NamedCriteriaProxy receivedPayment = Payment.query([customerId: customer.id, statusList: PaymentStatus.getReceivedList()])
+        NamedCriteriaProxy pendingPayment = Payment.query([customerId: customer.id, status: PaymentStatus.PENDING])
+        NamedCriteriaProxy overduePayment = Payment.query([customerId: customer.id, status: PaymentStatus.OVERDUE])
+
+        Double toReceiveOverdueValue = overduePayment.list { projections { sum("value") } }.pop() ?: 0D
+        Double toReceivePendingValue = pendingPayment.list { projections { sum("value") } }.pop() ?: 0D
+
         return [
-            received: receivedPaymentList.size(),
-            pending: pendingPaymentList.size(),
-            overdue: overduePaymentList.size(),
-            receivedValue: receivedValue,
-            toReceiveValue: toReceiveValue
+            received      : receivedPayment.count(),
+            pending       : pendingPayment.count(),
+            overdue       : overduePayment.count(),
+            receivedValue : receivedPayment.list { projections { sum("value") } }.pop() ?: 0D,
+            toReceiveValue: toReceiveOverdueValue + toReceivePendingValue
         ]
     }
 }

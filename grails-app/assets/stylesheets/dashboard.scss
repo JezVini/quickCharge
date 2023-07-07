@@ -21,11 +21,11 @@
         border-radius: 10px;
         border: 1px solid var(--table-main-gray-color);
 
-        th, td {
+        .dashboard-table-data-header, .dashboard-table-data {
             padding: 15px 10px;
         }
 
-        th {
+        .dashboard-table-data-header {
             background-color: var(--table-main-gray-color);
 
             &:first-child {
@@ -37,7 +37,7 @@
             }
         }
 
-        td {
+        .dashboard-table-data {
             border-bottom: 1px solid var(--table-main-gray-color);
             border-left: 1px dashed var(--table-main-gray-light-color);
             white-space: nowrap;

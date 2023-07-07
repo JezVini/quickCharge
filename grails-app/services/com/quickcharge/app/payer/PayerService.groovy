@@ -66,7 +66,7 @@ class PayerService {
         Map paymentQuery = [
             payerId   : parameterMap.id,
             customerId: customer.id,
-            status    : PaymentStatus.getUpdatableList()
+            statusList    : PaymentStatus.getUpdatableList()
         ]
 
         Payer payer = Payer.getById(parameterMap.long("id"), customer.id)
@@ -198,8 +198,8 @@ class PayerService {
     }
 
     public Map getPayerCounterMap(Customer customer) {
-        Integer active = Payer.query([customerId: customer.id]).list().size()
-        Integer deleted = Payer.query([customerId: customer.id, deletedOnly: true]).list().size()
+        Integer active = Payer.query([customerId: customer.id]).count()
+        Integer deleted = Payer.query([customerId: customer.id, deletedOnly: true]).count()
         
         return [
             active: active,
