@@ -1,0 +1,147 @@
+.navbar {
+    z-index: 9999;
+    top: 0;
+    position: fixed;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    padding: 1em 12em 1em 12em;
+    align-items: center;
+    background-color: black;
+}
+
+.navbar-link:hover {
+    color: #CCCCCC;
+}
+
+.navbar-li {
+    float: left;
+}
+
+.navbar-link {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-left: 0.5em;
+}
+
+.left-navbar {
+    display: flex;
+}
+
+.quickcharge-logo {
+    width: 10em;
+    margin-right: 3em;
+}
+
+.account-link {
+    font-size: 1.2em;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0.4em;
+}
+
+.account-links .create {
+    border-radius: 0.3em;
+    border: solid 0.09em white;
+    margin-left: 0.5em;
+}
+
+.account-link:hover {
+    color: #CCCCCC;
+}
+
+.account-links .create:hover {
+    background-color: white;
+    color: black;
+}
+
+.main-content {
+    padding-left: 20em;
+    padding-right: 20em;
+}
+
+.background-image {
+    width: 100%;
+    height: 60ex;
+    background-size: cover;
+    background-position: 100% 20%;
+    margin-bottom: 4em;
+}
+
+.main-title {
+    max-width: 8em;
+    font-size: 5em;
+    background-color: black;
+    clip-path: polygon(0 0, 100% 20%, 100% 100%, 0 100%);
+    color: white;
+    border-radius: 0.3em;
+    text-align: left;
+    padding: 0.5em;
+}
+
+.about-us {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    margin-bottom: 4em;
+}
+
+.about-us-icons {
+    display: flex;
+    flex-direction: column;
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+    border: solid 0.09em #CCCCCC;
+    padding: 0.5em;
+    border-radius: 0.5em;
+    margin-bottom: 1em;
+}
+
+.services-tab {
+    margin-bottom: 4em;
+    text-align: justify;
+}
+
+.contacts {
+    display: flex;
+    justify-content: center
+}
+
+.contacts-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: solid 0.09em #CCCCCC;
+    padding: 1em;
+    border-radius: 0.3em;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+.contacts-card:hover {
+    background-color: #CCCCCC;
+}
+
+.footer {
+    margin-top: 4em;
+    text-align: center;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: black;
+    color: white;
+}

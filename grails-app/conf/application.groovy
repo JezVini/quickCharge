@@ -7,7 +7,7 @@ grails.plugin.springsecurity.authority.className = 'com.quickcharge.app.authenti
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	[pattern: '/**',             access: ['IS_AUTHENTICATED_FULLY']],
 	[pattern: '/error',          access: ['permitAll']],
-	[pattern: '/index',          access: ['IS_AUTHENTICATED_FULLY']],
+	[pattern: '/index',          access: ['permitAll']],
 	[pattern: '/index.gsp',      access: ['permitAll']],
 	[pattern: '/shutdown',       access: ['permitAll']],
 	[pattern: '/assets/**',      access: ['permitAll']],
@@ -32,3 +32,5 @@ grails.plugin.springsecurity.logout.postOnly = false
 grails.config.locations = [
     "file:///quickcharge/application.groovy",
 ]
+
+grails.plugin.springsecurity.successHandler.defaultTargetUrl = "/dashboard/index"
